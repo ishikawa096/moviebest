@@ -1,0 +1,113 @@
+version: 2.1
+
+jobs:
+  rubocop:
+    working_directory: ~/app
+    docker:
+      - image: 'cimg/ruby:3.1.2-node'
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - gemfiles-v1-{{ .Branch }}-{{ checksum "backend/Gemfile.lock" }}
+            - gemfiles-v1-{{ .Branch }}-
+            - gemfiles-v1-master-
+      - run:
+          command: bundle config --local path vendor/bundle
+          working_directory: backend
+      - run:
+          name: bundle install
+          command: bundle check || bundle install -j4
+          working_directory: backend
+      - run:
+          name: Run rubocop
+          command: bundle exec rubocop --parallel
+          working_directory: backend
+      - save_cache:
+          key: gemfiles-v1-{{ .Branch }}-{{ checksum "backend/Gemfile.lock" }}
+          paths:
+            - backend/vendor/bundle
+
+  rspec:
+    working_directory: ~/app
+    docker:
+      - image: 'cimg/ruby:3.1.2-node'
+        environment:
+          BUNDLE_JOBS: '3'
+          BUNDLE_RETRY: '3'
+          BUNDLER_VERSION: 2.3.7
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_PASSWORD: password
+          MYSQL_PORT: 3306
+          MYSQL_HOST: db
+          RAILS_ENV: test
+          TZ: Japan
+      - image: 'cimg/mysql:8.0'
+        command: '--default-authentication-plugin=mysql_native_password'
+        environment:
+          MYSQL_USER: test
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_PASSWORD: password
+          MYSQL_DATABASE: backend_test
+          MYSQL_HOST: db
+        name: db
+    parallelism: 3
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - gemfiles-v1-{{ .Branch }}-{{ checksum "backend/Gemfile.lock" }}
+            - gemfiles-v1-{{ .Branch }}-
+            - gemfiles-v1-master-
+      - run:
+          command: bundle config --local path vendor/bundle
+          working_directory: backend
+      - run:
+          name: bundle install
+          command: bundle check || bundle install -j4
+          working_directory: backend
+      - run:
+          command: bundle exec rails db:schema:load --trace
+          name: Database setup
+          working_directory: backend
+      - run:
+          command: bundle exec rspec
+          name: Run rspec
+          working_directory: backend
+      - save_cache:
+          key: gemfiles-v1-{{ .Branch }}-{{ checksum "backend/Gemfile.lock" }}
+          paths:
+            - backend/vendor/bundle
+
+  jest:
+    working_directory: ~/app
+    docker:
+      - image: 'cimg/ruby:3.1.2-node'
+    steps:
+      - checkout
+      - restore_cache:
+          name: Yarn パッケージのキャッシュの復元
+          keys:
+            - yarn-packages-v1-{{ .Branch }}-{{ checksum "frontend/yarn.lock" }}
+            - yarn-packages-v1-{{ .Branch }}-
+            - yarn-packages-v1-master-
+      - run:
+          name: 依存関係のインストール
+          command: yarn install --immutable
+          working_directory: frontend
+      - save_cache:
+          name: Yarn パッケージのキャッシュの保存
+          key: yarn-packages--v1-{{ .Branch }}-{{ checksum "frontend/yarn.lock" }}
+          paths:
+            - ~/frontend/.cache/yarn
+      - run:
+          command: yarn test
+          name: Run yarn tests
+          working_directory: frontend
+
+workflows:
+  build_and_test:
+    jobs:
+      - jest
+      - rubocop
+      - rspec
