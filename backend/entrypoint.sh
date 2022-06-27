@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
-rm -f /moviebest/tmp/pids/server.pid
+bundle config set path 'vendor/bundle'
+bundle install -j3
+
+echo n | bundle exec rails db:setup
+
+rm -f /backend/tmp/pids/server.pid
 
 exec "$@"
