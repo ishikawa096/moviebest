@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { lists } from 'lists';
+import { lists } from '../components/lists';
 
 const App: React.FC = () => {
   const [message, setMessage] = useState<string>('');
@@ -7,7 +7,7 @@ const App: React.FC = () => {
   const handleExecTest = async () => {
     const response = await lists();
     if (response.status === 200) {
-      setMessage(response.data.message);
+      setMessage(response.data.data.attributes.comment);
     }
   };
 
