@@ -4,7 +4,7 @@ jobs:
   rubocop:
     working_directory: ~/app
     docker:
-      - image: 'cimg/ruby:3.1.2-node'
+      - image: 'cimg/ruby:3.1.2'
     steps:
       - checkout
       - restore_cache:
@@ -31,7 +31,7 @@ jobs:
   rspec:
     working_directory: ~/app
     docker:
-      - image: 'cimg/ruby:3.1.2-node'
+      - image: 'cimg/ruby:3.1.2'
         environment:
           BUNDLE_JOBS: '3'
           BUNDLE_RETRY: '3'
@@ -82,7 +82,7 @@ jobs:
   jest:
     working_directory: ~/app
     docker:
-      - image: 'cimg/ruby:3.1.2-node'
+      - image: 'cimg/node:16.15.1'
     steps:
       - checkout
       - restore_cache:
