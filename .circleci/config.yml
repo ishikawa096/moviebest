@@ -97,17 +97,75 @@ jobs:
           working_directory: frontend
       - save_cache:
           name: Yarn パッケージのキャッシュの保存
-          key: yarn-packages--v1-{{ .Branch }}-{{ checksum "frontend/yarn.lock" }}
+          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "frontend/yarn.lock" }}
           paths:
-            - ~/frontend/.cache/yarn
+            - frontend/node_modules
       - run:
           command: yarn test
           name: Run yarn tests
           working_directory: frontend
 
+  push_backend:
+    machine:
+      image: ubuntu-2004:2022.04.1
+    resource_class: arm.medium
+    steps:
+      - checkout
+      - aws-ecr/build-and-push-image:
+          repo: "${APP_PREFIX}-backend"
+          tag: "${CIRCLE_SHA1}"
+          path: ./backend/
+          dockerfile: Dockerfile.production
+          platform: linux/arm64
+
+  push_frontend:
+    machine:
+      image: ubuntu-2004:2022.04.1
+    resource_class: arm.medium
+    steps:
+      - checkout
+      - aws-ecr/build-and-push-image:
+          repo: "${APP_PREFIX}-frontend"
+          tag: "${CIRCLE_SHA1}"
+          path: ./frontend/
+          dockerfile: Dockerfile.production
+          platform: linux/arm64
+
+orbs:
+  aws-ecr: circleci/aws-ecr@8.1.2
+  aws-ecs: circleci/aws-ecs@2.3.0
+
 workflows:
-  build_and_test:
+  test_and_deploy:
     jobs:
-      - jest
       - rubocop
       - rspec
+      - jest
+      - push_backend:
+          requires:
+            - rubocop
+            - rspec
+            - jest
+      - push_frontend:
+          requires:
+            - rubocop
+            - rspec
+            - jest
+      - aws-ecs/deploy-service-update:
+          name: deploy_backend
+          aws-region: AWS_REGION
+          cluster-name: $AWS_CLUSTER
+          family: $ECS_FAMILY_BACKEND
+          service-name: $ECS_SERVICE_BACKEND
+          container-image-name-updates: "container=backend,tag=${CIRCLE_SHA1}"
+          requires:
+            - push_backend
+      - aws-ecs/deploy-service-update:
+          name: deploy_frontend
+          aws-region: AWS_REGION
+          cluster-name: $AWS_CLUSTER
+          family: $ECS_FAMILY_FRONTEND
+          service-name: $ECS_SERVICE_FRONTEND
+          container-image-name-updates: "container=frontend,tag=${CIRCLE_SHA1}"
+          requires:
+            - push_frontend

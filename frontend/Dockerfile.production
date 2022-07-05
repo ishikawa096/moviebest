@@ -1,0 +1,11 @@
+FROM node:16.15.1-slim
+
+WORKDIR /app
+
+RUN apt update -y
+COPY . /app
+RUN yarn build
+
+EXPOSE 3000
+
+CMD ["yarn", "start"]

@@ -2,7 +2,7 @@ version: "3"
 
 volumes:
   mysql_data:
-  vendor_bundle:
+  bundle_data:
 
 services:
   db:
@@ -20,16 +20,18 @@ services:
         ipv4_address: '172.20.0.2'
 
   api:
-    build: ./backend/
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile.dev
     command: bundle exec rails s -b '0.0.0.0'
     tty: true
     stdin_open: true
     volumes:
       - ./backend:/backend:cached
-      - vendor_bundle:/backend/vendor/bundle
-      - /backend/backend/log
-      - /backend/backend/tmp
-      - /backend/backend/.git
+      - bundle_data:/usr/local/bundle
+      - /backend/log
+      - /backend/tmp
+      - /backend/.git
     environment:
       TZ: Asia/Tokyo
     ports:
@@ -41,7 +43,9 @@ services:
         ipv4_address: '172.20.0.3'
 
   front:
-    build: ./frontend/
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile.dev
     volumes:
       - ./frontend:/app
     ports:
