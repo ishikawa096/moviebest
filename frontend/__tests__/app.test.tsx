@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import App from '../pages/sample';
-import { lists } from '../components/lists';
-import client from '../lib/api/client';
+import App from '../src/pages/sample';
+import { lists } from '../src/components/lists';
+import client from '../src/lib/api/client';
 
 const mockValue = { status: 200, data: { data: { attributes: { comment: 'Hello World!' } } } };
 (client.get as jest.Mock) = jest.fn().mockReturnValue(mockValue);
