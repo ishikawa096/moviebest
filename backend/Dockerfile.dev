@@ -24,7 +24,9 @@ RUN apt update && apt install -y --no-install-recommends \
 WORKDIR /backend
 COPY --from=build /usr/local/bundle /usr/local/bundle
 
-RUN groupadd nginx && useradd -g nginx nginx
+RUN mkdir -p tmp/sockets \
+  && groupadd nginx  \
+  && useradd -g nginx nginx
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
