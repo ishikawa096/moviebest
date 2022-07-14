@@ -1,7 +1,7 @@
 class Api::V1::ListController < ApplicationController
   def index
     theme_id = params[:theme_id]
-    lists = List.includes(:movies).where(theme_id: theme_id)
+    lists = List.includes(:movies).where(theme_id:)
     json = ListSerializer.new(lists).serializable_hash
     render json:, status: :ok
   end
@@ -26,6 +26,6 @@ class Api::V1::ListController < ApplicationController
   private
 
   def params_permited
-    params.require(:list).permit(:comment, :numbered, :theme_id, movies:[:title, :position])
+    params.require(:list).permit(:comment, :numbered, :theme_id, movies: %i[title position])
   end
 end

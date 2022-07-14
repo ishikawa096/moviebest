@@ -1,6 +1,8 @@
 class Api::V1::ThemeController < ApplicationController
   def index
-    themes = Theme.joins(:lists).group(:theme_id).order('count(theme_id) desc').limit(15).select(:id, :title)
+    themes = Theme.joins(:lists).group(:theme_id).order('count(theme_id) desc').limit(15).select(
+      :id, :title
+    )
     render json: themes, status: :ok
   end
 

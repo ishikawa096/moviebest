@@ -9,11 +9,7 @@ class ListSerializer
   # attribute :theme_capacity do |object|
   #   "#{object.theme.capacity}"
   # end
-  attribute :movies do |object|
-    object.movies.each do |movie|
-      "#{movie}"
-    end
-  end
+  attribute :movies, &:movies
   # belongs_to :theme
   # has_many :movies
 end
