@@ -1,11 +1,11 @@
+import type { List } from 'interfaces/interface'
 import { useState, useEffect } from 'react'
-import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import client from 'lib/api/client'
-import { List, Theme } from 'interfaces/interface'
+import { isEmptyObject } from 'lib/helpers'
+import { validateList } from 'lib/validates'
 
 interface Props {
-  onSave: (formData: { list: { comment: string, numbered: boolean, themeId: number, movies: Array<{ title: string, position: number }> } }) => void
+  onSave: (formData: { list: List }) => void
 }
 
 const ListForm = ({ onSave }: Props) => {
@@ -14,27 +14,22 @@ const ListForm = ({ onSave }: Props) => {
   const cap = parseInt(router.query.cap as string)
   const themeId = parseInt(router.query.themeId as string)
 
-  const defaultsMovies = [...Array(cap)]
-    .fill(null)
-    .map((_, i) => (
-      { title: '', position: i }
-    ))
+  const [formErrors, setFormErrors] = useState<{} | { title: string }>({})
+
+  const defaultsMovies = [...Array(cap)].fill(null).map((_, i) => ({ title: '', position: i }))
+  const initialMovies = [...defaultsMovies]
 
   const defaultsList = {
     comment: '',
     numbered: false,
     themeId: themeId,
-    movies: [{ title: '', position: 0 }],
+    movies: initialMovies,
   }
-
-  const initialMoviesState = [...defaultsMovies]
   const initialListState = { ...defaultsList }
-  const [movies, setMovies] = useState(initialMoviesState)
   const [list, setList] = useState(initialListState)
 
   useEffect(() => {
     if (!router.isReady) return
-    setMovies(initialMoviesState)
     setList(initialListState)
   }, [router])
 
@@ -42,76 +37,85 @@ const ListForm = ({ onSave }: Props) => {
     const { target } = e
     const { name } = target
     const value = target.value
-    setList({ ...list, [name]: value, movies: movies })
+    setList({ ...list, [name]: value })
   }
 
   const handleInputMovieChange = (e: { target: HTMLInputElement }, i: number) => {
     const { target } = e
     const value = target.value
-    const currMovie = { title: value, position: i }
-    setMovies(movies.map((movie) => (movie.position === i ? currMovie : movie)))
-    setList({ ...list, movies: movies })
+    const newMovie = { title: value, position: i }
+    const newMovies = list.movies.map((m) => (m.position === i ? newMovie : m))
+    setList({ ...list, movies: newMovies })
   }
 
   const handleCheckBoxChange = () => {
-    if (list.numbered) {
-      setList({ ...list, movies: movies, numbered: false })
-    } else {
-      setList({ ...list, movies: movies, numbered: true })
+    switch (list.numbered) {
+      case true:
+        setList({ ...list, numbered: false })
+        break
+      case false:
+        setList({ ...list, numbered: true })
+        break
     }
   }
 
-  const renderErrors = (errors: { comment?: string }) => {
-    const errorMessages = Object.values(errors).join('')
-    // error(errorMessages)
+  const renderErrors = () => {
+    if (isEmptyObject(formErrors)) {
+      return null
+    }
+    return (
+      <div className='errors'>
+        <ul>
+          {Object.values(formErrors).map((formError, i) => (
+            <li key={i}>{formError}</li>
+          ))}
+        </ul>
+      </div>
+    )
   }
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
-    const formData = { list }
-    // const errors = validateList(list)
-    // if (!isEmptyObject(errors)) {
-    //   renderErrors(errors)
-    // } else {
-    onSave(formData)
-    // setListData(initialListState)
-    // }
+    const errors = validateList(list)
+    setFormErrors(errors)
+    if (isEmptyObject(errors)) {
+      const formData = { list }
+      onSave(formData)
+      setList(initialListState)
+    }
   }
 
   // if (id && !list.id) return <listNotFound />
 
   return (
     <>
-      <h1># {title}</h1>
+      <h1 className='text-6xl'># {title}</h1>
+      {renderErrors()}
       <form className='listForm' onSubmit={handleSubmit} name='listForm'>
         <div className='listFormInner'>
-            {[...Array(cap)].fill(null).map((_, i) => (
-              <div className='listFormItem' key={i}>
-                <label htmlFor='movie'>
-                  <strong>映画{movies[i].position + 1}:</strong>
-                  <input type='text' name='title' className='movieInput w-full' onChange={(e) => handleInputMovieChange(e, i)} value={movies[i].title} placeholder='映画タイトルを入力' />
-                </label>
-              </div>
-            ))
-            }
+          {[...Array(cap)].fill(null).map((_, i) => (
+            <div className='listFormItem' key={i}>
+              <label htmlFor='movie'>
+                <strong>映画{list.movies[i].position + 1}:</strong>
+                <input type='text' name='title' className='w-full' onChange={(e) => handleInputMovieChange(e, i)} value={list.movies[i].title} placeholder='映画タイトルを入力' />
+              </label>
+            </div>
+          ))}
           <div className='listFormItem'>
             <label htmlFor='comment'>
               <strong>コメント:</strong>
-              <input type='text' id='comment' name='comment' className='listInput w-full' onChange={handleInputChange} value={list.comment} placeholder='コメントを入力' />
+              <input type='text' name='comment' className='w-full' onChange={handleInputChange} value={list.comment} placeholder='コメントを入力' />
             </label>
           </div>
           <div className='listFormItem'>
             <label htmlFor='numbered'>
               <strong>順位付きリスト</strong>
-              <input type='checkbox' id='numbered' name='numbered' className='listInput' onChange={handleCheckBoxChange} checked={list.numbered} />
+              <input type='checkbox' name='numbered' className='listInput' onChange={handleCheckBoxChange} checked={list.numbered} />
             </label>
           </div>
-          <input type='hidden' id='themeId' name='themeId' />
         </div>
         <div className='form-actions'>
-          <button type='submit' color='blue'>
-            保存
-          </button>
+          <button type='submit'>保存</button>
         </div>
       </form>
     </>

@@ -1,22 +1,24 @@
 import { useState, useEffect, ReactNode } from 'react'
 import { useRouter } from 'next/router'
-import client from 'lib/api/client'
-import { List, Theme } from 'interfaces/interface'
-import { render } from '@testing-library/react'
+import { Theme } from 'interfaces/interface'
+import { isEmptyObject } from 'lib/helpers'
+import { validateTheme } from 'lib/validates'
 
 type Props = {
-  onSave: (formData: { theme: { title: string; capacity: number } }) => void
+  onSave: (formData: { theme: Theme }) => void
 }
 
 const ThemeForm = ({ onSave }: Props) => {
   const router = useRouter()
+
+  const [formErrors, setFormErrors] = useState<{} | { title: string }>({})
 
   const defaultsTheme = {
     title: '',
     capacity: 5,
   }
   const initialThemeState = { ...defaultsTheme }
-  const [theme, setTheme] = useState(initialThemeState)
+  const [theme, setTheme] = useState<{title: string, capacity: number}>(initialThemeState)
 
   useEffect(() => {
     setTheme(initialThemeState)
@@ -31,46 +33,56 @@ const ThemeForm = ({ onSave }: Props) => {
 
   const capMin = 2
   const capMax = 20
-  const options =
-    [...Array(capMax - capMin + 1)].map((_, i) => {
-      return i + capMin
-    })
+  const options = [...Array(capMax - capMin + 1)].map((_, i) => {
+    return i + capMin
+  })
 
-  const renderErrors = (errors: { comment?: string }) => {
-    const errorMessages = Object.values(errors).join('')
-    // error(errorMessages)
+  const renderErrors = () => {
+    if (isEmptyObject(formErrors)) {
+      return null
+    }
+    return (
+      <div className='errors'>
+        <ul>
+          {Object.values(formErrors).map((formError, i) => (
+            <li key={i}>{formError}</li>
+          ))}
+        </ul>
+      </div>
+    )
   }
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
-    const formData = { theme }
-    // const errors = validateList(list)
-    // if (!isEmptyObject(errors)) {
-    //   renderErrors(errors)
-    // } else {
-    onSave(formData)
-    setTheme(initialThemeState)
-    // }
+    const errors = validateTheme(theme)
+    setFormErrors(errors)
+    if (isEmptyObject(errors)) {
+      const formData = { theme }
+      onSave(formData)
+    }
   }
-
-  // if (id && !list.id) return <listNotFound />
 
   return (
     <>
       <form className='listForm' onSubmit={handleSubmit} name='listForm'>
         <div className='listFormInner'>
           <div className='listFormItem'>
-            <label htmlFor='themeTitle'>
-              <strong>お題:</strong>
-              <input type='text' id='themeTitle' name='title' className='ThemeInput w-full' onChange={handleInputChange} value={theme.title} placeholder='お題を入力' required />
-            </label>
+            <>
+              {renderErrors()}
+              <label htmlFor='themeTitle'>
+                <strong>お題:</strong>
+                <input type='text' name='title' className='w-full' onChange={handleInputChange} value={theme.title} placeholder='お題を入力' autoFocus />
+              </label>
+            </>
           </div>
           <div className='listFormItem'>
             <label htmlFor='themeTitle'>
               <strong>作品数</strong>
-              <select id='themeCapacity' name='capacity' className='ThemeInput w-full' onChange={handleInputChange} value={theme.capacity} required >
+              <select name='capacity' className='w-full' onChange={handleInputChange} value={theme.capacity} >
                 {options.map((n) => (
-                  <option value={n} key={n}>{n}</option>
+                  <option value={n} key={n}>
+                    {n}
+                  </option>
                 ))}
               </select>
             </label>
@@ -78,7 +90,7 @@ const ThemeForm = ({ onSave }: Props) => {
         </div>
         <div className='form-actions'>
           <button type='submit' color='blue'>
-            このお題を使う
+            作成
           </button>
         </div>
       </form>

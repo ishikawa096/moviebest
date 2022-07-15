@@ -1,27 +1,28 @@
 export interface Theme {
-  id: number
+  id?: number
   title: string
-  capacity?: number
-  createdAt: string
-  updatedAt: string
+  capacity: number
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface Movie {
-  id: number
+  id?: number
   title: string
-  position?: number
-  listId: number
-  createdAt: string
-  updatedAt: string
+  position: number
+  listId?: number
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface List {
-  id: number
-  comment?: string
+  id?: number
+  comment: string
   numbered: boolean
-  createdAt: string
-  updatedAt: string
-  movies?: Array<Movie>
+  createdAt?: string
+  updatedAt?: string
+  movies: Array<Movie>
+  themeId: number
 }
 
 export interface user {
