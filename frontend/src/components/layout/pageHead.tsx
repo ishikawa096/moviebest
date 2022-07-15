@@ -28,7 +28,8 @@ const PageHead: NextPage<HeadProps> = ({ title, thumbnailUrl, description }) => 
       <title>{title}</title>
       <meta property="og:title" content={title}/>
       <meta property="og:image" content={thumbnailUrl}/>
-      <meta property="og:description" content={description}/>
+      <meta property="og:description" content={description} />
+      <link rel='icon' href='/favicon.ico' />
     </Head>
   )
 }
