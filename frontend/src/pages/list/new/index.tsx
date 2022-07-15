@@ -1,9 +1,11 @@
-import { useState, useEffect, FunctionComponent } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import PageHead from 'components/layout/pageHead'
-import client from 'lib/api/client'
-// import ListForm from 'components/ListForm'
+import axios from 'axios'
+import type { List } from 'interfaces/interface'
+import { handleAxiosError } from 'lib/helpers'
+import { toastSuccess } from 'lib/toast'
 
 const ListForm = dynamic(() => import('components/listForm'), {
   ssr: false,
@@ -12,29 +14,24 @@ const ListForm = dynamic(() => import('components/listForm'), {
 const NewList = () => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
-
   useEffect(() => {
     if (router.isReady) { setIsLoading(false) }
   }, [router])
 
-  const createList = async (newData: { list: { comment: string, numbered: boolean, themeId: number, movies: Array<{ title: string, position: number}> } }) => {
+  const createList = async (newData: { list: List }) => {
     try {
       setIsLoading(true)
-      const response = await client.post('/list', {
-        // theme: newData.theme,
-        list: newData.list,
-        // theme: JSON.stringify(newList.theme),
-        // headers: {
-        //   Accept: 'application/json',
-        //   'Content-Type': 'application/json',
-        // },
+      const response = await axios.post('/api/v1/client', {
+        data: newData.list,
+        endpoint: 'list',
       })
       if (response.status !== 200) throw Error(response.statusText)
 
       const savedList = response.data
+      toastSuccess('リストが作成されました')
       router.push(`/list/${savedList.id}`)
-    } catch (error) {
-      // console.log(error);
+    } catch (error: any) {
+      handleAxiosError(error);
     }
   }
 
@@ -43,7 +40,7 @@ const NewList = () => {
       {isLoading ? (<p>Now Loading...</p>) : (
         <>
           <PageHead title='新規リスト作成' />
-          <h2>new form</h2>
+          <h2>新しいリストを作る</h2>
           <ListForm onSave={createList} />
         </>
       )}

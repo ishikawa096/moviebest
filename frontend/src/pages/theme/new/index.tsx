@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react'
+import type { Theme } from 'interfaces/interface'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import PageHead from 'components/layout/pageHead'
-import client from 'lib/api/client'
+import axios from 'axios'
+import { handleAxiosError } from 'lib/helpers'
+import { toastSuccess } from 'lib/toast'
 
 const ThemeForm = dynamic(() => import('components/themeForm'), {
   ssr: false,
@@ -11,19 +13,23 @@ const ThemeForm = dynamic(() => import('components/themeForm'), {
 const NewTheme = () => {
   const router = useRouter()
 
-  const createTheme = async (newData: { theme: { title: string, capacity: number } }) => {
+  const createTheme = async (newData: { theme: Theme }) => {
     try {
-      const response = await client.post('/theme', {
-        theme: newData.theme,
+      const response = await axios.post('/api/v1/client', {
+        data: newData.theme,
+        endpoint: 'theme'
       })
       if (response.status !== 200) throw Error(response.statusText)
       const savedTheme = response.data.data.attributes
+      toastSuccess('お題が作成されました')
       router.push({
         pathname: '/list/new',
         query: { themeId: savedTheme.id, title: savedTheme.title, cap: savedTheme.capacity },
       })
     } catch (error) {
-      // console.log(error)
+      if (error instanceof Error) {
+        handleAxiosError(error)
+      }
     }
   }
 
