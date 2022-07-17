@@ -17,7 +17,7 @@ const Home = (props: Props) => {
       <ul>
         {themes.map((theme) => (
           <li key={theme.id}>
-            <Link href={`/theme/${encodeURIComponent(theme.id)}`}>
+            <Link href={`/themes/${encodeURIComponent(theme.id)}`}>
               <a>{theme.title}</a>
             </Link>
           </li>
@@ -37,7 +37,7 @@ const Home = (props: Props) => {
 
         <ThemesPool />
 
-        <Link href={'/theme/new'}>
+        <Link href={'/themes/new'}>
           <a><h2>新しいお題を作る</h2></a>
         </Link>
 
@@ -82,7 +82,7 @@ const Home = (props: Props) => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const response = await client.get('/theme')
+  const response = await client.get('/themes')
   const data = response.data
   return {
     props: { themes: data },

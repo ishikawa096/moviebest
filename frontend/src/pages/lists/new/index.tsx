@@ -23,13 +23,14 @@ const NewList = () => {
       setIsLoading(true)
       const response = await axios.post('/api/v1/client', {
         data: newData.list,
-        endpoint: 'list',
+        endpoint: 'lists',
+        key: 'list',
       })
       if (response.status !== 200) throw Error(response.statusText)
 
       const savedList = response.data
       toastSuccess('リストが作成されました')
-      router.push(`/list/${savedList.id}`)
+      router.push(`/lists/${savedList.id}`)
     } catch (error: any) {
       handleAxiosError(error);
     }

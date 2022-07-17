@@ -17,13 +17,14 @@ const NewTheme = () => {
     try {
       const response = await axios.post('/api/v1/client', {
         data: newData.theme,
-        endpoint: 'theme'
+        endpoint: 'themes',
+        key: 'theme',
       })
       if (response.status !== 200) throw Error(response.statusText)
       const savedTheme = response.data.data.attributes
       toastSuccess('お題が作成されました')
       router.push({
-        pathname: '/list/new',
+        pathname: '/lists/new',
         query: { themeId: savedTheme.id, title: savedTheme.title, cap: savedTheme.capacity },
       })
     } catch (error) {

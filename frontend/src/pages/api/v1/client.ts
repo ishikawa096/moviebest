@@ -10,13 +10,12 @@ export const client = axios.create({
 })
 
 export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { data } = req.body
-  const { endpoint } = req.body
+  const { data, endpoint, key } = req.body
   switch (req.method) {
     case 'POST':
       try {
         const postResponse = await client.post(`/${endpoint}`, {
-          [endpoint]: data
+          [key]: data
         })
         if (postResponse.status === 200) {
           res.status(200).json(postResponse.data)

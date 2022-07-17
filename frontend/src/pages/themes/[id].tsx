@@ -26,7 +26,7 @@ const ThemePage = (props: Props) => {
       <h1>お題タイトル: #{theme.title}</h1>
       <Link
         href={{
-          pathname: '/list/new',
+          pathname: '/lists/new',
           query: { themeId: theme.id, title: theme.title, cap: theme.capacity },
         }}
       >
@@ -49,10 +49,10 @@ const ThemePage = (props: Props) => {
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   try {
     const id = context.params?.id
-    const themeRes = await client.get(`/theme/${id}`)
+    const themeRes = await client.get(`/themes/${id}`)
     const theme = themeRes.data.data.attributes
 
-    const listsRes = await client.get('/list', {
+    const listsRes = await client.get('/lists', {
       params: {
         themeId: theme.id,
       },

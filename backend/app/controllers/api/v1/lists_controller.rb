@@ -1,4 +1,4 @@
-class Api::V1::ListController < ApplicationController
+class Api::V1::ListsController < ApplicationController
   def index
     theme_id = params[:theme_id]
     lists = List.includes(:movies).where(theme_id:)

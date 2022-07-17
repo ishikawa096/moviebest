@@ -1,4 +1,4 @@
-class Api::V1::ThemeController < ApplicationController
+class Api::V1::ThemesController < ApplicationController
   def index
     themes = Theme.joins(:lists).group(:theme_id).order('count(theme_id) desc').limit(15).select(
       :id, :title
