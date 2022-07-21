@@ -1,10 +1,12 @@
-import type { Theme } from 'interfaces/interface'
+import type { CreateThemeParams, Theme } from 'interfaces/interface'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import PageHead from 'components/layout/pageHead'
 import axios from 'axios'
 import { handleAxiosError } from 'lib/helpers'
 import { toastSuccess } from 'lib/toast'
+import { AuthContext } from 'pages/_app'
+import { useContext } from 'react'
 
 const ThemeForm = dynamic(() => import('components/themeForm'), {
   ssr: false,
@@ -12,8 +14,9 @@ const ThemeForm = dynamic(() => import('components/themeForm'), {
 
 const NewTheme = () => {
   const router = useRouter()
+  const { isSignedIn } = useContext(AuthContext)
 
-  const createTheme = async (newData: { theme: Theme }) => {
+  const createTheme = async (newData: { theme: CreateThemeParams }) => {
     try {
       const response = await axios.post('/api/v1/client', {
         data: newData.theme,
@@ -25,7 +28,7 @@ const NewTheme = () => {
       toastSuccess('お題が作成されました')
       router.push({
         pathname: '/lists/new',
-        query: { themeId: savedTheme.id, title: savedTheme.title, cap: savedTheme.capacity },
+        query: { id: savedTheme.id },
       })
     } catch (error) {
       if (error instanceof Error) {
@@ -33,6 +36,8 @@ const NewTheme = () => {
       }
     }
   }
+
+  if (!isSignedIn) return <p>ログインしてください</p>
 
   return (
     <>
