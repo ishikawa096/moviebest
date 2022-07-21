@@ -2,6 +2,7 @@ class Form::ListRegistration < Form::Base
   attribute :comment, :string
   attribute :numbered, :boolean
   attribute :theme_id, :integer
+  attribute :user_id, :integer
   attribute :movies
 
   def params

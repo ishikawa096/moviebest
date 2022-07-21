@@ -1,14 +1,14 @@
 class Api::V1::ListsController < ApplicationController
+  # rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
+
   def index
-    theme_id = params[:theme_id]
-    lists = List.includes(:movies).where(theme_id:)
+    lists = List.includes(:movies).where(params[:theme_id])
     json = ListSerializer.new(lists).serializable_hash
     render json:, status: :ok
   end
 
   def show
-    id = params[:id]
-    list = List.find(id)
+    list = List.find(params[:id])
     json = ListSerializer.new(list).serializable_hash
     render json:, status: :ok
   end
@@ -26,6 +26,11 @@ class Api::V1::ListsController < ApplicationController
   private
 
   def params_permited
-    params.require(:list).permit(:comment, :numbered, :theme_id, movies: %i[title position])
+    params.require(:list).permit(:comment, :numbered, :theme_id,
+                                 movies: %i[title position]).merge(user_id: current_user.id)
   end
+
+  # def render_not_found
+  #   render json: { message: 'リストが見つかりませんでした' }, status: :not_found
+  # end
 end

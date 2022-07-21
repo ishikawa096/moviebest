@@ -1,18 +1,19 @@
-import type { List } from 'interfaces/interface'
+import type { createListParams, Theme } from 'interfaces/interface'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { isEmptyObject } from 'lib/helpers'
 import { validateList } from 'lib/validates'
 
 interface Props {
-  onSave: (formData: { list: List }) => void
+  onSave: (formData: { list: createListParams }) => void
+  theme: Theme
 }
 
-const ListForm = ({ onSave }: Props) => {
+const ListForm = ({ onSave, theme }: Props) => {
   const router = useRouter()
-  const title = router.query.title
-  const cap = parseInt(router.query.cap as string)
-  const themeId = parseInt(router.query.themeId as string)
+  const title = theme.title
+  const cap = theme.capacity
+  const themeId = theme.id
 
   const [formErrors, setFormErrors] = useState<{} | { title: string }>({})
 
@@ -85,6 +86,7 @@ const ListForm = ({ onSave }: Props) => {
     }
   }
 
+  // if (!theme.id) return <p>theme not found</p>
   // if (id && !list.id) return <listNotFound />
 
   return (
