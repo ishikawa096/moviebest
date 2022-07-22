@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe 'Api::V1::Lists', type: :request do
+RSpec.describe 'Api::V1::Themes', type: :request do
   before do
-    create(:list, :with_movies)
-    get api_v1_lists_path
+    create(:theme)
+    get api_v1_themes_path
   end
 
   it 'レスポンスに成功する' do
