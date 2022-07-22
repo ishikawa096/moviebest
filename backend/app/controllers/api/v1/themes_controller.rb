@@ -1,9 +1,16 @@
 class Api::V1::ThemesController < ApplicationController
+  POPULAR_THEMES_MAX_COUNT = 15
+
   def index
-    themes = Theme.joins(:lists).group(:theme_id).order('count(theme_id) desc').limit(15).select(
+    themes = Theme.all.select(
       :id, :title
     )
-    render json: themes, status: :ok
+    json = themes.as_json.map do |t|
+      t.deep_transform_keys! do |key|
+        key.camelize(:lower)
+      end
+    end
+    render json:, status: :ok
   end
 
   def show
@@ -20,6 +27,16 @@ class Api::V1::ThemesController < ApplicationController
     else
       render json: theme.errors, status: :unprocessable_entity
     end
+  end
+
+  def popular
+    themes = Theme
+             .joins(:lists)
+             .group(:theme_id)
+             .order('count(theme_id) desc')
+             .limit(POPULAR_THEMES_MAX_COUNT)
+             .select(:id, :title)
+    render json: themes, status: :ok
   end
 
   private
