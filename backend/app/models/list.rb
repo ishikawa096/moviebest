@@ -11,7 +11,10 @@ class List < ApplicationRecord
   validate :number_of_movies_match_theme_capacity
 
   def number_of_movies_match_theme_capacity
-    errors.add(:movies, "を#{theme.capacity}つ入力してください") if theme.capacity != movies.size
+    return unless theme.capacity != movies.size
+
+    errors.add(:movies,
+               "を#{theme.capacity}つ入力してください(現在：#{movies.size})")
   end
 
   class << self
