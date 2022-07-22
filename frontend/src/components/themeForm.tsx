@@ -1,41 +1,13 @@
-import { useState, useEffect, ReactNode } from 'react'
-import { useRouter } from 'next/router'
-import { Theme } from 'interfaces/interface'
+import { CreateThemeParams } from 'interfaces/interface'
 import { isEmptyObject } from 'lib/helpers'
-import { validateTheme } from 'lib/validates'
+import { useThemeForm } from './useThemeForm'
 
 type Props = {
-  onSave: (formData: { theme: Theme }) => void
+  onSave: (formData: { theme: CreateThemeParams }) => void
 }
 
 const ThemeForm = ({ onSave }: Props) => {
-  const router = useRouter()
-
-  const [formErrors, setFormErrors] = useState<{} | { title: string }>({})
-
-  const defaultsTheme = {
-    title: '',
-    capacity: 5,
-  }
-  const initialThemeState = { ...defaultsTheme }
-  const [theme, setTheme] = useState<{title: string, capacity: number}>(initialThemeState)
-
-  useEffect(() => {
-    setTheme(initialThemeState)
-  }, [])
-
-  const handleInputChange = (e: { target: HTMLInputElement | HTMLSelectElement }) => {
-    const { target } = e
-    const { name } = target
-    const value = target.value
-    setTheme({ ...theme, [name]: value })
-  }
-
-  const capMin = 2
-  const capMax = 20
-  const options = [...Array(capMax - capMin + 1)].map((_, i) => {
-    return i + capMin
-  })
+  const { theme, formErrors, options, handleInputChange, handleSubmit } = useThemeForm(onSave)
 
   const renderErrors = () => {
     if (isEmptyObject(formErrors)) {
@@ -50,16 +22,6 @@ const ThemeForm = ({ onSave }: Props) => {
         </ul>
       </div>
     )
-  }
-
-  const handleSubmit = (e: { preventDefault: () => void }) => {
-    e.preventDefault()
-    const errors = validateTheme(theme)
-    setFormErrors(errors)
-    if (isEmptyObject(errors)) {
-      const formData = { theme }
-      onSave(formData)
-    }
   }
 
   return (
@@ -78,7 +40,7 @@ const ThemeForm = ({ onSave }: Props) => {
           <div className='listFormItem'>
             <label htmlFor='themeTitle'>
               <strong>作品数</strong>
-              <select name='capacity' className='w-full' onChange={handleInputChange} value={theme.capacity} >
+              <select name='capacity' className='w-full' onChange={handleInputChange} value={theme.capacity}>
                 {options.map((n) => (
                   <option value={n} key={n}>
                     {n}
