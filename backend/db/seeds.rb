@@ -1,32 +1,21 @@
-Theme.create!(
-  id: 1,
-  title: '90年代映画ベスト3',
-  capacity: 3
-)
+themes = ActiveSupport::JSON.decode(File.read('db/seeds/themes.json'))
+themes.each do |record|
+  Theme.create!(record)
+end
 
-List.create!(
-  theme_id: 1,
-  comment: 'テスト',
-  numbered: false,
-  user_id: 1
-)
+users = ActiveSupport::JSON.decode(File.read('db/seeds/users.json'))
+users.each do |record|
+  User.create!(record)
+end
 
-movies = [{
-  title: 'トレインスポッティング',
-  position: 1,
-  list_id: 1
-},
-{
-  title: 'ファーゴ',
-  position: 2,
-  list_id: 1
-},
-{
-  title: 'ファイト・クラブ',
-  position: 3,
-  list_id: 1
-}]
-
-movies.each do |record|
-  Movie.create!(record)
+lists = ActiveSupport::JSON.decode(File.read('db/seeds/lists.json'))
+lists.each do |record|
+  list = List.new(
+        comment: record["comment"],
+        numbered: record["numbered"]
+      )
+  Theme.find(record["theme_id"]).lists << list
+  User.find(record["user_id"]).lists << list
+  list.movies.build(record["movies"])
+  list.save!
 end

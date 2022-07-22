@@ -1,0 +1,8 @@
+[
+  {
+    "id": 1,
+    "name": "ゲスト",
+    "email": "guest@example.com",
+    "password": "guestloginpassword"
+  }
+]
