@@ -8,7 +8,7 @@ class Api::V1::ListsController < ApplicationController
 
   def show
     list = List.includes(:user, :theme, :movies).find(params[:id])
-    json = list.as_json(include: [:theme, :movies, user: { only: %i[name id] }])
+    json = list.as_json(include: [:theme, :movies, { user: { only: %i[name id] } }])
     render json:, status: :ok
   end
 
@@ -25,8 +25,10 @@ class Api::V1::ListsController < ApplicationController
   private
 
   def params_permited
-    params.require(:list).permit(:comment, :numbered, :theme_id,
-                                 movies: %i[title position]).merge(user_id: current_user.id)
+    params
+      .require(:list)
+      .permit(:comment, :numbered, :theme_id, movies: %i[title position])
+      .merge(user_id: current_user.id)
   end
 
   # def render_not_found

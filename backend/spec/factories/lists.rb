@@ -14,7 +14,7 @@ FactoryBot.define do
         list.movies << build_list(
           :movie,
           evaluator.theme_capacity,
-          list: list
+          list:
         )
       end
     end

@@ -10,7 +10,8 @@ class Api::V1::ThemesController < ApplicationController
 
   def show
     theme = Theme.includes(lists: %i[user movies]).find(params[:id])
-    json = theme.as_json(include: { lists: { include: [:movies, user: { only: %i[name id] }] } })
+    json = theme.as_json(include: { lists: { include: [:movies,
+                                                       { user: { only: %i[name id] } }] } })
     render json:, status: :ok
   end
 
