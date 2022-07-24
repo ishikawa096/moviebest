@@ -1,6 +1,6 @@
 import type { GetServerSidePropsContext } from 'next'
 import Link from 'next/link'
-import { client } from 'pages/api/v1/client'
+import client from 'lib/api/client'
 import { List, Theme, User } from 'interfaces/interface'
 
 interface Props {
@@ -9,15 +9,7 @@ interface Props {
 
 const UserPage = (props: Props) => {
   const user = props.user
-  const lists = user.lists //.map((list) => list.attributes)
-  // .map((list) => {
-  //   return {
-  //     id: list.id,
-  //     comment: list.comment,
-  //     numbered: list.numbered,
-  //     movies: list.movies,
-  //   }
-  // })
+  const lists = user.lists
 
   return (
     <div>
@@ -49,13 +41,6 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     const id = context.params?.id
     const res = await client.get(`/users/${id}`)
     const user = res.data
-
-    // const listsRes = await client.get('/lists', {
-    //   params: {
-    //     userId: id,
-    //   },
-    // })
-    // const lists = listsRes.data.data
 
     return { props: { user: user } }
   } catch (err) {
