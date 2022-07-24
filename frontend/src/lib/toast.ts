@@ -10,6 +10,7 @@ const defaults = {
   draggable: true,
   progress: undefined,
   transition: Flip,
+  theme: 'colored',
 }
 
 export const toastSuccess = (message: string) => {
