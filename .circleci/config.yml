@@ -17,7 +17,7 @@ jobs:
           working_directory: backend
       - run:
           name: bundle install
-          command: bundle check || bundle install -j4
+          command: bundle check || bundle install -j4 --clean
           working_directory: backend
       - run:
           name: Run rubocop
@@ -43,7 +43,7 @@ jobs:
           RAILS_ENV: test
           TZ: Japan
       - image: 'cimg/mysql:8.0'
-        command: '--default-authentication-plugin=mysql_native_password'
+        command: '--authentication_policy=mysql_native_password'
         environment:
           MYSQL_USER: test
           MYSQL_ROOT_PASSWORD: password
@@ -64,8 +64,16 @@ jobs:
           working_directory: backend
       - run:
           name: bundle install
-          command: bundle check || bundle install -j4
+          command: bundle check || bundle install -j4 --clean
           working_directory: backend
+      - run:
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.6.1
+      - run:
+          name: Wait for db
+          command: dockerize -wait tcp://db:3306 -timeout 30s
       - run:
           command: bundle exec rails db:schema:load --trace
           name: Database setup
