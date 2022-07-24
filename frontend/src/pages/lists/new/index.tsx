@@ -20,12 +20,12 @@ interface State {
 const NewList = () => {
   const router = useRouter()
   const themeId = router.query.id
-
   const [themeState, setThemeState] = useState<State>({ state: { isLoading: true } })
+
   const fetchTheme = async () => {
     const res = await client.get(`/themes/${themeId}`)
     if (res.status !== 200) throw Error(res.statusText)
-    const theme = res.data.data.attributes
+    const theme = res.data
     setThemeState({ state: { isLoading: false, theme: theme } })
   }
 
@@ -35,7 +35,7 @@ const NewList = () => {
     }
   }, [router])
 
-  const { setLoading, isSignedIn, setIsSignedIn, currentUser } = useContext(AuthContext)
+  const { isSignedIn } = useContext(AuthContext)
   if (!isSignedIn) return <p>ログインしてください</p>
 
   const createList = async (newData: { list: createListParams }) => {

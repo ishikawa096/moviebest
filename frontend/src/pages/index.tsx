@@ -14,7 +14,7 @@ const Home = (props: Props) => {
       <ul>
         {themes.map((theme) => (
           <li key={theme.id}>
-            <Link href={`/themes/${encodeURIComponent(theme.id)}`}>
+            <Link href={`/themes/${theme.id}`}>
               <a>{theme.title}</a>
             </Link>
           </li>

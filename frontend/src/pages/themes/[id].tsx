@@ -1,25 +1,15 @@
 import type { GetServerSidePropsContext } from 'next'
 import Link from 'next/link'
 import { client } from 'pages/api/v1/client'
-import { List, Theme } from 'interfaces/interface'
+import { List, Theme, User } from 'interfaces/interface'
 
 interface Props {
-  lists: Array<{ id: number; type: string; attributes: List }>
-  theme: Theme
+  theme: Theme & { lists: Array<List & { user: User }> }
 }
 
 const ThemePage = (props: Props) => {
-  const lists = props.lists
-    .map((list) => list.attributes)
-    .map((list) => {
-      return {
-        id: list.id,
-        comment: list.comment,
-        numbered: list.numbered,
-        movies: list.movies,
-      }
-    })
   const theme = props.theme
+  const lists = theme.lists
 
   return (
     <div>
@@ -27,7 +17,7 @@ const ThemePage = (props: Props) => {
       <Link
         href={{
           pathname: '/lists/new',
-          query: { themeId: theme.id, title: theme.title, cap: theme.capacity },
+          query: { id: theme.id },
         }}
       >
         <a>このお題で新規作成</a>
@@ -35,7 +25,8 @@ const ThemePage = (props: Props) => {
       <div>
         {lists.map((list) => (
           <div key={list.id}>
-            {list.movies?.map((movie) => (
+            <p>作成者：<Link href={`/users/${list.userId}`}><a>{list.user.name}</a></Link>さん</p>
+            {list.movies.map((movie) => (
               <div key={movie.id}>{movie.title}</div>
             ))}
             <p>{list.comment}</p>
@@ -49,17 +40,10 @@ const ThemePage = (props: Props) => {
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   try {
     const id = context.params?.id
-    const themeRes = await client.get(`/themes/${id}`)
-    const theme = themeRes.data.data.attributes
+    const res = await client.get(`/themes/${id}`)
+    const theme = res.data
 
-    const listsRes = await client.get('/lists', {
-      params: {
-        themeId: theme.id,
-      },
-    })
-    const lists = listsRes.data.data
-
-    return { props: { theme: theme, lists: lists } }
+    return { props: { theme: theme } }
 
   } catch (err) {
     if (err instanceof Error) {

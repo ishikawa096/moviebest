@@ -3,13 +3,12 @@ class Api::V1::ListsController < ApplicationController
 
   def index
     lists = List.includes(:movies).where(params[:theme_id])
-    json = ListSerializer.new(lists).serializable_hash
-    render json:, status: :ok
+    render json: lists, status: :ok
   end
 
   def show
-    list = List.find(params[:id])
-    json = ListSerializer.new(list).serializable_hash
+    list = List.includes(:user, :theme, :movies).find(params[:id])
+    json = list.as_json(include: [:theme, :movies, user: { only: %i[name id] }])
     render json:, status: :ok
   end
 

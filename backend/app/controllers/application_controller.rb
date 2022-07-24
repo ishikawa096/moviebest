@@ -6,11 +6,11 @@ class ApplicationController < ActionController::API
   # skip_before_action :verify_authenticity_token
   # protect_from_forgery with: :exception
   helper_method :current_user, :user_signed_in?
-  before_action :underscore_params!
+  # before_action :underscore_params!
 
-  private
+  # private
 
-  def underscore_params!
-    params.deep_transform_keys!(&:underscore)
-  end
+  # def underscore_params!
+  #   params.deep_transform_keys!(&:underscore)
+  # end
 end

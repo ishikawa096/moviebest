@@ -5,25 +5,19 @@ class Api::V1::ThemesController < ApplicationController
     themes = Theme.all.select(
       :id, :title
     )
-    json = themes.as_json.map do |t|
-      t.deep_transform_keys! do |key|
-        key.camelize(:lower)
-      end
-    end
-    render json:, status: :ok
+    render json: themes, status: :ok
   end
 
   def show
-    theme = Theme.find(params[:id])
-    json = ThemeSerializer.new(theme).serializable_hash
+    theme = Theme.includes(lists: %i[user movies]).find(params[:id])
+    json = theme.as_json(include: { lists: { include: [:movies, user: { only: %i[name id] }] } })
     render json:, status: :ok
   end
 
   def create
     theme = Theme.new(theme_params)
     if theme.save
-      json = ThemeSerializer.new(theme).serializable_hash
-      render json:, status: :ok
+      render json: theme, status: :ok
     else
       render json: theme.errors, status: :unprocessable_entity
     end

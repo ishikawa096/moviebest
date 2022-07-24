@@ -13,6 +13,7 @@
     "@tailwindcss/forms": "^0.5.2",
     "autoprefixer": "^10.4.7",
     "axios": "^0.27.2",
+    "axios-case-converter": "^0.9.0",
     "next": "12.1.6",
     "nookies": "^2.5.2",
     "postcss": "^8.4.14",
