@@ -1,7 +1,7 @@
 import type { GetStaticProps } from 'next'
 import Link from 'next/link'
 import PageHead from 'components/layout/pageHead'
-import { client } from './api/v1/client'
+import { client } from 'pages/api/v1/client'
 
 interface Props {
   themes: Array<{ id: number; title: string }>

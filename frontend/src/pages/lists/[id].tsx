@@ -1,6 +1,6 @@
 import type { GetServerSidePropsContext } from 'next'
 import Link from 'next/link'
-import client from 'lib/api/client'
+import { client } from 'pages/api/v1/client'
 import { List, Theme, User } from 'interfaces/interface'
 
 interface Props {

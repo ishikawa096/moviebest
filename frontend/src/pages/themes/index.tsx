@@ -1,6 +1,6 @@
 import type { Theme } from 'interfaces/interface'
 import type { GetStaticProps } from 'next'
-import client from 'lib/api/client'
+import { client } from 'pages/api/v1/client'
 import Link from 'next/link'
 
 interface Props {

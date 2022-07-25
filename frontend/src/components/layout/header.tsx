@@ -4,7 +4,6 @@ import { useRouter } from 'next/router'
 import { AuthContext } from 'pages/_app'
 import { signOut } from 'lib/api/auth'
 import { toastSuccess, toastError } from 'lib/toast'
-import { destroyCookies } from 'lib/api/authHelper'
 
 const Header = () => {
   const { loading, isSignedIn, setIsSignedIn } = useContext(AuthContext)
@@ -15,12 +14,9 @@ const Header = () => {
       const res = await signOut()
 
       if (res.data.success === true) {
-        destroyCookies()
-
         setIsSignedIn(false)
-        router.push('/')
-
         toastSuccess('ログアウトしました')
+        router.push('/')
       } else {
         toastError('Failed in sign out')
       }

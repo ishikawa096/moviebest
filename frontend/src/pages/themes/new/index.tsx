@@ -1,8 +1,8 @@
 import type { CreateThemeParams, Theme } from 'interfaces/interface'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
+import axios from 'axios'
 import PageHead from 'components/layout/pageHead'
-import client from 'lib/api/client'
 import { handleAxiosError } from 'lib/helpers'
 import { toastSuccess } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
@@ -18,8 +18,10 @@ const NewTheme = () => {
 
   const createTheme = async (newData: { theme: CreateThemeParams }) => {
     try {
-      const response = await client.post('/themes', {
-        theme: newData.theme,
+      const response = await axios.post('/api/v1/client', {
+        data: newData.theme,
+        endpoint: 'themes',
+        key: 'theme',
       })
       if (response.status !== 200) throw Error(response.statusText)
       const savedTheme = response.data

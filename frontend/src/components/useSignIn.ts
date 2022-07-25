@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import { signIn } from 'lib/api/auth'
 import type { SignInParams } from 'interfaces/interface'
 import { toastSuccess, toastError } from 'lib/toast'
-import { setCookies } from 'lib/api/authHelper'
 import { AuthContext } from 'pages/_app'
 
 export const useSignIn = () => {
@@ -43,13 +42,10 @@ export const useSignIn = () => {
     try {
       const res = await signIn(params)
       if (res.status === 200) {
-        setCookies(res)
-
         setIsSignedIn(true)
         setCurrentUser(res.data.data)
-
-        router.push('/')
         toastSuccess('ログインしました')
+        router.push('/')
       } else {
         toastError('emailかパスワードが違います')
       }

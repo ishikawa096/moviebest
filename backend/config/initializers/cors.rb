@@ -8,7 +8,7 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     if Rails.env.production?
-      origins ['https://best-eiga.com']
+      origins '*'
     else
       origins ['http://localhost:3000', 'http://front:3000']
     end

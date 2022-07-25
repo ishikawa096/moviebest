@@ -4,7 +4,6 @@ import { AuthContext } from './_app'
 import { signUp } from 'lib/api/auth'
 import type { SignUpParams } from 'interfaces/interface'
 import { toastSuccess, toastError } from 'lib/toast'
-import { setCookies } from 'lib/api/authHelper'
 
 const SignUp: React.FC = () => {
   const router = useRouter()
@@ -28,16 +27,12 @@ const SignUp: React.FC = () => {
 
     try {
       const res = await signUp(params)
-      console.log(res)
 
       if (res.status === 200) {
-        setCookies(res)
         setIsSignedIn(true)
         setCurrentUser(res.data.data)
-
-        router.push('/')
-
         toastSuccess('ログインしました')
+        router.push('/')
       } else {
         toastError('emailかパスワードが違います')
       }

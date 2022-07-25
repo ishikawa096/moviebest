@@ -1,34 +1,21 @@
-import client from 'lib/api/client'
-import { parseCookies } from "nookies"
+import axios from 'axios'
+import { parseCookies } from 'nookies'
 import { SignUpParams, SignInParams } from 'interfaces/interface'
 
 export const signUp = (params: SignUpParams) => {
-  return client.post('auth', params)
+  return axios.post('/api/v1/auth/signup', params)
 }
 
 export const signIn = (params: SignInParams) => {
-  return client.post('auth/sign_in', params)
+  return axios.post('/api/v1/auth/signin', params)
 }
 
 export const signOut = () => {
-  const cookies = parseCookies()
-  return client.delete('auth/sign_out', {
-    headers: {
-      'access-token': cookies._access_token,
-      client: cookies._client,
-      uid: cookies._uid,
-    },
-  })
+  return axios.get('/api/v1/auth/signout')
 }
 
 export const getCurrentUser = () => {
   const cookies = parseCookies()
   if (!cookies._access_token || !cookies._client || !cookies._uid) return
-  return client.get('/auth/sessions', {
-    headers: {
-      'access-token': cookies._access_token,
-      client: cookies._client,
-      uid: cookies._uid,
-    },
-  })
+  return axios.get('/api/v1/auth/sessions')
 }
