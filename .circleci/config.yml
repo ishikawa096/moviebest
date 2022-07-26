@@ -132,6 +132,12 @@ jobs:
     resource_class: arm.medium
     steps:
       - checkout
+      - run:
+          name: next env setup
+          command: |
+            touch ./frontend/.env.production.local
+            echo "BACKEND_API_HOST=$BACKEND_API_HOST" > ./frontend/.env.production.local
+            echo "BACKEND_API_KEY=$BACKEND_API_KEY" >> ./frontend/.env.production.local
       - aws-ecr/build-and-push-image:
           repo: "${APP_PREFIX}-frontend"
           tag: "${CIRCLE_SHA1}"
