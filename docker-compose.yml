@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 volumes:
   mysql_data:
@@ -30,12 +30,11 @@ services:
       - ./backend:/backend:cached
       - bundle_data:/usr/local/bundle
       - /backend/log
-      - /backend/tmp
       - /backend/.git
     environment:
       TZ: Asia/Tokyo
     ports:
-      - "3001:3000"
+      - '3001:3000'
     depends_on:
       - db
     networks:
@@ -50,7 +49,7 @@ services:
       - ./frontend:/app
     ports:
       - 3000:3000
-    command: "yarn dev"
+    command: 'yarn dev'
     networks:
       app_net:
         ipv4_address: '172.20.0.4'
