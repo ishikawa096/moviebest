@@ -15,6 +15,10 @@ a {
   text-decoration: none;
 }
 
+.text-shadow {
+  text-shadow: 1px 1px 3px rgb(0 0 0 / 90%), 2px 2px 7px rgb(73 64 125 / 95%);
+}
+
 * {
   box-sizing: border-box;
 }

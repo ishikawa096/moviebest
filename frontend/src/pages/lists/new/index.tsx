@@ -3,11 +3,10 @@ import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import axios from 'axios'
 import PageHead from 'components/layout/pageHead'
-import type { createListParams, Theme } from 'interfaces/interface'
+import type { CreateListParams, Theme } from 'interfaces/interface'
 import { handleAxiosError } from 'lib/helpers'
 import { toastSuccess, toastWarn } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
-import { list } from 'postcss'
 
 const ListForm = dynamic(() => import('components/listForm'), {
   ssr: false,
@@ -47,7 +46,7 @@ const NewList = () => {
   const { isSignedIn } = useContext(AuthContext)
   if (!isSignedIn) return <p>ログインしてください</p>
 
-  const createList = async (newData: { list: createListParams }) => {
+  const createList = async (newData: { list: CreateListParams }) => {
     try {
       const response = await axios.post('/api/v1/client', {
         key: 'list',

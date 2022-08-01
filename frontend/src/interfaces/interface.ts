@@ -16,18 +16,29 @@ export interface Movie {
   title: string
   position: number
   listId: number
+  tmdbId?: number
+  tmdbImage: string
   createdAt: string
   updatedAt: string
 }
 
-export interface createMovieParams {
+export interface CreateMovieParams {
   title: string
   position: number
+  tmdbId?: number
+  tmdbImage?: string
+}
+
+export interface MovieSelectOption {
+  label: string
+  value: string
+  posterPath: string
+  tmdbId?: number
 }
 
 export interface List {
   id: number
-  comment?: string
+  comment: string
   numbered: boolean
   themeId: number
   userId: number
@@ -36,11 +47,11 @@ export interface List {
   movies: Array<Movie>
 }
 
-export interface createListParams {
+export interface CreateListParams {
   comment?: string
   numbered: boolean
   themeId: number
-  movies: Array<createMovieParams>
+  movies: Array<CreateMovieParams>
 }
 
 export interface User {
