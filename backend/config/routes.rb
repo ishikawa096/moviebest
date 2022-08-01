@@ -7,6 +7,10 @@ Rails.application.routes.draw do
       resources :themes, only: %i[index show create] do
         get :popular, on: :collection
       end
+      resources :tmdb do
+        get :search, on: :collection
+        get :images, on: :collection
+      end
       resources :users, only: %i[show]
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
         registrations: 'api/v1/auth/registrations'

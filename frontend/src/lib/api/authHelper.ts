@@ -1,3 +1,4 @@
+import { getByLabelText } from "@testing-library/react"
 import type { AxiosResponse } from "axios"
 import type { NextApiResponse, NextPageContext } from "next"
 import { setCookie, destroyCookie } from "nookies"
@@ -5,6 +6,7 @@ import { setCookie, destroyCookie } from "nookies"
 export const setCookies = (res: AxiosResponse, ctx?: NextPageContext | { res: NextApiResponse }) => {
   const options = {
     maxAge: 14 * 24 * 60 * 60,
+    sameSite: 'lax',
     path: '/',
   }
   setCookie(ctx, '_access_token', res.headers['access-token'], options)

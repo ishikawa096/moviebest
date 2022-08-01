@@ -1,11 +1,12 @@
-import type { createListParams, Theme } from 'interfaces/interface'
+import type { CreateListParams, MovieSelectOption, Theme } from 'interfaces/interface'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { isEmptyObject } from 'lib/helpers'
 import { validateList } from 'lib/validates'
+import MoviesFormItem from './moviesFormItem'
 
 interface Props {
-  onSave: (formData: { list: createListParams }) => void
+  onSave: (formData: { list: CreateListParams }) => void
   theme: Theme
 }
 
@@ -34,19 +35,11 @@ const ListForm = ({ onSave, theme }: Props) => {
     setList(initialListState)
   }, [router])
 
-  const handleInputChange = (e: { target: HTMLInputElement }) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { target } = e
     const { name } = target
     const value = target.value
     setList({ ...list, [name]: value })
-  }
-
-  const handleInputMovieChange = (e: { target: HTMLInputElement }, i: number) => {
-    const { target } = e
-    const value = target.value
-    const newMovie = { title: value, position: i }
-    const newMovies = list.movies.map((m) => (m.position === i ? newMovie : m))
-    setList({ ...list, movies: newMovies })
   }
 
   const handleCheckBoxChange = () => {
@@ -57,6 +50,23 @@ const ListForm = ({ onSave, theme }: Props) => {
       case false:
         setList({ ...list, numbered: true })
         break
+    }
+  }
+
+  const handleMovieSelect = (newValue:  MovieSelectOption | any, i: number) => {
+    if (newValue.label) {
+      const newMovie = {
+        title: newValue.label,
+        position: i,
+        tmdbId: newValue.tmdbId,
+        tmdbImage: newValue.posterPath
+      }
+      const newMovies = list.movies.map((m) => (m.position === i ? newMovie : m))
+      setList({ ...list, movies: newMovies })
+    } else {
+      const newMovie = { title: '', position: i }
+      const newMovies = list.movies.map((m) => (m.position === i ? newMovie : m))
+      setList({ ...list, movies: newMovies })
     }
   }
 
@@ -86,23 +96,15 @@ const ListForm = ({ onSave, theme }: Props) => {
     }
   }
 
-  // if (!theme.id) return <p>theme not found</p>
-  // if (id && !list.id) return <listNotFound />
-
   return (
     <>
       <h1 className='text-6xl'># {title}</h1>
       {renderErrors()}
       <form className='listForm' onSubmit={handleSubmit} name='listForm'>
         <div className='listFormInner'>
-          {[...Array(cap)].fill(null).map((_, i) => (
-            <div className='listFormItem' key={i}>
-              <label htmlFor='movie'>
-                <strong>映画{list.movies[i].position + 1}:</strong>
-                <input type='text' name='title' className='w-full' onChange={(e) => handleInputMovieChange(e, i)} value={list.movies[i].title} placeholder='映画タイトルを入力' />
-              </label>
-            </div>
-          ))}
+          <div className='flex flex-row flex-wrap justify-center'>
+            <MoviesFormItem list={list} cap={cap} onChange={(newValue, i) => handleMovieSelect(newValue, i)} />
+          </div>
           <div className='listFormItem'>
             <label htmlFor='comment'>
               <strong>コメント:</strong>
