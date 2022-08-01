@@ -1,4 +1,4 @@
-import type { createListParams, CreateThemeParams } from "interfaces/interface";
+import type { CreateListParams, CreateThemeParams } from "interfaces/interface";
 
 export const validateTheme = (theme: CreateThemeParams) => {
   const errors: { [K in keyof CreateThemeParams]?: string } = {}
@@ -8,10 +8,10 @@ export const validateTheme = (theme: CreateThemeParams) => {
   return errors
 }
 
-export const validateList = (list: createListParams) => {
+export const validateList = (list: CreateListParams) => {
   // type Movies = 'movies'
   // const errors: { [K in keyof Omit<List, Movies>]?: string } & { movies?: Array<string> } = {}
-  const errors: { [K in keyof createListParams]?: string } = {}
+  const errors: { [K in keyof CreateListParams]?: string } = {}
   list.movies?.map((m) => {
     if (m.title === '') {
     errors.movies = 'タイトルを入力してください'
