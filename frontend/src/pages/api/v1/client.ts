@@ -14,17 +14,21 @@ export const client = applyCaseMiddleware(
 )
 
 export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  let cookies
+  let data
+  let endpoint
+  let key
   switch (req.method) {
     case 'GET':
       if (req.query.endpoint) {
-        const endpoint = req.query.endpoint
+        endpoint = req.query.endpoint
         try {
-          const getResponse = await client.get(`/${endpoint}`)
-          if (getResponse.status === 200) {
-            res.status(200).json(getResponse.data)
+          const response = await client.get(`/${endpoint}`)
+          if (response.status === 200) {
+            res.status(200).json(response.data)
             break
           } else {
-            res.status(getResponse.status).end()
+            res.status(response.status).end()
           }
         } catch (err) {
           res.status(500).json(err)
@@ -36,10 +40,12 @@ export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
       }
 
     case 'POST':
-      const cookies = nookies.get({ req })
-      const { data, endpoint, key } = req.body
+      cookies = nookies.get({ req })
+      data = req.body.data
+      endpoint = req.body.endpoint
+      key = req.body.key
       try {
-        const postResponse = await client.post(
+        const response = await client.post(
           `/${endpoint}`,
           {
             [key]: data,
@@ -52,11 +58,42 @@ export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
             },
           }
         )
-        if (postResponse.status === 200) {
-          res.status(200).json(postResponse.data)
+        if (response.status === 200) {
+          res.status(200).json(response.data)
           break
         } else {
-          res.status(postResponse.status).end()
+          res.status(response.status).end()
+          break
+        }
+      } catch (err) {
+        res.status(500).json(err)
+        break
+      }
+
+    case 'PATCH':
+      cookies = nookies.get({ req })
+      data = req.body.data
+      endpoint = req.body.endpoint
+      key = req.body.key
+      try {
+        const response = await client.patch(
+          `/${endpoint}`,
+          {
+            [key]: data,
+          },
+          {
+            headers: {
+              'access-token': cookies._access_token,
+              client: cookies._client,
+              uid: cookies._uid,
+            },
+          }
+        )
+        if (response.status === 200) {
+          res.status(200).json(response.data)
+          break
+        } else {
+          res.status(response.status).end()
           break
         }
       } catch (err) {

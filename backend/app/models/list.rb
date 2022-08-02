@@ -17,8 +17,21 @@ class List < ApplicationRecord
                "を#{theme.capacity}つ入力してください(現在：#{movies.size})")
   end
 
+  def update_with_movies!(params)
+    self.update!(comment: params[:comment], numbered: params[:numbered])
+    params[:movies].each do |movie_param|
+      movie = self.movies.find(movie_param[:id])
+      movie.update!(
+        title: movie_param[:title],
+        position: movie_param[:position],
+        tmdb_id: movie_param[:tmdb_id],
+        tmdb_image: movie_param[:tmdb_image]
+      )
+    end
+  end
+
   class << self
-    def create!(params)
+    def create_with_movies!(params)
       list = List.new(
         comment: params[:comment],
         numbered: params[:numbered],
