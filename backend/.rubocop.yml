@@ -18,6 +18,9 @@ Style/FrozenStringLiteralComment:
 Style/Documentation:
   Enabled: false
 
+Style/GuardClause:
+  Enabled: false
+
 AllCops:
   NewCops: enable
   Exclude:
