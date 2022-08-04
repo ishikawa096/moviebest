@@ -59,6 +59,6 @@ class Api::V1::ListsController < ApplicationController
   end
 
   def render401
-    render status: 401, message: 'Failed to authenticate'
+    render status: :unauthorized, message: 'Failed to authenticate'
   end
 end
