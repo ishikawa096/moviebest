@@ -79,6 +79,12 @@ export interface SignInParams {
   password: string
 }
 
+export interface PasswordParams {
+  currentPassword: string
+  password: string
+  passwordConfirmation: string
+}
+
 export interface ModalProps {
   showModal: boolean,
   title: string,
