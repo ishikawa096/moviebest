@@ -23,24 +23,24 @@ class Api::V1::ListsController < ApplicationController
   def update
     list = List.includes(:user, :theme, :movies).find(params[:id])
     if list.user != current_user
-      render json: { status: 401, message: 'Failed to authenticate for update' }
+      render401
       return
     end
     form = Form::ListRegistration.new(update_params)
     ActiveRecord::Base.transaction do
       list.update_with_movies!(form.params)
     end
-      render json: list, status: :ok
+    render json: list, status: :ok
   end
 
-  def delete
-    # form = Form::ListRegistration.new(params_permited)
-    # list = List.create!(form.params)
-    # if list
-    #   render json: list, status: :ok
-    # else
-    #   render json: list.errors, status: :unprocessable_entity
-    # end
+  def destroy
+    list = List.find(params[:id])
+    if list.user != current_user
+      render401
+      return
+    end
+    list.destroy!
+    render json: { message: 'List was successfully destroyed.' }, status: :ok
   end
 
   private
@@ -54,7 +54,11 @@ class Api::V1::ListsController < ApplicationController
 
   def update_params
     params
-    .require(:list)
-    .permit(:comment, :numbered, movies: %i[id title position tmdb_id tmdb_image])
+      .require(:list)
+      .permit(:comment, :numbered, movies: %i[id title position tmdb_id tmdb_image])
+  end
+
+  def render401
+    render status: 401, message: 'Failed to authenticate'
   end
 end

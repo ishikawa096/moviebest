@@ -1,7 +1,12 @@
-import { getByLabelText } from "@testing-library/react"
-import type { AxiosResponse } from "axios"
-import type { NextApiResponse, NextPageContext } from "next"
-import { setCookie, destroyCookie } from "nookies"
+import type { AxiosResponse } from 'axios'
+import type { NextApiResponse, NextPageContext } from 'next'
+import { setCookie, destroyCookie } from 'nookies'
+
+export const authHeaders = (cookies: { [key: string]: string }) => ({
+  'access-token': cookies._access_token,
+  client: cookies._client,
+  uid: cookies._uid,
+})
 
 export const setCookies = (res: AxiosResponse, ctx?: NextPageContext | { res: NextApiResponse }) => {
   const options = {

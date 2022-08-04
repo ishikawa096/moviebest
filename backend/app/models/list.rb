@@ -18,9 +18,9 @@ class List < ApplicationRecord
   end
 
   def update_with_movies!(params)
-    self.update!(comment: params[:comment], numbered: params[:numbered])
+    update!(comment: params[:comment], numbered: params[:numbered])
     params[:movies].each do |movie_param|
-      movie = self.movies.find(movie_param[:id])
+      movie = movies.find(movie_param[:id])
       movie.update!(
         title: movie_param[:title],
         position: movie_param[:position],

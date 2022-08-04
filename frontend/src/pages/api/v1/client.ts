@@ -2,6 +2,7 @@ import axios from 'axios'
 import applyCaseMiddleware from 'axios-case-converter'
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 import nookies from 'nookies'
+import { authHeaders } from 'lib/api/authHelper'
 
 export const client = applyCaseMiddleware(
   axios.create({
@@ -51,11 +52,7 @@ export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
             [key]: data,
           },
           {
-            headers: {
-              'access-token': cookies._access_token,
-              client: cookies._client,
-              uid: cookies._uid,
-            },
+            headers: authHeaders(cookies),
           }
         )
         if (response.status === 200) {
@@ -82,11 +79,7 @@ export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
             [key]: data,
           },
           {
-            headers: {
-              'access-token': cookies._access_token,
-              client: cookies._client,
-              uid: cookies._uid,
-            },
+            headers: authHeaders(cookies),
           }
         )
         if (response.status === 200) {
@@ -98,6 +91,30 @@ export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
         }
       } catch (err) {
         res.status(500).json(err)
+        break
+      }
+
+    case 'DELETE':
+      if (req.query.endpoint) {
+        endpoint = req.query.endpoint
+        cookies = nookies.get({ req })
+        try {
+          const response = await client.delete(`/${endpoint}`, {
+            headers: authHeaders(cookies),
+          })
+          if (response.status === 200) {
+            res.status(200).json(response.data)
+            break
+          } else {
+            res.status(response.status).json(response.data)
+            break
+          }
+        } catch (err) {
+          res.status(500).send(err)
+          break
+        }
+      } else {
+        res.status(400).send('request query is invalid')
         break
       }
 
