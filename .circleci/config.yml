@@ -160,11 +160,17 @@ workflows:
             - rubocop
             - rspec
             - jest
+          filters:
+            branches:
+              only: deploy
       - push_frontend:
           requires:
             - rubocop
             - rspec
             - jest
+          filters:
+            branches:
+              only: deploy
       - aws-ecs/deploy-service-update:
           name: deploy_backend
           aws-region: AWS_REGION
