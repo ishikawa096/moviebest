@@ -4,5 +4,9 @@ FactoryBot.define do
     position { 0 }
     tmdb_id { 10 }
     tmdb_image { '/test' }
+
+    trait :skip_validation do
+      to_create { |instance| instance.save(validate: false) }
+    end
   end
 end

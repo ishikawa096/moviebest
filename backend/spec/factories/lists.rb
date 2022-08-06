@@ -3,8 +3,17 @@ FactoryBot.define do
     comment { 'テスト' }
     numbered { false }
 
-    association :theme
     association :user
+
+    trait :with_theme do
+      transient do
+        theme_capacity { 3 }
+      end
+      after(:build) do |list, evaluator|
+        theme = create(:theme, capacity: evaluator.theme_capacity)
+        theme.lists << list
+      end
+    end
 
     trait :with_movies do
       transient do
@@ -17,6 +26,10 @@ FactoryBot.define do
           list:
         )
       end
+    end
+
+    trait :skip_validation do
+      to_create { |instance| instance.save(validate: false) }
     end
   end
 end

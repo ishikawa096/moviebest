@@ -6,7 +6,7 @@ class ApplicationController < ActionController::API
 
   # skip_before_action :verify_authenticity_token
   # protect_from_forgery with: :exception
-  helper_method :current_user, :user_signed_in?
+  helper_method :current_user, :user_signed_in?, :authenticate_user!
   before_action :authenticate
 
   private

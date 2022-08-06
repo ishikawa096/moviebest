@@ -1,4 +1,4 @@
-import type { CreateListParams, MovieSelectOption, Theme } from 'interfaces/interface'
+import type { CreateListParams, List, MovieSelectOption, Theme, User } from 'interfaces/interface'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { isEmptyObject } from 'lib/helpers'
@@ -8,9 +8,10 @@ import MoviesFormItem from './moviesFormItem'
 interface Props {
   onSave: (formData: { list: CreateListParams }) => void
   theme: Theme
+  listProp?: List & { user: User, theme: Theme }
 }
 
-const ListForm = ({ onSave, theme }: Props) => {
+const ListForm = ({ onSave, theme, listProp }: Props) => {
   const router = useRouter()
   const title = theme.title
   const cap = theme.capacity
@@ -18,22 +19,46 @@ const ListForm = ({ onSave, theme }: Props) => {
 
   const [formErrors, setFormErrors] = useState<{} | { title: string }>({})
 
-  const defaultsMovies = [...Array(cap)].fill(null).map((_, i) => ({ title: '', position: i }))
+  const defaultsMovies = listProp ? listProp.movies
+    : [...Array(cap)].fill(null).map((_, i) => ({ title: '', position: i}))
   const initialMovies = [...defaultsMovies]
 
-  const defaultsList = {
-    comment: '',
-    numbered: false,
-    themeId: themeId,
-    movies: initialMovies,
-  }
+  const defaultsList = listProp ? listProp
+    : {
+      comment: '',
+      numbered: false,
+      themeId: themeId,
+      movies: initialMovies,
+    }
   const initialListState = { ...defaultsList }
   const [list, setList] = useState(initialListState)
 
   useEffect(() => {
     if (!router.isReady) return
-    setList(initialListState)
+    if (listProp) {
+      setList(listProp)
+    } else {
+      setList(initialListState)
+    }
   }, [router])
+
+  const handleMovieSelect = (newValue: MovieSelectOption | any, i: number) => {
+    if (newValue.label) {
+      const newMovie = {
+        title: newValue.label,
+        position: i,
+        tmdbId: newValue.tmdbId,
+        tmdbImage: newValue.posterPath,
+      }
+      const newMovies = list.movies.map((m) => (m.position === i ? newMovie : m))
+      setList({ ...list, movies: newMovies })
+    } else {
+      const newMovie = { title: '', position: i }
+      const newMovies = list.movies.map((m) => (m.position === i ? newMovie : m))
+      setList({ ...list, movies: newMovies })
+    }
+  }
+  console.log(list.movies)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { target } = e
@@ -50,23 +75,6 @@ const ListForm = ({ onSave, theme }: Props) => {
       case false:
         setList({ ...list, numbered: true })
         break
-    }
-  }
-
-  const handleMovieSelect = (newValue:  MovieSelectOption | any, i: number) => {
-    if (newValue.label) {
-      const newMovie = {
-        title: newValue.label,
-        position: i,
-        tmdbId: newValue.tmdbId,
-        tmdbImage: newValue.posterPath
-      }
-      const newMovies = list.movies.map((m) => (m.position === i ? newMovie : m))
-      setList({ ...list, movies: newMovies })
-    } else {
-      const newMovie = { title: '', position: i }
-      const newMovies = list.movies.map((m) => (m.position === i ? newMovie : m))
-      setList({ ...list, movies: newMovies })
     }
   }
 
@@ -92,7 +100,6 @@ const ListForm = ({ onSave, theme }: Props) => {
     if (isEmptyObject(errors)) {
       const formData = { list }
       onSave(formData)
-      setList(initialListState)
     }
   }
 
@@ -103,7 +110,7 @@ const ListForm = ({ onSave, theme }: Props) => {
       <form className='listForm' onSubmit={handleSubmit} name='listForm'>
         <div className='listFormInner'>
           <div className='flex flex-row flex-wrap justify-center'>
-            <MoviesFormItem list={list} cap={cap} onChange={(newValue, i) => handleMovieSelect(newValue, i)} />
+            <MoviesFormItem movies={list.movies} cap={cap} onChange={(newValue, i) => handleMovieSelect(newValue, i)} />
           </div>
           <div className='listFormItem'>
             <label htmlFor='comment'>

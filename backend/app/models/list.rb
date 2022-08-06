@@ -14,16 +14,28 @@ class List < ApplicationRecord
     return unless theme.capacity != movies.size
 
     errors.add(:movies,
-               "を#{theme.capacity}つ入力してください(現在：#{movies.size})")
+               "映画を#{theme.capacity}つ入力してください(現在：#{movies.size})")
+  end
+
+  def update_with_movies!(params)
+    update!(comment: params[:comment], numbered: params[:numbered])
+    params[:movies].each do |movie_param|
+      movie = movies.find(movie_param[:id])
+      movie.update!(
+        title: movie_param[:title],
+        position: movie_param[:position],
+        tmdb_id: movie_param[:tmdb_id],
+        tmdb_image: movie_param[:tmdb_image]
+      )
+    end
   end
 
   class << self
-    def create!(params)
+    def create_with_movies!(params)
       list = List.new(
         comment: params[:comment],
         numbered: params[:numbered],
-        theme_id: params[:theme_id],
-        user_id: params[:user_id]
+        theme_id: params[:theme_id]
       )
       list.movies.build(params[:movies])
       list.save!

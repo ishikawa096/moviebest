@@ -1,4 +1,4 @@
-import type { CreateListParams, MovieSelectOption } from 'interfaces/interface'
+import type { CreateListParams, CreateMovieParams, Movie, MovieSelectOption } from 'interfaces/interface'
 import Image from 'next/image'
 import axios from 'axios'
 import AsyncCreatableSelect from 'react-select/async-creatable'
@@ -8,12 +8,12 @@ import { posterUrl } from 'lib/tmdbHelpers'
 import { useState } from 'react'
 
 interface Props {
-  list: CreateListParams
+  movies: Array<CreateMovieParams>
   cap: number
   onChange: (newValue: MovieSelectOption, i: number) => void
 }
 
-const MoviesFormItem = ({ list, cap, onChange }: Props) => {
+const MoviesFormItem = ({ movies, cap, onChange }: Props) => {
   const [update, setUpdate] = useState(false)
 
   const searchMovie = async (inputValue: string) => {
@@ -33,6 +33,17 @@ const MoviesFormItem = ({ list, cap, onChange }: Props) => {
     }
   }
 
+  const defaultValue = (i: number) => {
+    const value = movies[i].title ? {
+      label: movies[i].title,
+      value: movies[i].title,
+      posterPath: movies[i].tmdbImage,
+      tmdbId: movies[i].tmdbId,
+    } : null
+    console.log(value)
+    return value
+  }
+
   const onError = (option: MovieSelectOption) => {
     option.posterPath = ''
     update ? setUpdate(false) : setUpdate(true)
@@ -41,7 +52,7 @@ const MoviesFormItem = ({ list, cap, onChange }: Props) => {
   const FormatOptionLabel = ({ option }: { option: MovieSelectOption }) => (
     <div className='flex items-center justify-center relative m-0 h-[193px] sm:h-[275px] lg:h-[372px]'>
       <Image
-        src={(option.label === formatCreateLabel(option.value)) || (!option.posterPath) ? '/342x509.png' : posterUrl(option.posterPath, 'w342')}
+        src={option.label === formatCreateLabel(option.value) || !option.posterPath ? '/342x509.png' : posterUrl(option.posterPath, 'w342')}
         alt={option.label}
         layout='fill'
         objectFit='cover'
@@ -58,7 +69,15 @@ const MoviesFormItem = ({ list, cap, onChange }: Props) => {
       <div>
         <Image src='/342x509.png' alt='ここに映画のタイトルを入力' width={342} height={509} objectFit='cover' placeholder='blur' blurDataURL='/342x509.png' />
       </div>
-      <div className='absolute z-10 text-center'>ここに<br />映画の<br />タイトルを<br />入力</div>
+      <div className='absolute z-10 text-center'>
+        ここに
+        <br />
+        映画の
+        <br />
+        タイトルを
+        <br />
+        入力
+      </div>
     </div>
   )
 
@@ -75,7 +94,9 @@ const MoviesFormItem = ({ list, cap, onChange }: Props) => {
       {children}
     </components.ValueContainer>
   )
-  const Input = (props: InputProps) => <components.Input {...props} inputClassName='h-[195px] sm:h-[277px] lg:h-[374px] w-[130px] sm:w-[185px] lg:w-[250px] outline-none border-none shadow-none focus:ring-transparent focus:z-10' />
+  const Input = (props: InputProps) => (
+    <components.Input {...props} inputClassName='h-[195px] sm:h-[277px] lg:h-[374px] w-[130px] sm:w-[185px] lg:w-[250px] outline-none border-none shadow-none focus:ring-transparent focus:z-10' />
+  )
 
   const Control = ({ children, ...props }: ControlProps) => (
     <components.Control {...props} className='text-xs lg:text-base '>
@@ -107,7 +128,7 @@ const MoviesFormItem = ({ list, cap, onChange }: Props) => {
         padding: isFocused ? 10 : 3,
       }
     },
-    menu: (styles) => ({ ...styles, zIndex: 300}),
+    menu: (styles) => ({ ...styles, zIndex: 300 }),
     option: (styles) => {
       return {
         ...styles,
@@ -129,14 +150,17 @@ const MoviesFormItem = ({ list, cap, onChange }: Props) => {
       {[...Array(cap)].fill(null).map((_, i) => (
         <div key={i} className='listFormItem m-1 sm:m-3 lg:m-5'>
           <label htmlFor='movie'>
-            <strong className='bg-black text-white p-1 pr-10 pl-10 text-center'>{list.movies[i].position + 1}</strong>
+            <strong className='bg-black text-white p-1 pr-10 pl-10 text-center'>{movies[i].position + 1}</strong>
             <AsyncCreatableSelect
               loadOptions={searchMovie}
               onChange={(newValue: any) => onChange(newValue, i)}
               placeholder={placeholder}
+              defaultValue={defaultValue(i)}
               formatOptionLabel={(option: MovieSelectOption | any) => <FormatOptionLabel option={option} />}
               formatCreateLabel={formatCreateLabel}
               noOptionsMessage={() => null}
+              blurInputOnSelect={true}
+              maxMenuHeight={400}
               components={{ Input, Control, SingleValue, ValueContainer, DropdownIndicator, IndicatorSeparator, IndicatorsContainer, LoadingIndicator }}
               styles={movieFormStyles}
               theme={(theme) => ({

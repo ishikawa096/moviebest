@@ -78,3 +78,19 @@ export interface SignInParams {
   email: string
   password: string
 }
+
+export interface PasswordParams {
+  currentPassword: string
+  password: string
+  passwordConfirmation: string
+}
+
+export interface ModalProps {
+  showModal: boolean,
+  title: string,
+  description: string,
+  confirmationText: string,
+  cancellationText: string,
+  handleConfirm: React.MouseEventHandler<HTMLButtonElement>,
+  handleCancel: React.MouseEventHandler<HTMLButtonElement>
+}
