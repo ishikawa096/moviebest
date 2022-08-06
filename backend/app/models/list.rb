@@ -14,7 +14,7 @@ class List < ApplicationRecord
     return unless theme.capacity != movies.size
 
     errors.add(:movies,
-               "を#{theme.capacity}つ入力してください(現在：#{movies.size})")
+               "映画を#{theme.capacity}つ入力してください(現在：#{movies.size})")
   end
 
   def update_with_movies!(params)
@@ -35,8 +35,7 @@ class List < ApplicationRecord
       list = List.new(
         comment: params[:comment],
         numbered: params[:numbered],
-        theme_id: params[:theme_id],
-        user_id: params[:user_id]
+        theme_id: params[:theme_id]
       )
       list.movies.build(params[:movies])
       list.save!

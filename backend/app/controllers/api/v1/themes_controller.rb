@@ -1,11 +1,12 @@
 class Api::V1::ThemesController < ApplicationController
   POPULAR_THEMES_MAX_COUNT = 15
 
+  before_action :authenticate_user!, only: %i[create]
+
   def index
-    themes = Theme.all.select(
-      :id, :title
-    )
-    render json: themes, status: :ok
+    themes = Theme.includes(:lists)
+    json = themes.as_json(include: :lists)
+    render json:, status: :ok
   end
 
   def show
@@ -13,6 +14,8 @@ class Api::V1::ThemesController < ApplicationController
     json = theme.as_json(include: { lists: { include: [:movies,
                                                        { user: { only: %i[name id] } }] } })
     render json:, status: :ok
+  rescue ActiveRecord::RecordNotFound => e
+    render json: e.record.errors, status: :not_found
   end
 
   def create
