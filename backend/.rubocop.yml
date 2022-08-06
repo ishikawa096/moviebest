@@ -9,6 +9,15 @@ Rails:
 LineLength:
   Max: 100
 
+Metrics/MethodLength:
+  Enabled: false
+
+Layout/ArgumentAlignment:
+  Enabled: false
+
+Layout/HashAlignment:
+  Enabled: false
+
 Style/ClassAndModuleChildren:
   Enabled: false
 
@@ -21,6 +30,19 @@ Style/Documentation:
 Style/GuardClause:
   Enabled: false
 
+RSpec/MultipleExpectations:
+  Max: 5
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Max: 10
+
+
 AllCops:
   NewCops: enable
   Exclude:
@@ -32,3 +54,4 @@ AllCops:
     - 'vendor/**/*'
     - '.git/**/*'
     - 'spec/spec_helper.rb'
+    - 'spec/rails_helper.rb'
