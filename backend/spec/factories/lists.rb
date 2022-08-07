@@ -22,8 +22,7 @@ FactoryBot.define do
       after(:build) do |list, evaluator|
         list.movies << build_list(
           :movie,
-          evaluator.theme_capacity,
-          list:
+          evaluator.theme_capacity
         )
       end
     end

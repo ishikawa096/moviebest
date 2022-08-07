@@ -107,7 +107,7 @@ RSpec.describe 'Api::V1::Lists', type: :request do
       create(:theme, id: 1, capacity: 5)
       post api_v1_lists_path, headers: api_and_user_auth, params: create_params
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(subject['movies']).to include '映画を5つ入力してください(現在：2)'
+      expect(subject['movies']).to include 'を5つ入力してください(現在：2)'
     end
 
     it 'APIトークンがないとき:unauthorizedを返す' do
