@@ -4,7 +4,7 @@ import { validateTheme } from 'lib/validates'
 import { CreateThemeParams } from 'interfaces/interface'
 
 const CAP_MIN = 2
-const CAP_MAX = 20
+const CAP_MAX = 10
 
 export const useThemeForm = (onSave: (formData: { theme: CreateThemeParams }) => void) => {
   const [formErrors, setFormErrors] = useState<{} | { title: string }>({})

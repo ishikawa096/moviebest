@@ -3,5 +3,5 @@ class Theme < ApplicationRecord
 
   validates :title, presence: true, length: { maximum: 100 }
   validates :capacity, presence: true,
-                       numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+                       numericality: { only_integer: true, in: 2..10 }
 end
