@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_28_110636) do
+ActiveRecord::Schema.define(version: 2022_08_06_082337) do
 
   create_table "lists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "comment"
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 2022_07_28_110636) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "tmdb_id"
-    t.string "tmdb_image", default: "", null: false
+    t.string "tmdb_image"
   end
 
   create_table "themes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
