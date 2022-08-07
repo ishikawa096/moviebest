@@ -10,7 +10,7 @@ export default function Layout({ children }: CommonLayoutProps) {
     <>
       <Header />
       <main className='px-3 lg:px-8'>
-        <div className='py-16 min-h-screen flex flex-col justify-center items-center'>
+        <div className='pt-4 sm:pt-16 min-h-screen flex flex-col items-center'>
           {children}
         </div>
       </main>
