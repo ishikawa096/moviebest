@@ -19,8 +19,15 @@ const ListForm = ({ onSave, theme, listProp }: Props) => {
 
   const [formErrors, setFormErrors] = useState<{} | { title: string }>({})
 
+  const defaultMovieParams = (i: number) => ({
+    title: '',
+    position: i,
+    tmdbId: 0,
+    tmdbImage: '',
+  })
+
   const defaultsMovies = listProp ? listProp.movies
-    : [...Array(cap)].fill(null).map((_, i) => ({ title: '', position: i}))
+    : [...Array(cap)].fill(null).map((_, i) => (defaultMovieParams(i)))
   const initialMovies = [...defaultsMovies]
 
   const defaultsList = listProp ? listProp
@@ -43,7 +50,7 @@ const ListForm = ({ onSave, theme, listProp }: Props) => {
   }, [router])
 
   const handleMovieSelect = (newValue: MovieSelectOption | any, i: number) => {
-    if (newValue.label) {
+    if (newValue.label.trim()) {
       const newMovie = {
         title: newValue.label,
         position: i,
@@ -53,9 +60,7 @@ const ListForm = ({ onSave, theme, listProp }: Props) => {
       const newMovies = list.movies.map((m) => (m.position === i ? newMovie : m))
       setList({ ...list, movies: newMovies })
     } else {
-      const newMovie = { title: '', position: i }
-      const newMovies = list.movies.map((m) => (m.position === i ? newMovie : m))
-      setList({ ...list, movies: newMovies })
+      handleClear(i)
     }
   }
   console.log(list.movies)
@@ -77,6 +82,12 @@ const ListForm = ({ onSave, theme, listProp }: Props) => {
         break
     }
   }
+
+  const handleClear = (i: number) => {
+    const newMovies = list.movies.map((m) => (m.position === i ? defaultMovieParams(i) : m))
+    setList({ ...list, movies: newMovies })
+  }
+
 
   const renderErrors = () => {
     if (isEmptyObject(formErrors)) {
@@ -110,7 +121,7 @@ const ListForm = ({ onSave, theme, listProp }: Props) => {
       <form className='listForm' onSubmit={handleSubmit} name='listForm'>
         <div className='listFormInner'>
           <div className='flex flex-row flex-wrap justify-center'>
-            <MoviesFormItem movies={list.movies} cap={cap} onChange={(newValue, i) => handleMovieSelect(newValue, i)} />
+            <MoviesFormItem movies={list.movies} cap={cap} onChange={(newValue, i) => handleMovieSelect(newValue, i)} clear={(i) => handleClear(i)} />
           </div>
           <div className='listFormItem'>
             <label htmlFor='comment'>

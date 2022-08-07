@@ -16,7 +16,7 @@ export interface Movie {
   title: string
   position: number
   listId: number
-  tmdbId?: number
+  tmdbId: number
   tmdbImage: string
   createdAt: string
   updatedAt: string
