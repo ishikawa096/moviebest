@@ -8,4 +8,6 @@ class User < ApplicationRecord
   include DeviseTokenAuth::Concerns::User
 
   has_many :lists, dependent: :destroy
+
+  validates :name, presence: true, length: { maximum: 30 }
 end

@@ -1,4 +1,6 @@
 class List < ApplicationRecord
+  after_initialize :set_default_comment
+
   belongs_to :theme
   belongs_to :user
   has_many :movies, dependent: :destroy
@@ -11,10 +13,16 @@ class List < ApplicationRecord
   validate :number_of_movies_match_theme_capacity
 
   def number_of_movies_match_theme_capacity
-    return unless theme.capacity != movies.size
+    if !theme
+      errors.add(:theme, 'が必要です')
+    elsif theme.capacity != movies.size
+      errors.add(:movies,
+                 "を#{theme.capacity}つ入力してください(現在：#{movies.size})")
+    end
+  end
 
-    errors.add(:movies,
-               "映画を#{theme.capacity}つ入力してください(現在：#{movies.size})")
+  def set_default_comment
+    self.comment ||= ''
   end
 
   def update_with_movies!(params)
