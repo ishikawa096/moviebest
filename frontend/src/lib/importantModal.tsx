@@ -2,7 +2,7 @@ import Modal from 'react-modal'
 import { ModalProps } from 'interfaces/interface'
 import CloseButton from 'components/CloseButton'
 
-const InportantModal = ({ showModal, title, description, confirmationText, cancellationText, handleConfirm, handleCancel }: ModalProps) => {
+const ImportantModal = ({ showModal, title, description, confirmationText, cancellationText, handleConfirm, handleCancel }: ModalProps) => {
   if (typeof window !== 'undefined') {
     Modal.setAppElement('body')
   }
@@ -64,4 +64,4 @@ const InportantModal = ({ showModal, title, description, confirmationText, cance
   )
 }
 
-export default InportantModal
+export default ImportantModal

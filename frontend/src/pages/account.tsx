@@ -3,9 +3,10 @@ import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from 'pages/_app'
 import { useRouter } from 'next/router'
 import axios from 'axios'
-import { toastError, toastInfo, toastSuccess } from 'lib/toast'
-import ConfirmModal from 'lib/confirmModal'
+import { toastError, toastSuccess, toastWarn } from 'lib/toast'
+import ImportantModal from 'lib/importantModal'
 import { destroyCookies } from 'lib/api/authHelper'
+import NowLoading from 'components/nowLoading'
 
 interface UserState {
   state: { isLoading: false; user: User } | { isLoading: true }
@@ -76,14 +77,14 @@ const UserPage = () => {
 
   if (!isSignedIn && userState.state.isLoading) {
     router.push('/signin')
-    toastInfo('ログインしてください')
+    toastWarn('ログインしてください')
     return
   }
 
   return (
     <>
       {userState.state.isLoading ? (
-        <p>now loading...</p>
+        <NowLoading />
       ) : (
         <div>
             <h1>ユーザー名 {userState.state.user.name}</h1>
@@ -95,7 +96,7 @@ const UserPage = () => {
             <EditButton />
             <DeleteButton /></>}
           </div>
-          <ConfirmModal
+          <ImportantModal
             showModal={showModal}
             title='アカウントを削除しますか？'
             description='作成したベストも削除されます'

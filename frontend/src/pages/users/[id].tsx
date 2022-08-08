@@ -7,7 +7,7 @@ import { AuthContext } from 'pages/_app'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import { toastError, toastSuccess } from 'lib/toast'
-import ConfirmModal from 'lib/confirmModal'
+import ImportantModal from 'lib/importantModal'
 
 interface Props {
   user: User & { lists: Array<List & { theme: Theme, isDeleted: boolean }> }
@@ -108,7 +108,7 @@ const UserPage = (props: Props) => {
           )
         )}
       </div>
-      <ConfirmModal
+      <ImportantModal
         showModal={showModal}
         title='このベストを削除しますか？'
         description={`タイトル: "${targetTitle}"`}

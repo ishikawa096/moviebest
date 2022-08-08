@@ -7,6 +7,7 @@ import { useState, useEffect, createContext } from 'react'
 import { ToastContainer } from 'react-toastify'
 import Layout from 'components/layout/layout'
 import { getCurrentUser } from 'lib/api/auth'
+import NowLoading from 'components/nowLoading'
 
 export const AuthContext = createContext(
   {} as {
@@ -49,7 +50,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     return <Error statusCode={pageProps.error.statusCode} title={pageProps.error.message} />
   }
   if (loading) {
-    return <h3>now loading...</h3>
+    return <NowLoading />
   }
   return (
     <>

@@ -7,6 +7,7 @@ import type { CreateListParams, Theme } from 'interfaces/interface'
 import { handleAxiosError } from 'lib/helpers'
 import { toastSuccess, toastWarn } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
+import NowLoading from 'components/nowLoading'
 
 const ListForm = dynamic(() => import('components/listForm'), {
   ssr: false,
@@ -37,20 +38,24 @@ const NewList = () => {
       if (themeId) {
         fetchTheme()
       } else {
-        toastWarn('不明なパラメーターです。トップページに移動します')
-        router.push('/')
+        toastWarn('エラーが起きました。前のページに戻ります')
+        router.back()
       }
     }
   }, [router])
 
   const { isSignedIn } = useContext(AuthContext)
-  if (!isSignedIn) return <p>ログインしてください</p>
+  if (!isSignedIn && themeState.state.isLoading) {
+    router.push('/signin')
+    toastWarn('ログインしてください')
+    return
+  }
+
 
   const createList = async (newData: { list: CreateListParams }) => {
     try {
       const response = await axios.post('/api/v1/client', {
-        key: 'list',
-        data: newData.list,
+        params: { list: newData.list },
         endpoint: 'lists',
       })
       if (response.status !== 200) throw Error(response.statusText)
@@ -66,7 +71,7 @@ const NewList = () => {
   }
 
   if (themeState.state.isLoading) {
-    return <p>読み込み中</p>
+    return <NowLoading />
   }
 
   return (

@@ -5,8 +5,9 @@ import axios from 'axios'
 import PageHead from 'components/layout/pageHead'
 import type { CreateListParams, List, Theme, User } from 'interfaces/interface'
 import { handleAxiosError } from 'lib/helpers'
-import { toastError, toastSuccess, toastWarn } from 'lib/toast'
+import { toastError, toastInfo, toastSuccess, toastWarn } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
+import NowLoading from 'components/nowLoading'
 
 const ListForm = dynamic(() => import('components/listForm'), {
   ssr: false,
@@ -50,12 +51,20 @@ const EditList = () => {
   }, [router])
 
   const { isSignedIn, currentUser } = useContext(AuthContext)
-  if (!isSignedIn) return <p>ログインしてください</p>
+  if (!isSignedIn && listState.state.isLoading) {
+    router.push('/signin')
+    toastWarn('ログインしてください')
+    return
+  }
 
   if (!listState.state.isLoading) {
     const { list } = listState.state
     const user = list.user
-    if (!currentUser || currentUser.id !== user.id ) return <p>このリストを編集することができません</p>
+    if (!currentUser || currentUser.id !== user.id) {
+      router.back()
+      toastWarn('このリストを編集することができません')
+      return
+    }
   }
 
   const updateList = async (newData: { list: CreateListParams }) => {
@@ -77,8 +86,7 @@ const EditList = () => {
     }
     try {
       const response = await axios.patch('/api/v1/client', {
-        key: 'list',
-        data: newList,
+        params: { list: newList },
         endpoint: `lists/${listId}`,
       })
       if (response.status !== 200) throw Error(response.statusText)
@@ -94,7 +102,7 @@ const EditList = () => {
   }
 
   if (listState.state.isLoading) {
-    return <p>読み込み中</p>
+    return <NowLoading />
   }
 
   return (

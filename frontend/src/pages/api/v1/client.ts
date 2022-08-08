@@ -16,9 +16,8 @@ export const client = applyCaseMiddleware(
 
 export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   let cookies
-  let data
   let endpoint
-  let key
+  let params
   switch (req.method) {
     case 'GET':
       if (req.query.endpoint) {
@@ -42,15 +41,11 @@ export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
 
     case 'POST':
       cookies = nookies.get({ req })
-      data = req.body.data
       endpoint = req.body.endpoint
-      key = req.body.key
+      params = req.body.params
       try {
         const response = await client.post(
-          `/${endpoint}`,
-          {
-            [key]: data,
-          },
+          `/${endpoint}`, params,
           {
             headers: authHeaders(cookies),
           }
@@ -69,15 +64,11 @@ export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
 
     case 'PATCH':
       cookies = nookies.get({ req })
-      data = req.body.data
       endpoint = req.body.endpoint
-      key = req.body.key
+      params = req.body.params
       try {
         const response = await client.patch(
-          `/${endpoint}`,
-          {
-            [key]: data,
-          },
+          `/${endpoint}`, params,
           {
             headers: authHeaders(cookies),
           }
