@@ -23,9 +23,34 @@ RSpec.describe Theme, type: :model do
     expect(theme).to be_invalid
   end
 
-  it 'capacityが数字以外では無効であること' do
+  it 'capacityが数字以外なら無効であること' do
     theme = described_class.new(params.merge({ capacity: 'invalid' }))
     expect(theme).to be_invalid
+  end
+
+  it 'capacityが小数なら無効であること' do
+    theme = described_class.new(params.merge({ capacity: '4.5' }))
+    expect(theme).to be_invalid
+  end
+
+  it 'capacityが2未満なら無効であること' do
+    theme = described_class.new(params.merge({ capacity: '1' }))
+    expect(theme).to be_invalid
+  end
+
+  it 'capacityが2なら有効であること' do
+    theme = described_class.new(params.merge({ capacity: '2' }))
+    expect(theme).to be_valid
+  end
+
+  it 'capacityが11以上なら無効であること' do
+    theme = described_class.new(params.merge({ capacity: '11' }))
+    expect(theme).to be_invalid
+  end
+
+  it 'capacityが10なら有効であること' do
+    theme = described_class.new(params.merge({ capacity: '10' }))
+    expect(theme).to be_valid
   end
 
   it '削除できること' do
