@@ -4,9 +4,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       get :health_checks, to: 'health_checks#index'
       resources :lists, only: %i[index show create update destroy]
-      resources :themes, only: %i[index show create] do
-        get :popular, on: :collection
-      end
+      resources :themes, only: %i[index show create]
       resources :tmdb, only: [] do
         get :search, on: :collection
         get :images, on: :collection

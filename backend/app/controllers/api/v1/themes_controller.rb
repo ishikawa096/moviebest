@@ -27,16 +27,6 @@ class Api::V1::ThemesController < ApplicationController
     end
   end
 
-  def popular
-    themes = Theme
-             .joins(:lists)
-             .group(:theme_id)
-             .order('count(theme_id) desc')
-             .limit(POPULAR_THEMES_MAX_COUNT)
-             .select(:id, :title)
-    render json: themes, status: :ok
-  end
-
   private
 
   def theme_params
