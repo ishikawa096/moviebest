@@ -1,4 +1,5 @@
 import { toastError } from 'lib/toast'
+import { useLayoutEffect, useState } from 'react'
 
 export const isEmptyObject = (obj: {} | { any: any }) => Object.keys(obj).length === 0
 
@@ -16,3 +17,18 @@ export const randomColor = () => {
   const colors = ['bg-yellow-400', 'bg-red-400', 'bg-blue-400']
   return arrayRandom(colors)
 }
+
+export const useWindowWidth = (): number => {
+    const [size, setSize] = useState(0)
+    useLayoutEffect(() => {
+      const updateSize = (): void => {
+        setSize(window.innerWidth)
+      }
+
+      window.addEventListener('resize', updateSize)
+      updateSize()
+
+      return () => window.removeEventListener('resize', updateSize)
+    }, [])
+    return size
+  }
