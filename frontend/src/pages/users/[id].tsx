@@ -1,5 +1,4 @@
 import type { GetServerSidePropsContext } from 'next'
-import Link from 'next/link'
 import { client } from 'pages/api/v1/client'
 import { List, Theme, User } from 'interfaces/interface'
 import { useContext, useState } from 'react'
@@ -8,6 +7,7 @@ import { useRouter } from 'next/router'
 import axios from 'axios'
 import { toastError, toastSuccess } from 'lib/toast'
 import ImportantModal from 'lib/importantModal'
+import ListCard from 'components/lists/listCard'
 
 interface Props {
   user: User & { lists: Array<List & { theme: Theme, isDeleted: boolean }> }
@@ -40,7 +40,7 @@ const UserPage = (props: Props) => {
     const id = list.id
     const title = list.title
     setTargetId(id)
-    setTargetTitle(list.title)
+    setTargetTitle(title)
     setShowModal(true)
   }
 
@@ -85,19 +85,11 @@ const UserPage = (props: Props) => {
   return (
     <div>
       {currentUser?.id === user.id ? <h1>マイベスト</h1> : <h1>ユーザー名 {user.name}</h1>}
-      <div>
+      <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-9 px-2 grid-flow-row-dense'>
         {lists.map((list) =>
           list.isDeleted ? null : (
             <div key={list.id}>
-              <Link href={`/lists/${list.id}`}>
-                <a>{list.theme.title}</a>
-              </Link>
-
-              {list.movies?.map((movie) => (
-                <div key={movie.id}>{movie.title}</div>
-              ))}
-              <p>コメント：{list.comment}</p>
-
+              <ListCard user={user} movies={list.movies} theme={list.theme} />
               {currentUser?.id === user.id ? (
                 <>
                   <EditButton id={list.id} />

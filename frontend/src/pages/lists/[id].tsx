@@ -8,7 +8,7 @@ import { useState } from 'react'
 import PostersContainer from 'components/lists/postersContainer'
 import Posters from 'components/lists/posters'
 import FloatingButton from 'components/commons/floatingButton'
-import ListTable from 'components/lists/listTable'
+import ListCard from 'components/lists/listCard'
 
 const BLANK_IMAGE = '/342x509.png'
 
@@ -55,8 +55,8 @@ const ListPage = (props: Props) => {
   }
 
   return (
-    <div className=''>
-      <div className=''>
+    <div>
+      <div>
         <div className='w-screen py-1 px-10 text-center text-black text-lg underline bg-white'>
           <Link href={`/themes/${theme.id}`}>
             <a># {theme.title}</a>
@@ -65,9 +65,8 @@ const ListPage = (props: Props) => {
         <PostersContainer movies={movies}>
           <Posters movies={movies} theme={theme} images={images} blankImage={BLANK_IMAGE} onError={onError} />
         </PostersContainer>
-        <ListTable theme={theme} user={user} movies={movies} />
       </div>
-
+      <ListCard theme={theme} user={user} movies={movies} />
       <hr />
       <div className='h-30 p-10 mb-20 text-center'>コメント(仮){list.comment}</div>
       <hr />
