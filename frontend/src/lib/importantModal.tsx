@@ -10,6 +10,7 @@ const ImportantModal = ({ showModal, title, description, confirmationText, cance
   const customStyles = {
     overlay: {
       backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      zIndex: 100,
     },
     content: {
       top: '50%',
@@ -25,9 +26,7 @@ const ImportantModal = ({ showModal, title, description, confirmationText, cance
 
   return (
     <Modal style={customStyles} isOpen={showModal}>
-
       <CloseButton onClick={handleCancel} srOnly='close modal' />
-
       <div className='mt-3'>
         <svg aria-hidden='true' className='mx-auto mb-4 w-14 h-14 text-gray-400' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
           <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'></path>
