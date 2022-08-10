@@ -14,10 +14,10 @@ const ListForm = dynamic(() => import('components/lists/form/listForm'), {
 })
 
 interface State {
-  state: { isLoading: false, list: List & { user: User, theme: Theme } } | { isLoading: true }
+  state: { isLoading: false; list: List & { user: User; theme: Theme } } | { isLoading: true }
 }
 
-const EditList = () => {
+const EditList: React.FC = () => {
   const router = useRouter()
   const listId = router.query.id
   const [listState, setListState] = useState<State>({ state: { isLoading: true } })
@@ -33,7 +33,7 @@ const EditList = () => {
       const list = res.data
       setListState({ state: { isLoading: false, list: list } })
       setCurrentList(list)
-    } catch (err){
+    } catch (err) {
       toastError('something wrong...')
       router.push('/')
     }
@@ -54,7 +54,7 @@ const EditList = () => {
   if (!isSignedIn && listState.state.isLoading) {
     router.push('/signin')
     toastWarn('ログインしてください')
-    return
+    return <></>
   }
 
   if (!listState.state.isLoading) {
@@ -63,26 +63,33 @@ const EditList = () => {
     if (!currentUser || currentUser.id !== user.id) {
       router.back()
       toastWarn('このリストを編集することができません')
-      return
+      return <></>
     }
   }
 
   const updateList = async (newData: { list: CreateListParams }) => {
     const newMoviesData = newData.list.movies
-    const newMovies = currentList?.movies.map((cm) => (
-      newMoviesData.map((m) => (m.position === cm.position ? {
-        id: cm.id,
-        title: m.title,
-        position: m.position,
-        tmdbId: m.tmdbId,
-        tmdbImage: m.tmdbImage,
-      } : null))
-    )).flat().filter(m => m)
+    const newMovies = currentList?.movies
+      .map((cm) =>
+        newMoviesData.map((m) =>
+          m.position === cm.position
+            ? {
+                id: cm.id,
+                title: m.title,
+                position: m.position,
+                tmdbId: m.tmdbId,
+                tmdbImage: m.tmdbImage,
+              }
+            : null
+        )
+      )
+      .flat()
+      .filter((m) => m)
 
     const newList = {
       comment: newData.list.comment,
       numbered: newData.list.numbered,
-      movies: newMovies
+      movies: newMovies,
     }
     try {
       const response = await axios.patch('/api/v1/client', {
@@ -101,14 +108,13 @@ const EditList = () => {
     }
   }
 
-  if (listState.state.isLoading) {
-    return <NowLoading />
-  }
-
   return (
     <>
       <PageHead title='新規リスト作成' />
-      <ListForm onSave={updateList} theme={listState.state.list.theme} listProp={listState.state.list} />
+      <div className='w-full text-2xl lg:text-4xl text-center py-10 tracking-widest text-gray-700'>
+        <h1>ベストの編集</h1>
+      </div>
+      {listState.state.isLoading ? <NowLoading /> : <ListForm onSave={updateList} theme={listState.state.list.theme} listProp={listState.state.list} />}
     </>
   )
 }

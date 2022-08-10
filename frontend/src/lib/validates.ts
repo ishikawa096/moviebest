@@ -15,15 +15,15 @@ export const validateTheme = (theme: CreateThemeParams) => {
 }
 
 export const validateList = (list: CreateListParams) => {
-  // type Movies = 'movies'
-  // const errors: { [K in keyof Omit<List, Movies>]?: string } & { movies?: Array<string> } = {}
   const errors: { [K in keyof CreateListParams]?: string } = {}
   list.movies?.map((m) => {
     if (m.title === '') {
     errors.movies = 'タイトルを入力してください'
+    }
+  })
+  if (list.comment && list.comment.length > 1000) {
+    errors.comment = `コメントは1000文字までです(現在:${list.comment.length}文字)`
   }
-})
-  // validateMovies(list.movies)
   return errors
 }
 

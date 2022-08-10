@@ -1,23 +1,27 @@
 import type { CreateListParams, List, MovieSelectOption, Theme, User } from 'interfaces/interface'
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
 import { isEmptyObject } from 'lib/helpers'
 import { validateList } from 'lib/validates'
 import MoviesFormItem from './moviesFormItem'
+import SubmitButton from 'components/commons/submitButton'
+import { toastWarn } from 'lib/toast'
+import RenderErrors from 'components/renderErrors'
+
+const MAX_CAP = 10
 
 interface Props {
   onSave: (formData: { list: CreateListParams }) => void
   theme: Theme
-  listProp?: List & { user: User, theme: Theme }
+  listProp?: List & { user: User; theme: Theme }
 }
 
 const ListForm = ({ onSave, theme, listProp }: Props) => {
-  const router = useRouter()
   const title = theme.title
   const cap = theme.capacity
   const themeId = theme.id
+  const [isSending, setIsSending] = useState(false)
 
-  const [formErrors, setFormErrors] = useState<{} | { title: string }>({})
+  const [formErrors, setFormErrors] = useState<{ [K in keyof CreateListParams]?: string }>({})
 
   const defaultMovieParams = (i: number) => ({
     title: '',
@@ -25,29 +29,23 @@ const ListForm = ({ onSave, theme, listProp }: Props) => {
     tmdbId: 0,
     tmdbImage: '',
   })
-
-  const defaultsMovies = listProp ? listProp.movies
-    : [...Array(cap)].fill(null).map((_, i) => (defaultMovieParams(i)))
+  const EmptyMovies = [...Array(MAX_CAP)].fill(null).map((_, i) => defaultMovieParams(i))
+  const defaultsMovies = listProp ? EmptyMovies.map((m, i) => (listProp.movies[i] ? listProp.movies[i] : m)) : EmptyMovies
   const initialMovies = [...defaultsMovies]
 
-  const defaultsList = listProp ? listProp
+  const defaultsList = listProp
+    ? { ...listProp, movies: initialMovies }
     : {
-      comment: '',
-      numbered: false,
-      themeId: themeId,
-      movies: initialMovies,
-    }
+        comment: '',
+        numbered: false,
+        movies: initialMovies,
+      }
   const initialListState = { ...defaultsList }
   const [list, setList] = useState(initialListState)
 
   useEffect(() => {
-    if (!router.isReady) return
-    if (listProp) {
-      setList(listProp)
-    } else {
-      setList(initialListState)
-    }
-  }, [router])
+    setList(initialListState)
+  }, [])
 
   const handleMovieSelect = (newValue: MovieSelectOption | any, i: number) => {
     if (newValue.label.trim()) {
@@ -63,24 +61,12 @@ const ListForm = ({ onSave, theme, listProp }: Props) => {
       handleClear(i)
     }
   }
-  console.log(list.movies)
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { target } = e
     const { name } = target
     const value = target.value
     setList({ ...list, [name]: value })
-  }
-
-  const handleCheckBoxChange = () => {
-    switch (list.numbered) {
-      case true:
-        setList({ ...list, numbered: false })
-        break
-      case false:
-        setList({ ...list, numbered: true })
-        break
-    }
   }
 
   const handleClear = (i: number) => {
@@ -88,58 +74,61 @@ const ListForm = ({ onSave, theme, listProp }: Props) => {
     setList({ ...list, movies: newMovies })
   }
 
-
-  const renderErrors = () => {
-    if (isEmptyObject(formErrors)) {
-      return null
-    }
-    return (
-      <div className='errors'>
-        <ul>
-          {Object.values(formErrors).map((formError, i) => (
-            <li key={i}>{formError}</li>
-          ))}
-        </ul>
-      </div>
-    )
-  }
-
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
-    const errors = validateList(list)
+    setIsSending(true)
+    const submitList = { ...list, themeId: themeId }
+    const movies = submitList.movies.slice(0, cap)
+    submitList.movies = movies
+
+    const errors = validateList(submitList)
     setFormErrors(errors)
     if (isEmptyObject(errors)) {
-      const formData = { list }
+      const formData = { list: submitList }
       onSave(formData)
+    } else {
+      toastWarn('項目にエラーがあります')
+      setIsSending(false)
     }
   }
 
   return (
     <>
-      <h1 className='text-6xl'># {title}</h1>
-      {renderErrors()}
-      <form className='listForm' onSubmit={handleSubmit} name='listForm'>
-        <div className='listFormInner'>
-          <div className='flex flex-row flex-wrap justify-center'>
-            <MoviesFormItem movies={list.movies} cap={cap} onChange={(newValue, i) => handleMovieSelect(newValue, i)} clear={(i) => handleClear(i)} />
+      <div className='w-full mb-20'>
+        <form name='listForm' className='flex flex-col items-center bg-white rounded-lg'>
+          <div className='flex flex-col px-3 py-5 mb-10'>
+            <span className='text-lg'>お題</span>
+            <h2 className='text-3xl md:text-5xl lg:text-6xl px-2 py-1 bg-yellow-100 w-full rounded-lg'># {title}</h2>
           </div>
-          <div className='listFormItem'>
-            <label htmlFor='comment'>
-              <strong>コメント:</strong>
-              <input type='text' name='comment' className='w-full' onChange={handleInputChange} value={list.comment} placeholder='コメントを入力' />
-            </label>
+
+          <div>
+            <div className='mb-10 flex flex-row flex-wrap justify-center gap-4 md:gap-6 lg:gap-8'>
+              <MoviesFormItem movies={list.movies} cap={cap} onChange={(newValue, i) => handleMovieSelect(newValue, i)} clear={(i) => handleClear(i)} />
+              {formErrors.movies ? <RenderErrors error={formErrors.movies} /> : undefined}
+            </div>
+
+            <div className='mb-10 px-20'>
+              <label htmlFor='comment' className='block mb-2 text-sm font-medium text-gray-900'>
+                コメント
+              </label>
+              <textarea
+                name='comment'
+                onChange={handleInputChange}
+                value={list.comment}
+                id='comment'
+                rows={4}
+                className={`${formErrors.comment ? 'border-red-300' : 'border-gray-300'} block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border focus:ring-blue-500 focus:border-blue-500`}
+                placeholder='コメント'
+              />
+              {formErrors.comment ? <RenderErrors error={formErrors.comment} /> : undefined}
+            </div>
           </div>
-          <div className='listFormItem'>
-            <label htmlFor='numbered'>
-              <strong>順位付きリスト</strong>
-              <input type='checkbox' name='numbered' className='listInput' onChange={handleCheckBoxChange} checked={list.numbered} />
-            </label>
+
+          <div className='p-4 px-10 items-center text-center'>
+            <SubmitButton onClick={handleSubmit} disabled={list.movies.slice(0, cap).every((m) => m.title) ? false : true} isSending={isSending} title={listProp ? '確定' : '作成'} />
           </div>
-        </div>
-        <div className='form-actions'>
-          <button type='submit'>保存</button>
-        </div>
-      </form>
+        </form>
+      </div>
     </>
   )
 }

@@ -6,6 +6,8 @@ import { useState } from 'react'
 import { formatCreateLabel, FormatOptionLabel, placeholder, Input, Control, ValueContainer, movieFormStyles, formTheme } from './movieSelectStyles'
 import CloseButton from '../../commons/closeButton'
 
+const MAX_CAP = 10
+
 interface Props {
   movies: Array<CreateMovieParams>
   cap: number
@@ -48,20 +50,18 @@ const MoviesFormItem = ({ movies, cap, onChange, clear }: Props) => {
           tmdbId: movies[i].tmdbId,
         }
       : null
-    console.log(value)
     return value
   }
 
   const onError = (option: MovieSelectOption) => {
-    console.log('onerror')
     option.posterPath = ''
-    update ? setUpdate(false) : setUpdate(true)
+    setUpdate(!update)
   }
 
   return (
     <>
-      {[...Array(cap)].fill(null).map((_, i) => (
-        <div key={i} className='listFormItem relative m-1 sm:m-3 lg:m-5'>
+      {[...Array(MAX_CAP)].fill(null).map((_, i) => (
+        <div key={i} className={`${i + 1 > cap ? 'hidden' : 'block'} relative`}>
           <CloseButton onClick={() => clear(i)} srOnly='clear' />
           <label htmlFor='movie'>
             <strong className='bg-black text-white p-1 pr-10 pl-10 text-center'>{movies[i].position + 1}</strong>
