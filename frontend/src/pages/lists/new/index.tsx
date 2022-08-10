@@ -7,9 +7,9 @@ import type { CreateListParams, Theme } from 'interfaces/interface'
 import { handleAxiosError } from 'lib/helpers'
 import { toastSuccess, toastWarn } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
-import NowLoading from 'components/nowLoading'
+import NowLoading from 'components/commons/nowLoading'
 
-const ListForm = dynamic(() => import('components/listForm'), {
+const ListForm = dynamic(() => import('components/lists/form/listForm'), {
   ssr: false,
 })
 

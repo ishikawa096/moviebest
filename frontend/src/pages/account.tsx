@@ -6,7 +6,7 @@ import axios from 'axios'
 import { toastError, toastSuccess, toastWarn } from 'lib/toast'
 import ImportantModal from 'lib/importantModal'
 import { destroyCookies } from 'lib/api/authHelper'
-import NowLoading from 'components/nowLoading'
+import NowLoading from 'components/commons/nowLoading'
 
 interface UserState {
   state: { isLoading: false; user: User } | { isLoading: true }

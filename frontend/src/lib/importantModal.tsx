@@ -1,6 +1,6 @@
 import Modal from 'react-modal'
 import { ModalProps } from 'interfaces/interface'
-import CloseButton from 'components/CloseButton'
+import CloseButton from 'components/commons/closeButton'
 
 const ImportantModal = ({ showModal, title, description, confirmationText, cancellationText, handleConfirm, handleCancel }: ModalProps) => {
   if (typeof window !== 'undefined') {

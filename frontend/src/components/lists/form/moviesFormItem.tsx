@@ -4,7 +4,7 @@ import AsyncCreatableSelect from 'react-select/async-creatable'
 import { toastWarn } from 'lib/toast'
 import { useState } from 'react'
 import { formatCreateLabel, FormatOptionLabel, placeholder, Input, Control, ValueContainer, movieFormStyles, formTheme } from './movieSelectStyles'
-import CloseButton from './CloseButton'
+import CloseButton from '../../commons/closeButton'
 
 interface Props {
   movies: Array<CreateMovieParams>

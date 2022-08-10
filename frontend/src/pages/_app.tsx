@@ -7,7 +7,7 @@ import { useState, useEffect, createContext } from 'react'
 import { ToastContainer } from 'react-toastify'
 import Layout from 'components/layout/layout'
 import { getCurrentUser } from 'lib/api/auth'
-import NowLoading from 'components/nowLoading'
+import NowLoading from 'components/commons/nowLoading'
 
 export const AuthContext = createContext(
   {} as {

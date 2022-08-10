@@ -1,7 +1,7 @@
 import { CreateThemeParams } from 'interfaces/interface'
 import { isEmptyObject } from 'lib/helpers'
 import { useState } from 'react'
-import SubmitButton from '../submitButton'
+import SubmitButton from '../commons/submitButton'
 import { validateTheme } from 'lib/validates'
 import TitleForm from './titleForm'
 import CapacitySelect from './capacitySelect'
