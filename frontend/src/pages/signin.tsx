@@ -1,80 +1,95 @@
-import Link from 'next/link'
-import { useSignIn } from 'components/useSignIn'
+import { useState, useContext, useEffect } from 'react'
+import { useRouter } from 'next/router'
+import { signIn } from 'lib/api/auth'
+import type { SignInParams } from 'interfaces/interface'
+import { toastSuccess, toastError, toastInfo } from 'lib/toast'
+import { AuthContext } from 'pages/_app'
+import SignInButton from 'components/commons/signInButton'
+import RenderErrors from 'components/renderErrors'
+import PageHead from 'components/layout/pageHead'
+import SignInLayout from 'components/layout/signInLayout'
+import SignInInput from 'components/signInInput'
+
+const GUEST_EMAIL = 'guest@example.com'
+const GUEST_PASSWORD = 'guestloginpassword'
 
 const SignIn: React.FC = () => {
-  const {
-    email,
-    password,
-    handleEmailChange,
-    handlePasswordChange,
-    handleSubmit,
-    handleGuestSubmit,
-  } = useSignIn()
+  const router = useRouter()
+  const { isSignedIn, setIsSignedIn, setCurrentUser } = useContext(AuthContext)
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [isSending, setIsSending] = useState(false)
+  const [formError, setFormError] = useState('')
+
+  useEffect(() => {
+    if (isSignedIn) {
+      toastInfo('ログイン済みです')
+      router.back()
+    }
+  }, [router])
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value)
+  }
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value)
+  }
+
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    setIsSending(true)
+    const params: SignInParams = {
+      email: email,
+      password: password,
+    }
+    handleSignIn(params)
+  }
+
+  const handleGuestSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    const params: SignInParams = {
+      email: GUEST_EMAIL,
+      password: GUEST_PASSWORD,
+    }
+    handleSignIn(params)
+  }
+
+  const handleSignIn = async (params: SignInParams) => {
+    try {
+      const res = await signIn(params)
+      if (res.status === 200 && res.data.data) {
+        setIsSignedIn(true)
+        setCurrentUser(res.data.data)
+        toastSuccess('ログインしました')
+        router.back()
+      } else {
+        setIsSending(false)
+        console.log(res)
+        setFormError('Emailかパスワードが違います')
+      }
+    } catch (err) {
+      setIsSending(false)
+      toastError('エラーによりログインできませんでした')
+    }
+  }
 
   return (
     <>
-      <form noValidate autoComplete='off'>
-        <div className='relative z-0 mb-6 w-full group'>
-          <input
-            type='email'
-            name='email'
-            id='email'
-            value={email}
-            onChange={handleEmailChange}
-            className='block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer'
-            placeholder=' '
-            required
-          />
-          <label
-            htmlFor='email'
-            className='peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-7'
-          >
-            Email
-          </label>
-        </div>
-        <div className='relative z-0 mb-6 w-full group'>
-          <input
-            type='password'
-            name='password'
-            id='password'
-            value={password}
-            onChange={handlePasswordChange}
-            autoComplete='current-password'
-            className='block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer'
-            placeholder=' '
-            required
-          />
-          <label
-            htmlFor='password'
-            className='peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-7'
-          >
-            パスワード
-          </label>
-        </div>
-        <button
-          type='submit'
-          onClick={handleSubmit}
-          disabled={!email || !password ? true : false}
-          className='text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2'
-        >
-          ログイン
-        </button>
-        <div>
-        <button
-          type='submit'
-          onClick={handleGuestSubmit}
-          className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center'
-        >
-          ゲストログイン
-        </button>
-        </div>
-        <div>
-          <p>アカウントをお持ちではない方は</p>
-          <Link href='/signup'>
-            <a>新規アカウント作成</a>
-          </Link>
-        </div>
-      </form>
+      <PageHead title='ログイン' />
+      <SignInLayout title='ログイン'>
+        <form className='px-2 sm:px-5 py-5 flex flex-col'>
+          {formError ? <RenderErrors error={formError} /> : undefined}
+          <SignInInput value={email} label='Email' name='email' type='email' autoComplete='email' onChange={handleEmailChange} />
+          <SignInInput value={password} label='パスワード' name='password' type='password' autoComplete='current-password' onChange={handlePasswordChange} />
+          <SignInButton onClick={handleSubmit} disabled={!email || !password ? true : false} isSending={isSending} text='ログイン' color='color' />
+          <p className='pt-5 pb-2 text-sm'>アカウントをお持ちではない方は</p>
+          <div className='flex flex-col sm:flex-row justify-center'>
+            <SignInButton text='ゲストログイン' onClick={handleGuestSubmit} disabled={isSending} isSending={false} color='white' />
+            <SignInButton text='新規登録' onClick={() => router.push('/signup')} disabled={isSending} isSending={false} color='color' />
+          </div>
+        </form>
+      </SignInLayout>
     </>
   )
 }

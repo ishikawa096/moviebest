@@ -2,8 +2,8 @@ export interface Theme {
   id: number
   title: string
   capacity: number
-  createdAt: string
-  updatedAt: string
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface CreateThemeParams {
@@ -18,8 +18,8 @@ export interface Movie {
   listId: number
   tmdbId: number
   tmdbImage: string
-  createdAt: string
-  updatedAt: string
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface CreateMovieParams {
@@ -42,8 +42,8 @@ export interface List {
   numbered: boolean
   themeId: number
   userId: number
-  createdAt: string
-  updatedAt: string
+  createdAt: Date
+  updatedAt: Date
   movies: Array<Movie>
 }
 
@@ -85,6 +85,14 @@ export interface PasswordParams {
   passwordConfirmation: string
 }
 
+export interface UserEditParams {
+  name?: string
+  email?: string
+  currentPassword?: string
+  password?: string
+  passwordConfirmation?: string
+}
+
 export interface ModalProps {
   showModal: boolean,
   title: string,
@@ -93,4 +101,8 @@ export interface ModalProps {
   cancellationText: string,
   handleConfirm: React.MouseEventHandler<HTMLButtonElement>,
   handleCancel: React.MouseEventHandler<HTMLButtonElement>
+}
+
+export interface ButtonColor {
+  color: 'color' | 'white'
 }

@@ -26,13 +26,13 @@ const UserPage = () => {
 
   const EditButton = () => (
     <button
-      onClick={() => router.push('/password')}
-      title='パスワード変更'
+      onClick={() => router.push('/setting')}
+      title='アカウント情報変更'
       className='w-40 h-10 bottom-10 flex justify-center items-center bg-cyan-500
           rounded-full drop-shadow-sm text-white text-lg
           hover:-translate-y-1 hover:scale-110 hover:bg-sky-400 duration-150 ease-in-out'
     >
-      パスワード変更
+      アカウント情報変更
     </button>
   )
 
@@ -90,7 +90,7 @@ const UserPage = () => {
             <h1>ユーザー名 {userState.state.user.name}</h1>
             email {userState.state.user.email}
             <div>
-              {userState.state.user.email === 'guest@example.com' ?
+              {userState.state.user.email === 'guest@example.com' ? // TODO
                 <p>ゲストユーザーはユーザー情報を変更できません</p>
               : <>
             <EditButton />

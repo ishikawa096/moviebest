@@ -11,7 +11,9 @@ export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
       res.send(JSON.stringify(response.data))
     }
   } catch (err) {
-    res.status(500).json(err)
+    if (err instanceof Error) {
+      res.json(err)
+    }
   }
 }
 

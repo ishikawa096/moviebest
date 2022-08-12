@@ -5,7 +5,6 @@ import { client } from '../client'
 
 const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const params = req.body
-  console.log(params)
   const cookies = nookies.get({ req })
   try {
     const response = await client.put('/auth', params, { headers: authHeaders(cookies)})
@@ -14,7 +13,7 @@ const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse
       res.status(200).json(response.data)
     }
   } catch (err) {
-    res.status(500).json(err)
+    res.json(err)
   }
 }
 
