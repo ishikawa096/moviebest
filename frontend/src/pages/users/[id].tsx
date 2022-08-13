@@ -10,6 +10,7 @@ import ImportantModal from 'lib/importantModal'
 import ListCard from 'components/lists/listCard'
 import PageHead from 'components/layout/pageHead'
 import Headline from 'components/commons/headline'
+import { InView } from 'react-intersection-observer'
 
 interface Props {
   user: User & { lists: Array<List & { theme: Theme; isDeleted: boolean }> }
@@ -93,15 +94,21 @@ const UserPage = (props: Props) => {
       <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-9 px-2 grid-flow-row-dense'>
         {lists.map((list) =>
           list.isDeleted ? null : (
-            <div key={list.id}>
-              <ListCard user={user} movies={list.movies} theme={list.theme} />
-              {currentUser?.id === user.id ? (
-                <>
-                  <EditButton id={list.id} />
-                  <DeleteButton id={list.id} title={list.theme.title} />
-                </>
-              ) : null}
-            </div>
+            <InView triggerOnce={true} rootMargin='-100px' key={list.id}>
+              {({ inView, ref }) => {
+                return (
+                  <div ref={ref} className={`min-h-[300px] ${inView ? 'motion-safe:animate-fade' : ''} `}>
+                    {inView ? <ListCard user={user} movies={list.movies} theme={list.theme} /> : undefined}
+                    {inView && currentUser?.id === user.id ? (
+                      <>
+                        <EditButton id={list.id} />
+                        <DeleteButton id={list.id} title={list.theme.title} />
+                      </>
+                    ) : null}
+                  </div>
+                )
+              }}
+            </InView>
           )
         )}
       </div>
