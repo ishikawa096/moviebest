@@ -8,6 +8,7 @@ import { handleAxiosError } from 'lib/helpers'
 import { toastError, toastInfo, toastSuccess, toastWarn } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import NowLoading from 'components/commons/nowLoading'
+import Headline from 'components/commons/headline'
 
 const ListForm = dynamic(() => import('components/lists/form/listForm'), {
   ssr: false,
@@ -111,9 +112,9 @@ const EditList: React.FC = () => {
   return (
     <>
       <PageHead title='新規リスト作成' />
-      <div className='w-full text-2xl lg:text-4xl text-center py-10 tracking-widest text-gray-700'>
+      <Headline>
         <h1>ベストの編集</h1>
-      </div>
+      </Headline>
       {listState.state.isLoading ? <NowLoading /> : <ListForm onSave={updateList} theme={listState.state.list.theme} listProp={listState.state.list} />}
     </>
   )

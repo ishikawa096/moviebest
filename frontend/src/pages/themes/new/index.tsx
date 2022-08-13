@@ -1,16 +1,13 @@
-import type { CreateThemeParams, Theme } from 'interfaces/interface'
+import type { CreateThemeParams } from 'interfaces/interface'
 import { useRouter } from 'next/router'
-import dynamic from 'next/dynamic'
 import axios from 'axios'
 import PageHead from 'components/layout/pageHead'
 import { handleAxiosError } from 'lib/helpers'
 import { toastSuccess, toastWarn } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import { useContext, useState } from 'react'
-
-const ThemeForm = dynamic(() => import('components/themes/themeForm'), {
-  ssr: false
-})
+import ThemeForm from 'components/themes/themeForm'
+import Headline from 'components/commons/headline'
 
 const NewTheme = () => {
   const router = useRouter()
@@ -48,6 +45,9 @@ const NewTheme = () => {
   return (
     <>
       <PageHead title='新規お題作成' />
+      <Headline>
+        <h1>新しいお題をつくる</h1>
+      </Headline>
       <ThemeForm onSave={createTheme} isError={isError} />
     </>
   )

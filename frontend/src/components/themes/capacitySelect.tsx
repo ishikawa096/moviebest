@@ -16,7 +16,7 @@ const CapacitySelect = ({ onChange, theme, capacities, formErrors }: Props) => (
       value={theme.capacity}
       className={`${
         formErrors.capacity ? 'border-2 border-red-500' : 'border border-gray-300'
-      } text-xl sm:text-2xl lg:text-3xl bg-gray-50 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
+      } text-xl sm:text-2xl lg:text-3xl bg-gray-50 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5`}
     >
       {capacities.map((n) => (
         <option value={n} key={n}>

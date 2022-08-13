@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { AuthContext } from 'pages/_app'
 import { signOut } from 'lib/api/auth'
 import { toastSuccess, toastError } from 'lib/toast'
-import Button from 'components/commons/headerButton'
+import HeaderButton from 'components/commons/headerButton'
 import Hamburger from 'components/commons/hamburger'
 import { useWindowWidth } from 'lib/helpers'
 
@@ -51,7 +51,7 @@ const Header = () => {
     <div className='flex items-center text-center w-full md:w-auto'>
       <button
         onClick={() => handleLink(path)}
-        className='block w-full py-3 whitespace-nowrap text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0'
+        className='block w-full py-3 whitespace-nowrap text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 decoration-transparent hover:decoration-sky-400 md:p-0 hover:underline decoration-4 duration-300'
       >
         {name}
       </button>
@@ -63,23 +63,26 @@ const Header = () => {
       if (isSignedIn && currentUser) {
         return (
           <>
-            <NavItem path='/themes/new' name='お題をつくる' />
             {menuOpen ? undefined : (
-              <button
-                onClick={() => setSettingOpen(!settingOpen)}
-                className='block w-full py-2 px-4 whitespace-nowrap text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0'
-              >
-                設定
-              </button>
+              <>
+                <button
+                  onClick={() => setSettingOpen(!settingOpen)}
+                  className='block w-full py-2 px-4 whitespace-nowrap text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 decoration-transparent hover:decoration-sky-400 md:p-0 hover:underline decoration-4 duration-300'
+                >
+                  設定
+                </button>
+                <HeaderButton text='投稿' onClick={() => handleLink('/lists/new')} color='color' />
+              </>
             )}
+            {!settingOpen && menuOpen ? <NavItem name='✏️ 投稿する' path='/lists/new' /> : null}
             {settingOpen || menuOpen ? (
-              <div className='w-full md:space-y-7 md:w-60 md:py-4 md:z-20 md:absolute md:top-12 md:right-0 md:bg-white md:border-b'>
-                <NavItem name='マイページ' path={`/users/${currentUser.id}`} />
+              <div className='w-full shadow-lg md:space-y-7 md:w-60 md:py-8 md:z-20 md:absolute md:top-14 md:right-3 md:bg-white md:border-b'>
+                <NavItem name='マイベスト' path={`/users/${currentUser.id}`} />
                 <NavItem name='ユーザー設定' path='/account' />
                 <div className='flex items-center md:justify-center w-full'>
                   <button
                     onClick={handleSignOut}
-                    className='block w-full py-3 px-4 whitespace-nowrap text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0'
+                    className='block w-full py-3 px-4 whitespace-nowrap text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 decoration-transparent hover:decoration-sky-400 md:p-0 hover:underline decoration-4 duration-300'
                   >
                     ログアウト
                   </button>
@@ -92,8 +95,8 @@ const Header = () => {
         return (
           <>
             <div className='w-full flex flex-col md:flex-row items-center'>
-              <Button text='ログイン' onClick={() => handleLink('/signin')} color='white' />
-              <Button text='新規登録' onClick={() => handleLink('/signup')} color='color' />
+              <HeaderButton text='ログイン' onClick={() => handleLink('/signin')} color='white' />
+              <HeaderButton text='新規登録' onClick={() => handleLink('/signup')} color='color' />
             </div>
           </>
         )
@@ -116,10 +119,10 @@ const Header = () => {
           </div>
           <Hamburger onClick={() => setMenuOpen(!menuOpen)} isOpen={menuOpen} />
           <div className={`w-full md:block md:w-auto md:pl-3 ${menuOpen ? 'block z-20 absolute top-14 right-0 bg-white' : 'hidden'}`}>
-            <div className='flex flex-col items-center md:flex-row md:space-x-5 md:mt-0 md:text-sm md:font-medium md:w-auto'>
-              <NavItem path='/' name='使い方' />
-              <NavItem path='/lists' name='新着ベスト' />
-              <NavItem path='/themes' name='お題をさがす' />
+            <div className='flex flex-col items-center shadow-lg md:shadow-none md:flex-row md:space-x-5 md:mt-0 md:text-sm md:font-medium md:w-auto'>
+              <NavItem name='使い方' path='/#about' />
+              <NavItem name='新着ベスト' path='/lists' />
+              <NavItem name='お題をみる' path='/themes' />
               <AuthButtons />
             </div>
           </div>

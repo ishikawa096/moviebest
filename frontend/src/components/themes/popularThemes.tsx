@@ -1,5 +1,6 @@
+import { randomBackGroundColors } from 'components/layout/styles'
 import { List, Theme } from 'interfaces/interface'
-import { randomColor } from 'lib/helpers'
+import { arrayRandom } from 'lib/helpers'
 import Link from 'next/link'
 
 interface Props {
@@ -7,7 +8,11 @@ interface Props {
 }
 
 const ThemeCard = ({ theme }: { theme: Theme & { lists: Array<List> } }) => (
-  <div className={`h-auto items-baseline font-bold bg-orange-300 ${theme.lists.length > 1 ? 'text-4xl' : 'text-2xl'} ${randomColor()}`}>
+  <div
+    className={`h-auto items-baseline text-bold hover:text-yellow-400 hover:bg-white duration-150 ease-in-out ${theme.lists.length > 3 ? 'text-4xl' : 'text-2xl'} ${arrayRandom(
+      randomBackGroundColors
+    )}`}
+  >
     <Link href={`/themes/${theme.id}`}>
       <a>
         {theme.title} ({theme.lists.length})

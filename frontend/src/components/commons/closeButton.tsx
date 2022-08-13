@@ -7,7 +7,7 @@ const CloseButton = ({ onClick, srOnly }: Props) => (
   <button
     type='button'
     onClick={onClick}
-    className='absolute top-0.5 right-0.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-0.5 ml-auto inline-flex items-center'
+    className='absolute z-10 top-0.5 right-0.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-0.5 ml-auto inline-flex items-center'
   >
     <svg aria-hidden='true' width='20' height='20' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
       <path

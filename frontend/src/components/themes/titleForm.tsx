@@ -18,7 +18,7 @@ const TitleForm = ({ onChange, theme, formErrors }: Props) => (
         value={theme.title}
         className={`${
           formErrors.title ? 'border-red-500' : 'border-gray-300'
-        } block py-2.5 px-0 w-full text-2xl sm:text-3xl lg:text-4xl text-gray-900 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer placeholder-gray-400`}
+        } block py-2.5 px-0 w-full text-2xl sm:text-3xl lg:text-4xl text-gray-900 bg-transparent border-0 border-b-2 appearance-none  focus:outline-none focus:ring-0 focus:border-sky-500 peer placeholder-gray-400`}
         placeholder='ここにお題を入力'
       />
       {formErrors.title ? <RenderErrors error={formErrors.title} /> : undefined}

@@ -3,6 +3,8 @@ import type { GetStaticProps } from 'next'
 import { client } from 'pages/api/v1/client'
 import Link from 'next/link'
 import ListsContainer from 'components/lists/listsContainer'
+import Headline from 'components/commons/headline'
+import PageHead from 'components/layout/pageHead'
 
 interface Props {
   lists: Array<List & { user: User; theme: Theme }>
@@ -14,10 +16,11 @@ const Lists = (props: Props) => {
 
   return (
     <>
+      <PageHead title='新着ベスト' />
       <div className='px-10 w-full'>
-        <div className='mb-5 w-full px-10 py-2 text-2xl text-bold'>
-          <h2>💫新着ベスト</h2>
-        </div>
+        <Headline>
+          <h1>新着ベスト</h1>
+        </Headline>
         <ListsContainer lists={lists} />
       </div>
     </>

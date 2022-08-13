@@ -38,7 +38,7 @@ export const placeholder = (
 export const formatCreateLabel = (inputValue: string) => `"${inputValue}"を選択`
 
 export const Control = ({ children, ...props }: ControlProps) => (
-  <components.Control {...props} className='text-xs lg:text-base '>
+  <components.Control {...props} className='text-xs md:text-sm lg:text-base '>
     {children}
   </components.Control>
 )
@@ -60,9 +60,11 @@ export const movieFormStyles: StylesConfig = {
   control: (styles, { isFocused }) => {
     return {
       ...styles,
-      borderWidth: 4,
-      borderStyle: 'dashed',
-      boxShadow: 'inherit',
+      borderWidth: 1,
+      borderRadius: '0.25rem',
+      borderStyle: 'solid',
+      borderColor: 'rgb(209 213 219)',
+      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
       padding: isFocused ? 10 : 3,
     }
   },
@@ -85,9 +87,11 @@ export const movieFormStyles: StylesConfig = {
 
 export const formTheme = (theme: Theme) => ({
   ...theme,
-  borderRadius: 0,
   colors: {
     ...theme.colors,
-    primary: '#1F2937',
+    primary: '#0ea5e9',
+    primary75: '#38bdf8',
+    primary50: '#7dd3fc',
+    primary25: '#bae6fd',
   },
 })

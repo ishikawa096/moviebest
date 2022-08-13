@@ -5,9 +5,11 @@ import { List, Theme, User } from 'interfaces/interface'
 import FloatingButton from 'components/commons/floatingButton'
 import { useRouter } from 'next/router'
 import ListsContainer from 'components/lists/listsContainer'
+import PageHead from 'components/layout/pageHead'
+import Headline from 'components/commons/headline'
 
 interface Props {
-  theme: Theme & { lists: Array<List & { user: User, theme?: Theme }> }
+  theme: Theme & { lists: Array<List & { user: User; theme?: Theme }> }
 }
 
 const ThemePage = (props: Props) => {
@@ -26,32 +28,21 @@ const ThemePage = (props: Props) => {
     <>
       このお題で
       <br />
-      新規作成
+      投稿
     </>
   )
 
   return (
-    <div>
-      <div className='w-screen py-14 px-10 text-center text-bold text-3xl underline bg-white'>
-        <Link
-          href={{
-            pathname: '/lists/new',
-            query: { id: theme.id },
-          }}
-        >
-          <a># {theme.title}</a>
-        </Link>
+    <>
+      <PageHead title={theme.title + 'の一覧'} />
+      <div>
+        <Headline>
+          <h1 className='italic underline decoration-orange-500 text-3xl'># {theme.title}</h1>
+        </Headline>
+        <ListsContainer lists={lists} />
+        <FloatingButton onClick={buttonHandler} content={buttonContent} />
       </div>
-          <ListsContainer lists={lists} />
-      {/* <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-9 px-2 grid-flow-row-dense'>
-        {lists.map((list) => (
-          <div key={list.id}>
-            <ListCard user={list.user} movies={list.movies} theme={theme} />
-          </div>
-        ))}
-      </div> */}
-      <FloatingButton onClick={buttonHandler} content={buttonContent} />
-    </div>
+    </>
   )
 }
 

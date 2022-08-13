@@ -10,6 +10,7 @@ import ThemeSelect from 'components/lists/form/themeSelect'
 import Link from 'next/link'
 import ListForm from 'components/lists/form/listForm'
 import NowLoading from 'components/commons/nowLoading'
+import Headline from 'components/commons/headline'
 
 interface State {
   state: { isLoading: false; theme: Theme } | { isLoading: true }
@@ -89,10 +90,12 @@ const NewList = () => {
   return (
     <>
       <PageHead title='新規リスト作成' />
-      <div className='w-full text-2xl lg:text-4xl text-center py-10 tracking-widest text-gray-700'>
+      <Headline>
         <h1>新しいベストをつくる</h1>
-      </div>
-      {loading ? <NowLoading /> : themeState.state.isLoading ? (
+      </Headline>
+      {loading ? (
+        <NowLoading />
+      ) : themeState.state.isLoading ? (
         <div className='flex flex-col w-full mb-1 p-10'>
           <div className='text-center text-sm md:text-base'>
             お題を選ぼう。　新しくお題を作るなら→

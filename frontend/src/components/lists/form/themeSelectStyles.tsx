@@ -15,4 +15,5 @@ export const Input = (props: InputProps) => (
 
 export const styles: StylesConfig = {
   input: (styles) => ({ ...styles, fontSize: '2rem' }),
+  menu: (styles) => ({ ...styles, zIndex: 300 }),
 }

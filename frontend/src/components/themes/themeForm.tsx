@@ -48,31 +48,29 @@ const ThemeForm = ({ onSave, isError }: Props) => {
 
   return (
     <>
-      <div className='w-full text-2xl lg:text-4xl text-center py-10 tracking-widest underline decoration-double decoration-4 underline-offset-2 decoration-sky-200'>
-        <h1>新しいお題をつくる</h1>
+      <div className='flex flex-col items-center'>
+        <form onSubmit={handleSubmit} name='listForm' className=' rounded-2xl w-full min-w-max sm:max-w-4xl overflow-hidden bg-white p-10 items-center text-gray-700'>
+          <div className='mb-8'>
+            <div className='w-full border-orange-500 border-l-8 text-lg tracking-wide p-3'>
+              <label htmlFor='themeTitleForm'>お題を入力</label>
+            </div>
+            <TitleForm theme={theme} onChange={handleInputChange} formErrors={formErrors} />
+          </div>
+          <div className='FormItem'>
+            <div className='w-full border-orange-500 border-l-8 text-lg tracking-wide p-3'>選べる作品の数を設定（最大10）</div>
+            <div className='p-4 px-10 items-center'>
+              <label htmlFor='themeCapacity'>
+                <strong>作品数</strong>
+              </label>
+              <CapacitySelect theme={theme} capacities={capacities} onChange={handleInputChange} formErrors={formErrors} />
+            </div>
+          </div>
+          <div className='p-4 px-10 items-center text-center'>
+            <SubmitButton onClick={handleSubmit} disabled={theme.title ? false : true} isSending={isError ? false : isSending} title='作成' />
+            <span className='block mt-4 text-sm'>作品を選ぶ画面に移ります</span>
+          </div>
+        </form>
       </div>
-      <form onSubmit={handleSubmit} name='listForm' className='border-2 rounded-2xl w-full min-w-max sm:max-w-4xl overflow-hidden'>
-        <div className='FormItem'>
-          <div className='w-full bg-gray-200 text-lg tracking-wide p-3'>
-            <label htmlFor='themeTitleForm'>お題を入力</label>
-          </div>
-          <TitleForm theme={theme} onChange={handleInputChange} formErrors={formErrors} />
-        </div>
-        <div className='FormItem'>
-          <div className='w-full bg-gray-200 text-lg tracking-wide p-3'>選べる作品の数を設定（最大10）</div>
-          <div className='p-4 px-10 items-center'>
-            <label htmlFor='themeCapacity'>
-              <strong>作品数</strong>
-            </label>
-            <CapacitySelect theme={theme} capacities={capacities} onChange={handleInputChange} formErrors={formErrors} />
-          </div>
-        </div>
-        <div className='w-full bg-gray-200 text-lg tracking-wide p-3'>作成！</div>
-        <div className='p-4 px-10 items-center text-center'>
-          <SubmitButton onClick={handleSubmit} disabled={theme.title ? false : true} isSending={isError ? false : isSending} title='作成' />
-          <span className='block mt-4 text-sm'>作品を選ぶ画面に移ります</span>
-        </div>
-      </form>
     </>
   )
 }

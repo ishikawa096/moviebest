@@ -1,5 +1,6 @@
 import { Theme } from 'interfaces/interface'
 import Select from 'react-select'
+import { formTheme } from './movieSelectStyles'
 import { styles, Input, Control } from './themeSelectStyles'
 
 interface Props {
@@ -22,8 +23,9 @@ const ThemeSelect = ({ onChange, themes, theme }: Props) => {
       defaultValue={theme ? { label: theme.title, value: theme } : { label: 'お題を選択', value: {} }}
       onChange={(newValue: any) => onChange(newValue)}
       options={options()}
-      components={{ Input, Control}}
+      components={{ Input, Control }}
       styles={styles}
+      theme={formTheme}
     />
   )
 }

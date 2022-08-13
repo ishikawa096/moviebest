@@ -8,9 +8,11 @@ import axios from 'axios'
 import { toastError, toastSuccess } from 'lib/toast'
 import ImportantModal from 'lib/importantModal'
 import ListCard from 'components/lists/listCard'
+import PageHead from 'components/layout/pageHead'
+import Headline from 'components/commons/headline'
 
 interface Props {
-  user: User & { lists: Array<List & { theme: Theme, isDeleted: boolean }> }
+  user: User & { lists: Array<List & { theme: Theme; isDeleted: boolean }> }
 }
 
 const UserPage = (props: Props) => {
@@ -83,8 +85,11 @@ const UserPage = (props: Props) => {
   }
 
   return (
-    <div>
-      {currentUser?.id === user.id ? <h1>マイベスト</h1> : <h1>ユーザー名 {user.name}</h1>}
+    <>
+      <PageHead title={user.name + 'さんの投稿一覧'} />
+      <Headline>
+        <h1>{user.name + 'さんの投稿一覧'}</h1>
+      </Headline>
       <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-9 px-2 grid-flow-row-dense'>
         {lists.map((list) =>
           list.isDeleted ? null : (
@@ -109,7 +114,7 @@ const UserPage = (props: Props) => {
         handleConfirm={() => handleDelete()}
         handleCancel={() => setShowModal(false)}
       />
-    </div>
+    </>
   )
 }
 
@@ -119,7 +124,6 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     const res = await client.get(`/users/${id}`)
     const user = res.data
     return { props: { user: user } }
-
   } catch (err) {
     if (err instanceof Error) {
       return {

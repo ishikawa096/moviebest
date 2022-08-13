@@ -13,22 +13,17 @@ export const arrayRandom = (array: Array<any>) => {
   return random
 }
 
-export const randomColor = () => {
-  const colors = ['bg-yellow-400', 'bg-red-400', 'bg-blue-400']
-  return arrayRandom(colors)
-}
-
 export const useWindowWidth = (): number => {
-    const [size, setSize] = useState(0)
-    useLayoutEffect(() => {
-      const updateSize = (): void => {
-        setSize(window.innerWidth)
-      }
+  const [size, setSize] = useState(0)
+  useLayoutEffect(() => {
+    const updateSize = (): void => {
+      setSize(window.innerWidth)
+    }
 
-      window.addEventListener('resize', updateSize)
-      updateSize()
+    window.addEventListener('resize', updateSize)
+    updateSize()
 
-      return () => window.removeEventListener('resize', updateSize)
-    }, [])
-    return size
-  }
+    return () => window.removeEventListener('resize', updateSize)
+  }, [])
+  return size
+}

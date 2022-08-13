@@ -3,7 +3,7 @@ import axios from 'axios'
 import AsyncCreatableSelect from 'react-select/async-creatable'
 import { toastWarn } from 'lib/toast'
 import { useState } from 'react'
-import { formatCreateLabel, FormatOptionLabel, placeholder, Input, Control, ValueContainer, movieFormStyles} from './movieSelectStyles'
+import { formatCreateLabel, FormatOptionLabel, placeholder, Input, Control, ValueContainer, movieFormStyles, formTheme } from './movieSelectStyles'
 import CloseButton from '../../commons/closeButton'
 
 const MAX_CAP = 10
@@ -66,7 +66,7 @@ const MoviesSelect = ({ movies, cap, onChange, clear }: Props) => {
           <label htmlFor='movie'>
             <strong className='bg-white border-gray-300 border border-b-white  rounded-t-lg  text-gray-500 py-1 px-5 sm:px-7 md:px-10 text-center'>{movies[i].position + 1}</strong>
             <AsyncCreatableSelect
-              value={ movies[i].title.trim() ? { label: movies[i].title, value: movies[i].title, posterPath: movies[i].tmdbImage, tmdbId: movies[i].tmdbId } : null }
+              value={movies[i].title.trim() ? { label: movies[i].title, value: movies[i].title, posterPath: movies[i].tmdbImage, tmdbId: movies[i].tmdbId } : null}
               loadOptions={searchMovie}
               onChange={(newValue: any) => onChange(newValue, i)}
               placeholder={placeholder}
@@ -78,6 +78,7 @@ const MoviesSelect = ({ movies, cap, onChange, clear }: Props) => {
               maxMenuHeight={400}
               components={{ Input, Control, ValueContainer }}
               styles={movieFormStyles}
+              theme={formTheme}
             />
           </label>
         </div>

@@ -9,8 +9,8 @@ export default function Layout({ children }: CommonLayoutProps) {
   return (
     <>
       <Header />
-      <main className='px-3 lg:px-8 font-base'>
-        <div className='min-h-screen flex flex-col items-center'>
+      <main>
+        <div className='min-h-screen flex flex-col font-base bg-gray-100 pb-32'>
           {children}
         </div>
       </main>
