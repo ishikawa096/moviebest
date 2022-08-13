@@ -5,7 +5,7 @@ import { useContext, useState } from 'react'
 import { AuthContext } from 'pages/_app'
 import { useRouter } from 'next/router'
 import axios from 'axios'
-import { toastError, toastSuccess } from 'lib/toast'
+import { toastSuccess } from 'lib/toast'
 import ImportantModal from 'lib/importantModal'
 import ListCard from 'components/lists/listCard'
 import PageHead from 'components/layout/pageHead'
@@ -13,6 +13,7 @@ import Headline from 'components/commons/headline'
 import { InView } from 'react-intersection-observer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen, faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import { errorMessage } from 'lib/helpers'
 
 interface Props {
   user: User & { lists: Array<List & { theme: Theme; isDeleted: boolean }> }
@@ -30,11 +31,7 @@ const UserPage = (props: Props) => {
   const { currentUser } = useContext(AuthContext)
 
   const EditButton = (list: { id: number }) => (
-    <button
-      onClick={() => router.push(`/lists/edit/${list.id}`)}
-      title='ベストを編集'
-      className='w-5 h-5 ml-5 hover:-translate-y-1 hover:scale-110 hover:text-gray-300 duration-150 ease-in-out'
-    >
+    <button onClick={() => router.push(`/lists/edit/${list.id}`)} title='ベストを編集' className='w-5 h-5 ml-5 hover:-translate-y-1 hover:scale-110 hover:text-gray-300 duration-150 ease-in-out'>
       <FontAwesomeIcon icon={faPen} />
     </button>
   )
@@ -59,23 +56,21 @@ const UserPage = (props: Props) => {
     setShowModal(false)
     if (targetId) {
       try {
-        const res = await axios.delete('/api/v1/client', {
+        const response = await axios.delete('/api/v1/client', {
           params: {
-            endpoint: `lists/${targetId}`,
+            path: `/lists/${targetId}`,
           },
         })
-        if (res.status !== 200) throw Error(res.statusText)
+        if (response.status !== 200 || response.data.status) throw Error(response.data.message)
         toastSuccess('ベストが削除されました')
         const newLists = lists.map((l) => (l.id === targetId ? { ...l, isDeleted: true } : l))
         setLists(newLists)
         update ? setUpdate(false) : setUpdate(true)
       } catch (err) {
-        if (err instanceof Error) {
-          toastError('削除できませんでした')
-        }
+        errorMessage()
       }
     } else {
-      toastError('削除できませんでした')
+      errorMessage()
     }
   }
 

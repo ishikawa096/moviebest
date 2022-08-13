@@ -3,8 +3,8 @@ import { useRouter } from 'next/router'
 import axios from 'axios'
 import PageHead from 'components/layout/pageHead'
 import type { CreateListParams, Theme } from 'interfaces/interface'
-import { handleAxiosError } from 'lib/helpers'
-import { toastSuccess, toastWarn } from 'lib/toast'
+import { errorMessage, redirectToSignIn } from 'lib/helpers'
+import { toastError, toastSuccess, toastWarn } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import ThemeSelect from 'components/lists/form/themeSelect'
 import Link from 'next/link'
@@ -26,7 +26,7 @@ const NewList = () => {
   const fetchTheme = async () => {
     const res = await axios.get('/api/v1/client', {
       params: {
-        endpoint: `themes/${queryThemeId}`,
+        path: `/themes/${queryThemeId}`,
       },
     })
     if (res.status !== 200) throw Error(res.statusText)
@@ -38,7 +38,7 @@ const NewList = () => {
   const fetchThemes = async () => {
     const res = await axios.get('/api/v1/client', {
       params: {
-        endpoint: `themes`,
+        path: `/themes`,
       },
     })
     if (res.status !== 200) throw Error(res.statusText)
@@ -60,8 +60,7 @@ const NewList = () => {
 
   const { isSignedIn } = useContext(AuthContext)
   if (!isSignedIn && themeState.state.isLoading) {
-    router.push('/signin')
-    toastWarn('ログインしてください')
+    redirectToSignIn(router)
     return
   }
 
@@ -73,17 +72,15 @@ const NewList = () => {
     try {
       const response = await axios.post('/api/v1/client', {
         params: { list: newData.list },
-        endpoint: 'lists',
+        path: '/lists',
       })
-      if (response.status !== 200) throw Error(response.statusText)
+      if (response.status !== 200 || response.data.status) throw Error(response.data.message)
 
       const savedList = response.data
       toastSuccess('リストが作成されました')
       router.push(`/lists/${savedList.id}`)
     } catch (err) {
-      if (err instanceof Error) {
-        handleAxiosError(err)
-      }
+      errorMessage()
     }
   }
 

@@ -1,16 +1,15 @@
 import { useState, useContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import type { PasswordParams, UserEditParams } from 'interfaces/interface'
-import { toastSuccess, toastError, toastWarn } from 'lib/toast'
+import { toastSuccess, toastError } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import axios from 'axios'
 import PageHead from 'components/layout/pageHead'
 import SignInButton from 'components/commons/signInButton'
 import SignInInput from 'components/signInInput'
 import { validatePassword, validateUserEdit } from 'lib/validates'
-import { isEmptyObject } from 'lib/helpers'
+import { errorMessage, isEmptyObject, redirectToSignIn } from 'lib/helpers'
 import Headline from 'components/commons/headline'
-import Link from 'next/link'
 
 const PasswordPage: React.FC = () => {
   const router = useRouter()
@@ -32,8 +31,7 @@ const PasswordPage: React.FC = () => {
   }, [])
 
   if (!isSignedIn && currentUser === undefined) {
-    router.push('/signin')
-    toastWarn('ログインが必要です')
+    redirectToSignIn(router)
     return <></>
   }
 
@@ -62,7 +60,7 @@ const PasswordPage: React.FC = () => {
       }
     } catch (err) {
       setIsSending(false)
-      toastError('エラーにより更新できませんでした')
+      errorMessage()
     }
   }
 
@@ -94,7 +92,7 @@ const PasswordPage: React.FC = () => {
       }
     } catch (err) {
       setIsSendingPassword(false)
-      toastError('エラーにより更新できませんでした')
+      errorMessage()
     }
   }
 
@@ -139,13 +137,7 @@ const PasswordPage: React.FC = () => {
             />
           </form>
           {/* <p className='underline text-sm text-blue-500 hover:text-blue-200'> */}
-            <SignInButton
-              onClick={() => router.back()}
-              disabled={false}
-              isSending={false}
-              text='ユーザー情報へ戻る'
-              color='white'
-            />
+          <SignInButton onClick={() => router.back()} disabled={false} isSending={false} text='ユーザー情報へ戻る' color='white' />
           {/* </p> */}
         </div>
       </div>

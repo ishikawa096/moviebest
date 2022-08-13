@@ -16,81 +16,74 @@ export const client = applyCaseMiddleware(
 
 export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   let cookies
-  let endpoint
+  let path
   let params
   switch (req.method) {
     case 'GET':
-      if (req.query.endpoint) {
-        endpoint = req.query.endpoint
+      if (req.query.path) {
+        path = req.query.path
         try {
-          const response = await client.get(`/${endpoint}`)
-          if (response.status === 200) {
-            res.status(200).json(response.data)
-            break
-          } else {
-            res.status(response.status).end()
-          }
+          const response = await client.get(`${path}`)
+          if (response.status !== 200) throw Error(response.statusText)
+          res.status(200).json(response.data)
+          break
         } catch (err) {
-          res.status(500).json(err)
+          res.send(err)
           break
         }
       } else {
-        res.status(400).end()
+        res.status(400).send('request query is missing')
         break
       }
 
     case 'POST':
-      cookies = nookies.get({ req })
-      endpoint = req.body.endpoint
-      params = req.body.params
-      try {
-        const response = await client.post(
-          `/${endpoint}`, params,
-          {
+      if (req.body.path && req.body.params) {
+        cookies = nookies.get({ req })
+        path = req.body.path
+        params = req.body.params
+        try {
+          const response = await client.post(`${path}`, params, {
             headers: authHeaders(cookies),
-          }
-        )
-        if (response.status === 200) {
+          })
+          if (response.status !== 200) throw Error(response.statusText)
           res.status(200).json(response.data)
           break
-        } else {
-          res.status(response.status).end()
+        } catch (err) {
+          res.send(err)
           break
         }
-      } catch (err) {
-        res.status(500).json(err)
+      } else {
+        res.status(400).send('request body is missing')
         break
       }
 
     case 'PATCH':
-      cookies = nookies.get({ req })
-      endpoint = req.body.endpoint
-      params = req.body.params
-      try {
-        const response = await client.patch(
-          `/${endpoint}`, params,
-          {
+      if (req.body.path && req.body.params) {
+        cookies = nookies.get({ req })
+        path = req.body.path
+        params = req.body.params
+        try {
+          const response = await client.patch(`${path}`, params, {
             headers: authHeaders(cookies),
-          }
-        )
-        if (response.status === 200) {
+          })
+          if (response.status !== 200) throw Error(response.statusText)
           res.status(200).json(response.data)
           break
-        } else {
-          res.status(response.status).end()
+        } catch (err) {
+          res.send(err)
           break
         }
-      } catch (err) {
-        res.status(500).json(err)
+      } else {
+        res.status(400).send('request body is missing')
         break
       }
 
     case 'DELETE':
-      if (req.query.endpoint) {
-        endpoint = req.query.endpoint
+      if (req.query.path) {
+        path = req.query.path
         cookies = nookies.get({ req })
         try {
-          const response = await client.delete(`/${endpoint}`, {
+          const response = await client.delete(`${path}`, {
             headers: authHeaders(cookies),
           })
           if (response.status === 200) {
@@ -101,11 +94,11 @@ export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
             break
           }
         } catch (err) {
-          res.status(500).send(err)
+          res.send(err)
           break
         }
       } else {
-        res.status(400).send('request query is invalid')
+        res.status(400).send('request query is missing')
         break
       }
 

@@ -2,13 +2,14 @@ import { useState, useContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { signIn } from 'lib/api/auth'
 import type { SignInParams } from 'interfaces/interface'
-import { toastSuccess, toastError, toastInfo } from 'lib/toast'
+import { toastSuccess } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import SignInButton from 'components/commons/signInButton'
 import RenderErrors from 'components/renderErrors'
 import PageHead from 'components/layout/pageHead'
 import SignInLayout from 'components/layout/signInLayout'
 import SignInInput from 'components/signInInput'
+import { alreadySignIn, errorMessage } from 'lib/helpers'
 
 const GUEST_EMAIL = 'guest@example.com'
 const GUEST_PASSWORD = 'guestloginpassword'
@@ -23,8 +24,7 @@ const SignIn: React.FC = () => {
 
   useEffect(() => {
     if (isSignedIn) {
-      toastInfo('ログイン済みです')
-      router.back()
+      alreadySignIn(router)
     }
   }, [router])
 
@@ -70,7 +70,7 @@ const SignIn: React.FC = () => {
       }
     } catch (err) {
       setIsSending(false)
-      toastError('エラーによりログインできませんでした')
+      errorMessage()
     }
   }
 

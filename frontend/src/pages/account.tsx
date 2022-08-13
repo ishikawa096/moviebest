@@ -9,6 +9,8 @@ import { destroyCookies } from 'lib/api/authHelper'
 import NowLoading from 'components/commons/nowLoading'
 import Headline from 'components/commons/headline'
 import SubmitButton from 'components/commons/submitButton'
+import { redirect } from 'next/dist/server/api-utils'
+import { redirectToSignIn } from 'lib/helpers'
 
 interface UserState {
   state: { isLoading: false; user: User } | { isLoading: true }
@@ -34,7 +36,7 @@ const UserPage = () => {
       try {
         const res = await axios.delete('/api/v1/client', {
           params: {
-            endpoint: 'auth',
+            path: '/auth',
           },
         })
         if (res.status !== 200) throw Error(res.statusText)
@@ -54,8 +56,7 @@ const UserPage = () => {
   }
 
   if (!isSignedIn && userState.state.isLoading) {
-    router.push('/signin')
-    toastWarn('ログインしてください')
+    redirectToSignIn(router)
     return
   }
 

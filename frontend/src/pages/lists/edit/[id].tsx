@@ -4,8 +4,8 @@ import dynamic from 'next/dynamic'
 import axios from 'axios'
 import PageHead from 'components/layout/pageHead'
 import type { CreateListParams, List, Theme, User } from 'interfaces/interface'
-import { handleAxiosError } from 'lib/helpers'
-import { toastError, toastInfo, toastSuccess, toastWarn } from 'lib/toast'
+import { errorMessage, redirectToSignIn } from 'lib/helpers'
+import { toastError, toastSuccess, toastWarn } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import NowLoading from 'components/commons/nowLoading'
 import Headline from 'components/commons/headline'
@@ -28,7 +28,7 @@ const EditList: React.FC = () => {
     try {
       const res = await axios.get('/api/v1/client', {
         params: {
-          endpoint: `lists/${listId}`,
+          path: `/lists/${listId}`,
         },
       })
       const list = res.data
@@ -53,8 +53,7 @@ const EditList: React.FC = () => {
 
   const { isSignedIn, currentUser } = useContext(AuthContext)
   if (!isSignedIn && listState.state.isLoading) {
-    router.push('/signin')
-    toastWarn('ログインしてください')
+    redirectToSignIn(router)
     return <></>
   }
 
@@ -95,17 +94,15 @@ const EditList: React.FC = () => {
     try {
       const response = await axios.patch('/api/v1/client', {
         params: { list: newList },
-        endpoint: `lists/${listId}`,
+        path: `/lists/${listId}`,
       })
-      if (response.status !== 200) throw Error(response.statusText)
+      if (response.status !== 200 || response.data.status) throw Error(response.statusText)
 
       const savedList = response.data
       toastSuccess('リストが更新されました')
       router.push(`/lists/${savedList.id}`)
     } catch (err) {
-      if (err instanceof Error) {
-        handleAxiosError(err)
-      }
+      errorMessage()
     }
   }
 

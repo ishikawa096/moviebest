@@ -3,13 +3,13 @@ import { useRouter } from 'next/router'
 import { AuthContext } from './_app'
 import { signUp } from 'lib/api/auth'
 import type { SignUpParams } from 'interfaces/interface'
-import { toastSuccess, toastError, toastWarn, toastInfo } from 'lib/toast'
+import { toastSuccess, toastError } from 'lib/toast'
 import SignInLayout from 'components/layout/signInLayout'
 import SignInButton from 'components/commons/signInButton'
 import SignInInput from 'components/signInInput'
 import PageHead from 'components/layout/pageHead'
 import { validateSignUp } from 'lib/validates'
-import { isEmptyObject } from 'lib/helpers'
+import { alreadySignIn, errorMessage, isEmptyObject } from 'lib/helpers'
 
 const SignUp: React.FC = () => {
   const router = useRouter()
@@ -25,8 +25,7 @@ const SignUp: React.FC = () => {
 
   useEffect(() => {
     if (isSignedIn) {
-      toastInfo('ログイン済みです')
-      router.back()
+      alreadySignIn(router)
     }
   }, [])
 
@@ -58,7 +57,7 @@ const SignUp: React.FC = () => {
       }
     } catch (err) {
       setIsSending(false)
-      toastError('エラーにより登録できませんでした')
+      errorMessage()
     }
   }
 
