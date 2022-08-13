@@ -7,6 +7,8 @@ import { toastSuccess, toastError } from 'lib/toast'
 import HeaderButton from 'components/commons/headerButton'
 import Hamburger from 'components/commons/hamburger'
 import { useWindowWidth } from 'lib/helpers'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPen } from '@fortawesome/free-solid-svg-icons'
 
 const Header = () => {
   const { loading, isSignedIn, setIsSignedIn, currentUser } = useContext(AuthContext)
@@ -47,11 +49,11 @@ const Header = () => {
     setSettingOpen(false)
   }
 
-  const NavItem = ({ path, name }: { path: string; name: string }) => (
+  const NavItem = ({ path, name }: { path: string; name: string | React.ReactNode }) => (
     <div className='flex items-center text-center w-full md:w-auto'>
       <button
         onClick={() => handleLink(path)}
-        className='block w-full py-3 whitespace-nowrap text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 decoration-transparent hover:decoration-sky-400 md:p-0 hover:underline decoration-4 duration-300'
+        className='block w-full py-3 whitespace-nowrap text-base text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 decoration-transparent hover:decoration-sky-400 md:p-0 hover:underline decoration-4 duration-300'
       >
         {name}
       </button>
@@ -74,7 +76,17 @@ const Header = () => {
                 <HeaderButton text='投稿' onClick={() => handleLink('/lists/new')} color='color' />
               </>
             )}
-            {!settingOpen && menuOpen ? <NavItem name='✏️ 投稿する' path='/lists/new' /> : null}
+            {!settingOpen && menuOpen ? (
+              <NavItem
+                name={
+                  <>
+                    <FontAwesomeIcon icon={faPen} className='px-1' />
+                    投稿する
+                  </>
+                }
+                path='/lists/new'
+              />
+            ) : null}
             {settingOpen || menuOpen ? (
               <div className='w-full shadow-lg md:space-y-7 md:w-60 md:py-8 md:z-20 md:absolute md:top-14 md:right-3 md:bg-white md:border-b'>
                 <NavItem name='マイベスト' path={`/users/${currentUser.id}`} />

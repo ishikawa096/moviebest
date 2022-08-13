@@ -11,6 +11,8 @@ import ListCard from 'components/lists/listCard'
 import PageHead from 'components/layout/pageHead'
 import Headline from 'components/commons/headline'
 import { InView } from 'react-intersection-observer'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPen, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 
 interface Props {
   user: User & { lists: Array<List & { theme: Theme; isDeleted: boolean }> }
@@ -31,13 +33,19 @@ const UserPage = (props: Props) => {
     <button
       onClick={() => router.push(`/lists/edit/${list.id}`)}
       title='ベストを編集'
-      className='w-40 h-10 bottom-10 flex justify-center items-center bg-cyan-500
-          rounded-full drop-shadow-sm text-white text-lg
-          hover:-translate-y-1 hover:scale-110 hover:bg-sky-400 duration-150 ease-in-out'
+      className='w-5 h-5 ml-5 hover:-translate-y-1 hover:scale-110 hover:text-gray-300 duration-150 ease-in-out'
     >
-      編集
+      <FontAwesomeIcon icon={faPen} />
     </button>
   )
+
+  const DeleteButton = (list: { id: number; title: string }) => {
+    return (
+      <button onClick={() => openModal(list)} title='ベストを削除' className='w-5 h-5 ml-5 hover:-translate-y-1 hover:scale-110 hover:text-gray-300 duration-150 ease-in-out'>
+        <FontAwesomeIcon icon={faTrashCan} />
+      </button>
+    )
+  }
 
   const openModal = (list: { id: number; title: string }) => {
     const id = list.id
@@ -45,20 +53,6 @@ const UserPage = (props: Props) => {
     setTargetId(id)
     setTargetTitle(title)
     setShowModal(true)
-  }
-
-  const DeleteButton = (list: { id: number; title: string }) => {
-    return (
-      <button
-        onClick={() => openModal(list)}
-        title='ベストを削除'
-        className='w-40 h-10 bottom-10 flex justify-center items-center  bg-cyan-500
-          rounded-full drop-shadow-sm text-white text-lg
-          hover:-translate-y-1 hover:scale-110 hover:bg-sky-400 duration-150 ease-in-out'
-      >
-        削除
-      </button>
-    )
   }
 
   const handleDelete = async () => {
@@ -97,14 +91,14 @@ const UserPage = (props: Props) => {
             <InView triggerOnce={true} rootMargin='-100px' key={list.id}>
               {({ inView, ref }) => {
                 return (
-                  <div ref={ref} className={`min-h-[300px] ${inView ? 'motion-safe:animate-fade' : ''} `}>
-                    {inView ? <ListCard user={user} movies={list.movies} theme={list.theme} /> : undefined}
+                  <div ref={ref} className={`min-h-[300px] relative ${inView ? 'motion-safe:animate-fade' : ''} `}>
                     {inView && currentUser?.id === user.id ? (
-                      <>
+                      <div className='absolute bottom-2 left-1/2 z-20 flex-row flex-nowrap text-lg text-white space-x-7'>
                         <EditButton id={list.id} />
                         <DeleteButton id={list.id} title={list.theme.title} />
-                      </>
+                      </div>
                     ) : null}
+                    {inView ? <ListCard user={user} movies={list.movies} theme={list.theme} /> : undefined}
                   </div>
                 )
               }}

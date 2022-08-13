@@ -7,6 +7,8 @@ import LargeButton from 'components/commons/largeButton'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import About from 'components/about'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faRankingStar, faFilm } from '@fortawesome/free-solid-svg-icons'
 
 interface Props {
   themes: Array<Theme & { lists: Array<List> }>
@@ -38,7 +40,8 @@ const Home = (props: Props) => {
       <section className='w-screen'>
         <div className='mb-5 w-full'>
           <div className='w-screen px-10 py-2 text-2xl text-bold'>
-            <h2>🎥みんなの新着ベスト</h2>
+            <FontAwesomeIcon icon={faFilm} className='px-1' />
+            みんなの新着ベスト
           </div>
           <ListsSlider lists={lists} />
         </div>
@@ -54,11 +57,12 @@ const Home = (props: Props) => {
       <section>
         <div className='mb-5'>
           <div className='w-screen px-10 py-2 text-2xl text-bold'>
-            <h2>💫人気のお題</h2>
+            <FontAwesomeIcon icon={faRankingStar} className='px-1' />
+            人気のお題
           </div>
           <PopularThemes themes={themes} />
         </div>
-        <div className='mb-32 flex flex-row items-center text-center justify-around gap-10'>
+        <div className='mb-32 flex flex-col md:flex-row items-center text-center justify-around gap-10'>
           <LargeButton
             title='お題をもっと見る'
             onClick={() => {

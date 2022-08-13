@@ -3,6 +3,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { posterUrl } from 'lib/tmdbHelpers'
 import { useState } from 'react'
+import TweetIcon from './tweetIcon'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser } from '@fortawesome/free-solid-svg-icons'
 
 const BLANK_IMAGE = '/342x509.png'
 const MAX_TITLE_LENGTH = 20
@@ -75,24 +78,16 @@ const ListCard = ({ theme, user, movies }: Props) => {
             </a>
           </Link>
 
-          <div className='absolute bottom-0 flex flex-row justify-between w-full p-2 text-center text-white font-thin  bg-opacity-50 bg-gray-400 backdrop-blur-xl backdrop-saturate-[10]'>
-            <div>
-              作成者：
+          <div className='absolute bottom-0 flex flex-row justify-between w-full text-center text-white font-light bg-opacity-50 bg-gray-400 backdrop-blur-xl backdrop-saturate-[10]'>
+            <div className='p-2'>
               <Link href={`/users/${user.id}`}>
-                <a className='hover:underline'>{user.name}</a>
+                <a className='hover:underline'>
+                  <FontAwesomeIcon icon={faUser} className='px-1' />
+                  {user.name}
+                </a>
               </Link>
             </div>
-            <div>
-              <a
-                href={`https://twitter.com/intent/tweet?url=${process.env.NEXT_PUBLIC_APP_HOST}/lists/${movies[0].listId}&text=${movies
-                  .map((m) => `${m.position + 1}.%20${m.title}%0a`)
-                  .join('')}&hashtags=${theme.title}`}
-                target='_blank'
-                rel='noreferrer'
-              >
-                tweet
-              </a>
-            </div>
+            <TweetIcon themeTitle={theme.title} movies={movies} />
           </div>
         </div>
       </div>

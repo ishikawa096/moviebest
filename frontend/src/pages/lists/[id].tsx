@@ -10,6 +10,8 @@ import Posters from 'components/lists/posters'
 import FloatingButton from 'components/commons/floatingButton'
 import ListCard from 'components/lists/listCard'
 import PageHead from 'components/layout/pageHead'
+import HeaderButton from 'components/commons/headerButton'
+import TweetButton from 'components/commons/tweetButton'
 
 const BLANK_IMAGE = '/342x509.png'
 
@@ -58,21 +60,24 @@ const ListPage = (props: Props) => {
   return (
     <>
       <PageHead title={user.name + 'さんの' + theme.title} />
-      <div className='flex flex-col px-3 py-5 text-center'>
-        <h3 className='mb-2 text-sm md:text-base lg:text-md px-2 py-1 italic underline decoration-orange-500 w-full'>
+      <div className='flex flex-col px-3 py-5 text-center italic w-full underline'>
+        <h3 className='mb-2 text-sm md:text-base lg:text-md px-2 py-1 w-full'>
           <Link href={`/users/${list.userId}`}>
-            <a className='decoration-orange-500 hover:decoration-yellow-200 hover:decoration-6'>{user.name} さんの</a>
+            <a className='decoration-orange-500 hover:text-orange-600 hover:decoration-6 duration-150'>{user.name} さんの</a>
           </Link>
         </h3>
-        <h2 className='text-3xl md:text-4xl lg:text-5xl px-2 py-1 italic underline decoration-orange-500 w-full'>
+        <h2 className='text-3xl md:text-4xl lg:text-5xl px-2 py-1'>
           <Link href={`/themes/${theme.id}`}>
-            <a className='decoration-orange-500 hover:decoration-yellow-200 hover:decoration-6'># {theme.title}</a>
+            <a className='decoration-orange-500 hover:text-orange-600 duration-150'># {theme.title}</a>
           </Link>
         </h2>
       </div>
       <PostersContainer movies={movies}>
         <Posters movies={movies} theme={theme} images={images} blankImage={BLANK_IMAGE} onError={onError} />
       </PostersContainer>
+      <div className='w-full flex justify-center mb-6'>
+        <TweetButton themeTitle={theme.title} movies={movies} />
+      </div>
       <div className='flex flex-col lg:flex-row justify-start mb-20 mx-40 rounded-lg items-center'>
         <div>
           <ListCard theme={theme} user={user} movies={movies} />
