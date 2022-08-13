@@ -16,6 +16,7 @@ const ThemePage = (props: Props) => {
   const router = useRouter()
   const theme = props.theme
   const lists = theme.lists.map((l) => ({ ...l, theme: theme }))
+  lists.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
 
   const buttonHandler = () => {
     router.push({
