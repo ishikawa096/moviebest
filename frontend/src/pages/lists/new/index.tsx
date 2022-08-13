@@ -95,7 +95,7 @@ const NewList = () => {
       {loading ? <NowLoading /> : themeState.state.isLoading ? (
         <div className='flex flex-col w-full mb-1 p-10'>
           <div className='text-center text-sm md:text-base'>
-            まずお題を選ぼう。　新しくお題を作るなら→
+            お題を選ぼう。　新しくお題を作るなら→
             <Link href='/themes/new'>
               <a className='text-sky-500 hover:text-sky-300'>こちら</a>
             </Link>
