@@ -32,59 +32,71 @@ const ListCard = ({ theme, user, movies }: Props) => {
   }
 
   const listColumn = movies.map((movie) => (
-    <div key={movie.id} className='flex flex-row backdrop-blur-xl backdrop-brightness-3xl text-black rounded-sm overflow-hidden backdrop-saturate-[3]'>
-      <div className={`text-center mr-[1px] flex font-sans w-5 bg-opacity-50  bg-white items-center text-gray-800 text-md ${movie.position + 1 >= 10 ? 'pl-0.5' : 'pl-1.5' }`}>{movie.position + 1}</div>
-      <div className={`'pl-1 pr-3 py-1 flex items-center justify-center tracking-tighter w-full bg-opacity-50 bg-white whitespace-nowrap overflow-x-scroll text-gray-900 ${movie.title.length > 12 ? 'text-base' : 'text-xl' }`}>{titleOmit(movie.title)}</div>
+    <div key={movie.id} className='flex flex-row text-white rounded-sm overflow-hidden'>
+      <div
+        className={`text-center mr-[1px] flex font-sans w-5 items-center text-md bg-opacity-50 bg-gray-400 backdrop-blur-xl backdrop-saturate-[10] ${movie.position + 1 >= 10 ? 'pl-0.5' : 'pl-1.5'}`}
+      >
+        {movie.position + 1}
+      </div>
+      <div
+        className={`'pl-1 pr-3 py-1 flex items-center justify-center tracking-tighter whitespace-nowrap w-full bg-opacity-50 bg-gray-400 backdrop-blur-xl backdrop-saturate-[10] ${
+          movie.title.length > 12 ? 'text-base' : 'text-lg'
+        }`}
+      >
+        {titleOmit(movie.title)}
+      </div>
     </div>
   ))
 
   return (
-    <div className='relative flex flex-col w-80 sm:w-[22rem] h-[fit-content] min-h-[30rem] mr-auto ml-auto justify-center items-center rounded-xl overflow-hidden'>
-      <Image
-        src={image ? posterUrl(image, 'w500') : BLANK_IMAGE}
-        alt={'このベストのメイン画像'}
-        layout='fill'
-        objectFit='cover'
-        placeholder='blur'
-        blurDataURL={BLANK_IMAGE}
-        onError={() => onError()}
-      />
+    <>
+      <div className='relative flex flex-col w-80 sm:w-[22rem] h-[fit-content] min-h-[30rem] mr-auto ml-auto justify-center items-center rounded-xl overflow-hidden'>
+        <Image
+          src={image ? posterUrl(image, 'w500') : BLANK_IMAGE}
+          alt={'このベストのメイン画像'}
+          layout='fill'
+          objectFit='cover'
+          placeholder='blur'
+          blurDataURL={BLANK_IMAGE}
+          onError={() => onError()}
+        />
 
-      <div className='absolute flex flex-col w-full h-full z-10 rounded-2xl'>
-        <Link href={`/themes/${theme.id}`}>
-          <a>
-            <div className='p-4 text-center text-xl text-white font-light backdrop-brightness-50 backdrop-blur-lg backdrop-saturate-[5] hover:underline'>
-              <h1># {theme.title}</h1>
-            </div>
-          </a>
-        </Link>
-        <Link href={`/lists/${movies[0].listId}`}>
-          <a className='contents'>
-            <div className='flex flex-col justify-around h-full px-2 mb-10'>{listColumn}</div>
-          </a>
-        </Link>
-
-        <div className='absolute bottom-0 flex flex-row justify-between w-full p-2 text-center text-white font-thin backdrop-brightness-50 backdrop-blur-lg backdrop-saturate-[5]'>
-          <div>
-            作成者：
-            <Link href={`/users/${user.id}`}>
-              <a className='hover:underline'>{user.name}</a>
-            </Link>
-          </div>
-          <div>
-            <a
-              href={`https://twitter.com/intent/tweet?url=${process.env.NEXT_PUBLIC_APP_HOST}/lists/${movies[0].listId}&text=${movies
-                .map((m) => `${m.position + 1}.%20${m.title}%0a`)
-                .join('')}&hashtags=${theme.title}`}
-              target='_blank'
-              rel='noreferrer'
-            >
-              tweet
+        <div className='absolute flex flex-col w-full h-full z-10 rounded-2xl'>
+          <Link href={`/themes/${theme.id}`}>
+            <a>
+              <div className='p-4 text-center text-xl text-white font-light  bg-opacity-50 bg-gray-400 backdrop-blur-xl backdrop-saturate-[10] hover:underline'>
+                <h1># {theme.title}</h1>
+              </div>
             </a>
+          </Link>
+          <Link href={`/lists/${movies[0].listId}`}>
+            <a className='contents'>
+              <div className='flex flex-col justify-around h-full px-2 mb-10'>{listColumn}</div>
+            </a>
+          </Link>
+
+          <div className='absolute bottom-0 flex flex-row justify-between w-full p-2 text-center text-white font-thin  bg-opacity-50 bg-gray-400 backdrop-blur-xl backdrop-saturate-[10]'>
+            <div>
+              作成者：
+              <Link href={`/users/${user.id}`}>
+                <a className='hover:underline'>{user.name}</a>
+              </Link>
+            </div>
+            <div>
+              <a
+                href={`https://twitter.com/intent/tweet?url=${process.env.NEXT_PUBLIC_APP_HOST}/lists/${movies[0].listId}&text=${movies
+                  .map((m) => `${m.position + 1}.%20${m.title}%0a`)
+                  .join('')}&hashtags=${theme.title}`}
+                target='_blank'
+                rel='noreferrer'
+              >
+                tweet
+              </a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
