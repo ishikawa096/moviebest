@@ -7,6 +7,8 @@ import { toastError, toastSuccess, toastWarn } from 'lib/toast'
 import ImportantModal from 'lib/importantModal'
 import { destroyCookies } from 'lib/api/authHelper'
 import NowLoading from 'components/commons/nowLoading'
+import Headline from 'components/commons/headline'
+import SubmitButton from 'components/commons/submitButton'
 
 interface UserState {
   state: { isLoading: false; user: User } | { isLoading: true }
@@ -17,38 +19,14 @@ const UserPage = () => {
   const router = useRouter()
   const [userState, setUserState] = useState<UserState>({ state: { isLoading: true } })
   const [showModal, setShowModal] = useState<boolean>(false)
+  const [isGuest, setIsGuest] = useState(false)
 
   useEffect(() => {
     if (currentUser !== undefined) {
       setUserState({ state: { isLoading: false, user: currentUser } })
     }
-  }, [currentUser])
-
-  const EditButton = () => (
-    <button
-      onClick={() => router.push('/setting')}
-      title='アカウント情報変更'
-      className='w-40 h-10 bottom-10 flex justify-center items-center bg-cyan-500
-          rounded-full drop-shadow-sm text-white text-lg
-          hover:-translate-y-1 hover:scale-110 hover:bg-sky-400 duration-150 ease-in-out'
-    >
-      アカウント情報変更
-    </button>
-  )
-
-  const DeleteButton = () => {
-    return (
-      <button
-        onClick={() => setShowModal(true)}
-        title='ユーザーを削除'
-        className='w-40 h-10 bottom-10 flex justify-center items-center  bg-cyan-500
-          rounded-full drop-shadow-sm text-white text-lg
-          hover:-translate-y-1 hover:scale-110 hover:bg-sky-400 duration-150 ease-in-out'
-      >
-        削除
-      </button>
-    )
-  }
+    if (!userState.state.isLoading && userState.state.user.email === 'guest@example.com') setIsGuest(true) // TODO
+  }, [])
 
   const handleDelete = async () => {
     setShowModal(false)
@@ -61,7 +39,7 @@ const UserPage = () => {
         })
         if (res.status !== 200) throw Error(res.statusText)
         toastSuccess('アカウントが削除されました')
-        toastSuccess('またのご利用お待ちしております') //todo 専用ページ
+        toastSuccess('ご利用ありがとうございました')
         destroyCookies()
         setIsSignedIn(false)
         router.push('/')
@@ -86,16 +64,32 @@ const UserPage = () => {
       {userState.state.isLoading ? (
         <NowLoading />
       ) : (
-        <div>
-            <h1>ユーザー名 {userState.state.user.name}</h1>
-            email {userState.state.user.email}
-            <div>
-              {userState.state.user.email === 'guest@example.com' ? // TODO
-                <p>ゲストユーザーはユーザー情報を変更できません</p>
-              : <>
-            <EditButton />
-            <DeleteButton /></>}
+        <>
+          <Headline>
+            <h1>ユーザー設定</h1>
+          </Headline>
+
+          <div className='flex flex-col items-center px-5 md:px-32 text-gray-700'>
+            <div className='bg-white w-full rounded-lg flex flex-col md:items-center p-5 md:p-10'>
+              <div className='text-lg text-center rounded-lg border'>
+                <div className='flex flex-col md:flex-row'>
+                  <div className='md:w-32 p-6 px-3 text-sm border-b bg-gray-100 whitespace-nowrap'>ユーザー名</div>
+                  <div className='w-full p-6 border-b'>{userState.state.user.name}</div>
+                </div>
+                <div className='flex flex-col md:flex-row'>
+                  <div className='md:w-32 p-6 px-3 text-sm bg-gray-100 whitespace-nowrap'>Email</div>
+                  <div className='w-full p-6'>{userState.state.user.email}</div>
+                </div>
+              </div>
+
+              <div className='flex flex-col gap-10 pt-10 items-center'>
+                {isGuest ? <p>ゲストユーザーはユーザー情報を変更できません</p> : undefined}
+                <SubmitButton onClick={() => router.push('/setting')} title='情報変更' disabled={isGuest} isSending={false} />
+                <SubmitButton onClick={() => setShowModal(true)} title='アカウント削除' disabled={isGuest} isSending={false} />
+              </div>
+            </div>
           </div>
+
           <ImportantModal
             showModal={showModal}
             title='アカウントを削除しますか？'
@@ -105,7 +99,7 @@ const UserPage = () => {
             handleConfirm={() => handleDelete()}
             handleCancel={() => setShowModal(false)}
           />
-        </div>
+        </>
       )}
     </>
   )

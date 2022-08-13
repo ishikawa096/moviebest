@@ -6,10 +6,11 @@ import { AuthContext } from 'pages/_app'
 import axios from 'axios'
 import PageHead from 'components/layout/pageHead'
 import SignInButton from 'components/commons/signInButton'
-import SignInLayout from 'components/layout/signInLayout'
 import SignInInput from 'components/signInInput'
 import { validatePassword, validateUserEdit } from 'lib/validates'
 import { isEmptyObject } from 'lib/helpers'
+import Headline from 'components/commons/headline'
+import Link from 'next/link'
 
 const PasswordPage: React.FC = () => {
   const router = useRouter()
@@ -100,40 +101,54 @@ const PasswordPage: React.FC = () => {
   return (
     <>
       <PageHead title='アカウント情報変更' />
-      <SignInLayout title='アカウント情報変更'>
-        <form className='px-2 sm:px-5 py-5 flex flex-col'>
-          <SignInInput value={name} label='ユーザー名' name='name' type='text' autoComplete='nickname' onChange={(e) => setName(e.target.value)} error={formErrors.name} />
-          <SignInInput value={email} label='Email' name='email' type='email' autoComplete='email' onChange={(e) => setEmail(e.target.value)} error={formErrors.email} />
-          <SignInButton onClick={handleAccountSubmit} disabled={!name && !email ? true : false} isSending={isSending} text='アカウント更新' color='color' />
-          <p className='pt-3 pb-5 text-sm'>パスワードを変更する場合は以下のフィールドの入力が必要です</p>
-          <SignInInput
-            value={currentPassword}
-            label='現在のパスワード'
-            name='currentPassword'
-            type='password'
-            autoComplete='current-password'
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            error={formErrors.currentPassword}
-          />
-          <SignInInput value={password} label='パスワード' name='password' type='password' autoComplete='new-password' onChange={(e) => setPassword(e.target.value)} error={formErrors.password} />
-          <SignInInput
-            value={passwordConfirmation}
-            label='確認用パスワード'
-            name='passwordConfirmation'
-            type='password'
-            autoComplete='new-password'
-            onChange={(e) => setPasswordConfirmation(e.target.value)}
-            error={formErrors.passwordConfirmation}
-          />
-          <SignInButton
-            onClick={handlePasswordSubmit}
-            disabled={!currentPassword || !password || !passwordConfirmation ? true : false}
-            isSending={isSendingPassword}
-            text='パスワード更新'
-            color='color'
-          />
-        </form>
-      </SignInLayout>
+      <Headline>
+        <h1>アカウント情報変更</h1>
+      </Headline>
+      <div className='flex flex-col items-center px-5 md:px-32 text-gray-700'>
+        <div className='bg-white w-full rounded-lg flex flex-col md:items-center p-5 md:p-10'>
+          <form className='px-2 sm:px-5 py-5 flex flex-col'>
+            <SignInInput value={name} label='ユーザー名' name='name' type='text' autoComplete='nickname' onChange={(e) => setName(e.target.value)} error={formErrors.name} />
+            <SignInInput value={email} label='Email' name='email' type='email' autoComplete='email' onChange={(e) => setEmail(e.target.value)} error={formErrors.email} />
+            <SignInButton onClick={handleAccountSubmit} disabled={!name && !email ? true : false} isSending={isSending} text='アカウント更新' color='color' />
+            <p className='pt-2 pb-5 text-xs'>パスワードを変更する場合は以下の入力が必要です</p>
+            <SignInInput
+              value={currentPassword}
+              label='現在のパスワード'
+              name='currentPassword'
+              type='password'
+              autoComplete='current-password'
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              error={formErrors.currentPassword}
+            />
+            <SignInInput value={password} label='パスワード' name='password' type='password' autoComplete='new-password' onChange={(e) => setPassword(e.target.value)} error={formErrors.password} />
+            <SignInInput
+              value={passwordConfirmation}
+              label='確認用パスワード'
+              name='passwordConfirmation'
+              type='password'
+              autoComplete='new-password'
+              onChange={(e) => setPasswordConfirmation(e.target.value)}
+              error={formErrors.passwordConfirmation}
+            />
+            <SignInButton
+              onClick={handlePasswordSubmit}
+              disabled={!currentPassword || !password || !passwordConfirmation ? true : false}
+              isSending={isSendingPassword}
+              text='パスワード更新'
+              color='color'
+            />
+          </form>
+          {/* <p className='underline text-sm text-blue-500 hover:text-blue-200'> */}
+            <SignInButton
+              onClick={() => router.back()}
+              disabled={false}
+              isSending={false}
+              text='ユーザー情報へ戻る'
+              color='white'
+            />
+          {/* </p> */}
+        </div>
+      </div>
     </>
   )
 }
