@@ -86,7 +86,7 @@ const Header = () => {
               />
             ) : null}
             {settingOpen || menuOpen ? (
-              <div className='w-full shadow-lg md:space-y-7 md:w-60 md:py-8 md:z-20 md:absolute md:top-14 md:right-3 md:bg-white md:border-b'>
+              <div className='w-full shadow-lg md:space-y-7 md:w-64 md:py-8 md:z-20 md:absolute md:top-16 md:right-0 md:bg-white md:border-b md:motion-safe:animate-slideIn'>
                 <NavItem name='マイベスト' onClick={() => handleRouterPush(`/users/${currentUser.id}`)} />
                 <NavItem name='ユーザー設定' onClick={() => handleRouterPush('/account')} />
                 <NavItem name='ログアウト' onClick={handleSignOut} />
@@ -113,7 +113,7 @@ const Header = () => {
     <header className='font-base w-screen'>
       <nav className='bg-white border-gray-200 border-b px-2 sm:px-4 py-2.5 rounded'>
         <div className='container flex flex-row items-center justify-between mx-auto'>
-          <div>
+          <div className='z-40'>
             <Link href='/' className='flex items-center'>
               <a className='self-center text-xl font-logo whitespace-nowrap'>
                 映画<span className='text-base'>なんでも</span>ベスト
@@ -121,7 +121,7 @@ const Header = () => {
             </Link>
           </div>
           <Hamburger onClick={() => setMenuOpen(!menuOpen)} isOpen={menuOpen} />
-          <div className={`w-full md:block md:w-auto md:pl-3 ${menuOpen ? 'block z-20 absolute top-14 right-0 bg-white' : 'hidden'}`}>
+          <div className={`w-full md:block md:w-auto md:pl-3 ${menuOpen ? 'block z-20 absolute top-14 right-0 bg-white motion-safe:animate-dropdown' : 'hidden'}`}>
             <div className='flex flex-col items-center shadow-lg md:shadow-none md:flex-row md:space-x-5 md:mt-0 md:text-sm md:font-medium md:w-auto'>
               <NavItem name='使い方' onClick={() => handleRouterPush('/#about')} />
               <NavItem name='新着ベスト' onClick={() => handleRouterPush('/lists')} />

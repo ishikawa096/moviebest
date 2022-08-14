@@ -7,7 +7,7 @@ const Hamburger = ({ onClick, isOpen }: Props) => (
   <button
     onClick={onClick}
     type='button'
-    className='inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200'
+    className='z-40 inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200'
   >
     <span className='sr-only'>メニューを開く</span>
     <svg className={`w-6 h-6 ${isOpen ? 'hidden' : 'block'}`} aria-hidden='true' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>

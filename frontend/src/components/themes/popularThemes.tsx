@@ -9,13 +9,14 @@ interface Props {
 
 const ThemeCard = ({ theme }: { theme: Theme & { lists: Array<List> } }) => (
   <div
-    className={`h-auto items-baseline text-bold hover:text-yellow-400 hover:bg-white duration-150 ease-in-out ${theme.lists.length > 3 ? 'text-4xl' : 'text-2xl'} ${arrayRandom(
+    className={`flex items-center h-auto px-3 py-1 hover:text-yellow-400 hover:bg-white hover:shadow-sm rounded-md duration-150 ease-in-out ${theme.lists.length > 3 ? 'text-4xl' : 'text-2xl'} ${arrayRandom(
       randomBackGroundColors
     )}`}
   >
     <Link href={`/themes/${theme.id}`}>
-      <a>
-        {theme.title} ({theme.lists.length})
+      <a className='font-bold'>
+        {theme.title}
+        <span className='rounded-full text-xl'>／{theme.lists.length}</span>
       </a>
     </Link>
   </div>

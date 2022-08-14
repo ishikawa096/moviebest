@@ -53,7 +53,7 @@ const ListCard = ({ theme, user, movies }: Props) => {
 
   return (
     <>
-      <div className='relative flex flex-col w-80 sm:w-[22rem] h-[fit-content] min-h-[30rem] mr-auto ml-auto justify-center items-center rounded-xl overflow-hidden'>
+      <div className='relative flex flex-col w-80 sm:w-[22rem] h-[fit-content] min-h-[30rem] mr-auto ml-auto justify-center items-center rounded-xl overflow-hidden hover:shadow-lg duration-150'>
         <Image
           src={image ? posterUrl(image, 'w500') : BLANK_IMAGE}
           alt={'このベストのメイン画像'}

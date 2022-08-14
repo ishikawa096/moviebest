@@ -9,16 +9,45 @@ module.exports = {
       },
       animation: {
         fade: 'fade 1s ease-in forwards',
+        fadeIn: 'fadeIn 1s ease-in forwards',
+        dropdown: 'dropdown 0.3s ease-in forwards',
+        slideIn: 'slideIn 0.2s ease-out forwards',
       },
       keyframes: {
         fade: {
           '0%': {
             opacity: 0,
-            transform: "translateY(60px)",
+            transform: 'translateY(60px)',
           },
           '100%': {
             opacity: 1,
-            transform: "translateY(0)",
+            transform: 'translateY(0)',
+          },
+        },
+        fadeIn: {
+          '0%': {
+            opacity: 0,
+            transform: 'translateY(-20px)',
+          },
+          '100%': {
+            opacity: 1,
+            transform: 'translateY(0)',
+          },
+        },
+        dropdown: {
+          '0%': {
+            transform: 'translateY(-100%)',
+          },
+          '100%': {
+            transform: 'translateY(0)',
+          },
+        },
+        slideIn: {
+          '0%': {
+            transform: 'translateX(100%)',
+          },
+          '100%': {
+            transform: 'translateX(0)',
           },
         },
       },

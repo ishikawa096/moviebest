@@ -26,11 +26,11 @@ const Home = (props: Props) => {
       <PageHead />
       <section>
         <div className='relative justify-center mb-10 w-screen h-[80vh] text-center'>
-          <div className='text-[0px]'>
+          <div className='text-[0px] bg-white'>
             <Image src={'/Kander.svg'} alt='背景画像' priority={true} layout='fill' objectFit='cover' />
           </div>
           <div className='p-5 flex flex-col justify-center text-center items-center bg-white absolute top-[30%] bottom-[30%] right-0 left-0 md:top-0 md:bottom-0 md:right-[30%] md:left-[30%] min-w-[10rem] z-10'>
-            <h1 className='mb-10 font-logo text-3xl whitespace-nowrap'>
+            <h1 className='mb-10 font-logo text-3xl whitespace-nowrap motion-safe:animate-fadeIn'>
               映画<span className='text-2xl'>なんでも</span>ベスト
             </h1>
             <h3 className='font-light'>お題に合わせて自分だけの映画ベストランキングを作ろう</h3>
