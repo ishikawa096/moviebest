@@ -84,7 +84,7 @@ export interface PasswordParams {
 export interface UserEditParams {
   name?: string
   email?: string
-  currentPassword?: string
+  currentPassword: string
   password?: string
   passwordConfirmation?: string
 }

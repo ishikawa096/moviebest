@@ -3,13 +3,12 @@ import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from 'pages/_app'
 import { useRouter } from 'next/router'
 import axios from 'axios'
-import { toastError, toastSuccess, toastWarn } from 'lib/toast'
+import { toastError, toastSuccess } from 'lib/toast'
 import ImportantModal from 'lib/importantModal'
 import { destroyCookies } from 'lib/api/authHelper'
 import NowLoading from 'components/commons/nowLoading'
 import Headline from 'components/commons/headline'
 import SubmitButton from 'components/commons/submitButton'
-import { redirect } from 'next/dist/server/api-utils'
 import { redirectToSignIn } from 'lib/helpers'
 
 interface UserState {
@@ -85,7 +84,8 @@ const UserPage = () => {
 
               <div className='flex flex-col gap-10 pt-10 items-center'>
                 {isGuest ? <p>ゲストユーザーはユーザー情報を変更できません</p> : undefined}
-                <SubmitButton onClick={() => router.push('/setting')} title='情報変更' disabled={isGuest} isSending={false} />
+                <SubmitButton onClick={() => router.push('/setting')} title='名前・Eメール変更' disabled={isGuest} isSending={false} />
+                <SubmitButton onClick={() => router.push('/password')} title='パスワード変更' disabled={isGuest} isSending={false} />
                 <SubmitButton onClick={() => setShowModal(true)} title='アカウント削除' disabled={isGuest} isSending={false} />
               </div>
             </div>
