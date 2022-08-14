@@ -53,13 +53,13 @@ class Api::V1::ListsController < ApplicationController
   def create_params
     params
       .require(:list)
-      .permit(:comment, :numbered, :theme_id, movies: %i[title position tmdb_id tmdb_image])
+      .permit(:comment, :theme_id, movies: %i[title position tmdb_id tmdb_image])
   end
 
   def update_params
     params
       .require(:list)
-      .permit(:comment, :numbered, movies: %i[id title position tmdb_id tmdb_image])
+      .permit(:comment, movies: %i[id title position tmdb_id tmdb_image])
   end
 
   def render401

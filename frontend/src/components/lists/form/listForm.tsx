@@ -39,7 +39,6 @@ const ListForm = ({ onSave, theme, listProp }: Props) => {
     ? { ...listProp, movies: initialMovies }
     : {
         comment: '',
-        numbered: false,
         movies: initialMovies,
       }
   const initialListState = { ...defaultsList }

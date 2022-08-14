@@ -7,7 +7,6 @@ class List < ApplicationRecord
   validates_associated :movies
 
   validates :comment, length: { maximum: 1000 }
-  validates :numbered, inclusion: { in: [true, false] }
   validates :theme_id, numericality: { only_integer: true }
   validates :user_id, numericality: { only_integer: true }
   validate :number_of_movies_match_theme_capacity
@@ -26,7 +25,7 @@ class List < ApplicationRecord
   end
 
   def update_with_movies!(params)
-    update!(comment: params[:comment], numbered: params[:numbered])
+    update!(comment: params[:comment])
     params[:movies].each do |movie_param|
       movie = movies.find(movie_param[:id])
       movie.update!(
@@ -42,7 +41,6 @@ class List < ApplicationRecord
     def create_with_movies!(params)
       list = List.new(
         comment: params[:comment],
-        numbered: params[:numbered],
         theme_id: params[:theme_id]
       )
       list.movies.build(params[:movies])

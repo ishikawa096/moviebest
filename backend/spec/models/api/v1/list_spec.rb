@@ -6,11 +6,10 @@ RSpec.describe List, type: :model do
   let(:movies) { build_list(:movie, 2) }
   let(:params) do
     {
-      comment: 'Comment.',
-    numbered: true,
-    user:,
-    theme:,
-    movies:
+      comment: 'Comment',
+      user:,
+      theme:,
+      movies:
     }
   end
 
@@ -27,11 +26,6 @@ RSpec.describe List, type: :model do
   it 'commentが無いとき空文字に置換されること' do
     list = described_class.new(params.merge({ comment: nil }))
     expect(list.comment).to eq ''
-  end
-
-  it 'numberedが無くてもデフォルトのfalseになること' do
-    list = described_class.new(params.merge({ numbered: nil }))
-    expect(list.numbered).to be_falsey
   end
 
   it '関連userが無いなら無効であること' do

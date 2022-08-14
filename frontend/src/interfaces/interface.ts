@@ -39,7 +39,6 @@ export interface MovieSelectOption {
 export interface List {
   id: number
   comment: string
-  numbered: boolean
   themeId: number
   userId: number
   createdAt: Date
@@ -49,7 +48,6 @@ export interface List {
 
 export interface CreateListParams {
   comment?: string
-  numbered: boolean
   themeId: number
   movies: Array<CreateMovieParams>
 }

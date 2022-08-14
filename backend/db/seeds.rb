@@ -11,8 +11,7 @@ end
 lists = ActiveSupport::JSON.decode(File.read('db/seeds/lists.json'))
 lists.each do |record|
   list = List.new(
-        comment: record["comment"],
-        numbered: record["numbered"]
+        comment: record["comment"]
       )
   Theme.find(record["theme_id"]).lists << list
   User.find(record["user_id"]).lists << list

@@ -10,11 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_06_082337) do
+ActiveRecord::Schema.define(version: 2022_08_14_032646) do
 
   create_table "lists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "comment"
-    t.boolean "numbered", default: false, null: false
     t.integer "theme_id"
     t.integer "user_id"
     t.datetime "created_at", precision: 6, null: false
