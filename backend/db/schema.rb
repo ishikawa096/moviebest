@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_14_032646) do
+ActiveRecord::Schema.define(version: 2022_08_14_043256) do
 
   create_table "lists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "comment"
@@ -50,8 +50,6 @@ ActiveRecord::Schema.define(version: 2022_08_14_032646) do
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
     t.string "name"
-    t.string "nickname"
-    t.string "image"
     t.string "email"
     t.text "tokens"
     t.datetime "created_at", precision: 6, null: false

@@ -58,8 +58,6 @@ export interface User {
   provider: string
   email: string
   name: string
-  nickname?: string
-  image?: string
   allowPasswordChange: boolean
   createdAt: Date
   updatedAt: Date
