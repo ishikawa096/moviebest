@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  mount_devise_token_auth_for 'User', at: 'auth'
   namespace :api do
     namespace :v1 do
       get :health_checks, to: 'health_checks#index'
@@ -7,14 +6,18 @@ Rails.application.routes.draw do
       resources :themes, only: %i[index show create]
       resources :tmdb, only: [] do
         get :search, on: :collection
-        get :images, on: :collection
       end
+      get :health_checks, to: 'health_checks#index'
       resources :users, only: %i[show]
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
-        registrations: 'api/v1/auth/registrations'
+        registrations: 'api/v1/auth/registrations',
+        passwords: 'api/v1/auth/passwords',
       }
       namespace :auth do
-        resources :sessions, only: %i[index]
+        devise_scope :api_v1_user do
+          get :sessions, to: 'sessions#index'
+          post :guest_sign_in, to: 'sessions#guest_sign_in'
+        end
       end
     end
   end

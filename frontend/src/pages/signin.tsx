@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { signIn } from 'lib/api/auth'
+import { guestSignIn, signIn } from 'lib/api/auth'
 import type { SignInParams } from 'interfaces/interface'
 import { toastSuccess } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
@@ -11,12 +11,9 @@ import SignInLayout from 'components/layout/signInLayout'
 import SignInInput from 'components/signInInput'
 import { alreadySignIn, errorMessage } from 'lib/helpers'
 
-const GUEST_EMAIL = 'guest@example.com'
-const GUEST_PASSWORD = 'guestloginpassword'
-
 const SignIn: React.FC = () => {
   const router = useRouter()
-  const { isSignedIn, setIsSignedIn, setCurrentUser } = useContext(AuthContext)
+  const { isSignedIn, setIsSignedIn, setCurrentUser, setIsGuest } = useContext(AuthContext)
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [isSending, setIsSending] = useState(false)
@@ -46,13 +43,24 @@ const SignIn: React.FC = () => {
     handleSignIn(params)
   }
 
-  const handleGuestSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleGuestSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    const params: SignInParams = {
-      email: GUEST_EMAIL,
-      password: GUEST_PASSWORD,
+    try {
+      const res = await guestSignIn()
+      if (res.status === 200 && res.data.data) {
+        setIsSignedIn(true)
+        setCurrentUser(res.data.data)
+        setIsGuest(true)
+        toastSuccess('ゲストログインしました')
+        router.back()
+      } else {
+        setIsSending(false)
+        errorMessage()
+      }
+    } catch (err) {
+      setIsSending(false)
+      errorMessage()
     }
-    handleSignIn(params)
   }
 
   const handleSignIn = async (params: SignInParams) => {
@@ -85,7 +93,7 @@ const SignIn: React.FC = () => {
           <SignInButton onClick={handleSubmit} disabled={!email || !password ? true : false} isSending={isSending} text='ログイン' color='color' />
           <p className='pt-5 pb-2 text-sm'>アカウントをお持ちではない方は</p>
           <div className='flex flex-col sm:flex-row justify-center'>
-            <SignInButton text='ゲストログイン' onClick={handleGuestSubmit} disabled={isSending} isSending={false} color='white' />
+            <SignInButton text='ゲストログイン' onClick={handleGuestSignIn} disabled={isSending} isSending={false} color='white' />
             <SignInButton text='新規登録' onClick={() => router.push('/signup')} disabled={isSending} isSending={false} color='color' />
           </div>
         </form>

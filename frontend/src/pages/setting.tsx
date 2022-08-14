@@ -8,29 +8,34 @@ import PageHead from 'components/layout/pageHead'
 import SignInButton from 'components/commons/signInButton'
 import SignInInput from 'components/signInInput'
 import { validateUserEdit } from 'lib/validates'
-import { errorMessage, isEmptyObject, redirectToSignIn } from 'lib/helpers'
+import { errorMessage, guestUserUnavailable, isEmptyObject, redirectToSignIn } from 'lib/helpers'
 import Headline from 'components/commons/headline'
+import NowLoading from 'components/commons/nowLoading'
 
 const Setting: React.FC = () => {
   const router = useRouter()
-  const { isSignedIn, currentUser } = useContext(AuthContext)
+  const { isSignedIn, currentUser, isGuest } = useContext(AuthContext)
   const [name, setName] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   const [currentPassword, setCurrentPassword] = useState<string>('')
+  const [isLoading, setIsLoading] = useState(true)
   const [isSending, setIsSending] = useState(false)
   const [formErrors, setFormErrors] = useState<{ [K in keyof UserEditParams]?: string }>({})
 
   useEffect(() => {
+    if (!isSignedIn) {
+        redirectToSignIn(router)
+      }
     if (currentUser) {
-      setEmail(currentUser.email)
-      setName(currentUser.name)
+      if (isGuest) {
+        guestUserUnavailable(router)
+      } else {
+        setEmail(currentUser.email)
+        setName(currentUser.name)
+        setIsLoading(false)
+      }
     }
   }, [])
-
-  if (!isSignedIn && currentUser === undefined) {
-    redirectToSignIn(router)
-    return <></>
-  }
 
   const handleAccountSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
@@ -67,25 +72,26 @@ const Setting: React.FC = () => {
       <Headline>
         <h1>アカウント情報変更</h1>
       </Headline>
-      <div className='flex flex-col items-center px-5 md:px-32 text-gray-700'>
-        <div className='bg-white w-full rounded-lg flex flex-col md:items-center p-5 md:p-10'>
-          <form className='px-2 sm:px-5 py-5 min-w-[30rem] flex flex-col'>
-            <SignInInput value={name} label='ユーザー名' name='name' type='text' autoComplete='nickname' onChange={(e) => setName(e.target.value)} error={formErrors.name} />
-            <SignInInput value={email} label='Email' name='email' type='email' autoComplete='email' onChange={(e) => setEmail(e.target.value)} error={formErrors.email} />
-            <SignInInput
-              value={currentPassword}
-              label='現在のパスワード'
-              name='currentPassword'
-              type='password'
-              autoComplete='current-password'
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              error={formErrors.currentPassword}
-            />
-            <SignInButton onClick={handleAccountSubmit} disabled={!name || !email || !currentPassword ? true : false} isSending={isSending} text='アカウント更新' color='color' />
-          </form>
-          <SignInButton onClick={() => router.push('/account')} disabled={false} isSending={false} text='ユーザー情報へ戻る' color='white' />
-        </div>
-      </div>
+      {isLoading ? <NowLoading /> :
+        <div className='flex flex-col items-center px-5 md:px-32 text-gray-700'>
+          <div className='bg-white w-full rounded-lg flex flex-col md:items-center p-5 md:p-10'>
+            <form className='px-2 sm:px-5 py-5 md:min-w-[30rem] flex flex-col'>
+              <SignInInput value={name} label='ユーザー名' name='name' type='text' autoComplete='nickname' onChange={(e) => setName(e.target.value)} error={formErrors.name} />
+              <SignInInput value={email} label='Email' name='email' type='email' autoComplete='email' onChange={(e) => setEmail(e.target.value)} error={formErrors.email} />
+              <SignInInput
+                value={currentPassword}
+                label='パスワード'
+                name='currentPassword'
+                type='password'
+                autoComplete='current-password'
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                error={formErrors.currentPassword}
+              />
+              <SignInButton onClick={handleAccountSubmit} disabled={!name || !email || !currentPassword ? true : false} isSending={isSending} text='アカウント更新' color='color' />
+            </form>
+            <SignInButton onClick={() => router.push('/account')} disabled={false} isSending={false} text='ユーザー情報へ戻る' color='white' />
+          </div>
+        </div>}
     </>
   )
 }

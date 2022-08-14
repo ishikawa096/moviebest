@@ -16,17 +16,15 @@ interface UserState {
 }
 
 const UserPage = () => {
-  const { isSignedIn, setIsSignedIn, currentUser } = useContext(AuthContext)
+  const { loading, isSignedIn, setIsSignedIn, currentUser, isGuest } = useContext(AuthContext)
   const router = useRouter()
   const [userState, setUserState] = useState<UserState>({ state: { isLoading: true } })
   const [showModal, setShowModal] = useState<boolean>(false)
-  const [isGuest, setIsGuest] = useState(false)
 
   useEffect(() => {
-    if (currentUser !== undefined) {
+    if (!loading && currentUser) {
       setUserState({ state: { isLoading: false, user: currentUser } })
     }
-    if (!userState.state.isLoading && userState.state.user.email === 'guest@example.com') setIsGuest(true) // TODO
   }, [])
 
   const handleDelete = async () => {
@@ -38,7 +36,7 @@ const UserPage = () => {
             path: '/auth',
           },
         })
-        if (res.status !== 200) throw Error(res.statusText)
+        if (res.status !== 200 || res.data.status !== 'success') throw Error(res.statusText)
         toastSuccess('アカウントが削除されました')
         toastSuccess('ご利用ありがとうございました')
         destroyCookies()

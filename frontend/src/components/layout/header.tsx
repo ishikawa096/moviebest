@@ -13,7 +13,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons'
 const BREAKPOINT_WIDTH = 768
 
 const Header = () => {
-  const { loading, isSignedIn, setIsSignedIn, currentUser } = useContext(AuthContext)
+  const { loading, isSignedIn, setIsSignedIn, currentUser, setIsGuest } = useContext(AuthContext)
   const [settingOpen, setSettingOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const router = useRouter()
@@ -35,6 +35,7 @@ const Header = () => {
       const res = await signOut()
       if (res.data.success === true) {
         setIsSignedIn(false)
+        setIsGuest(false)
         toastSuccess('ログアウトしました')
         router.push('/')
       } else {

@@ -17,6 +17,8 @@ export const AuthContext = createContext(
     setIsSignedIn: React.Dispatch<React.SetStateAction<boolean>>
     currentUser: User | undefined
     setCurrentUser: React.Dispatch<React.SetStateAction<User | undefined>>
+    isGuest: boolean
+    setIsGuest: React.Dispatch<React.SetStateAction<boolean>>
   }
 )
 
@@ -24,6 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState<boolean>(true)
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<User | undefined>(undefined)
+  const [isGuest, setIsGuest] =useState<boolean>(false)
 
   const handleGetCurrentUser = async () => {
     try {
@@ -31,6 +34,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       if (res?.data.isLogin === true) {
         setIsSignedIn(true)
         setCurrentUser(res?.data.data)
+        if (res?.data.data.email === process.env.NEXT_PUBLIC_GUEST_EMAIL) {
+          setIsGuest(true)
+        }
         console.log(res?.data.data)
       } else {
         console.log(res)
@@ -54,7 +60,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
   return (
     <>
-      <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setIsSignedIn, currentUser, setCurrentUser }}>
+      <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setIsSignedIn, currentUser, setCurrentUser, isGuest, setIsGuest }}>
         <Layout>
           <Component {...pageProps} />
         </Layout>

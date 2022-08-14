@@ -5,14 +5,19 @@ end
 
 users = ActiveSupport::JSON.decode(File.read('db/seeds/users.json'))
 users.each do |record|
-  User.create!(record)
+  user = User.new(
+    name: record["name"],
+    email: record["email"],
+    password: SecureRandom.urlsafe_base64
+  )
+  user.save!
 end
 
 lists = ActiveSupport::JSON.decode(File.read('db/seeds/lists.json'))
 lists.each do |record|
   list = List.new(
-        comment: record["comment"]
-      )
+    comment: record["comment"]
+  )
   Theme.find(record["theme_id"]).lists << list
   User.find(record["user_id"]).lists << list
   list.movies.build(record["movies"])

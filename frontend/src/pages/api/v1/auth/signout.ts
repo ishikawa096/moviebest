@@ -11,10 +11,10 @@ export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
     })
     if (response.data.success === true) {
       destroyCookies({ res })
-      res.send(JSON.stringify(response.data))
+      res.json(response.data)
     }
   } catch (err) {
-    res.status(500).json(err)
+    res.json(err)
   }
 }
 

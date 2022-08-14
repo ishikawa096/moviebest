@@ -3,9 +3,8 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 import { client } from '../client'
 
 export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const params = req.body
   try {
-    const response = await client.post('/auth', params)
+    const response = await client.post('/auth/guest_sign_in')
     if (response.status === 200) {
       setCookies(response, { res })
       res.json(response.data)

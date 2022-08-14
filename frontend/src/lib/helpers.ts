@@ -18,6 +18,11 @@ export const alreadySignIn = (router: NextRouter) => {
   toastInfo('すでにログインしています')
 }
 
+export const guestUserUnavailable = (router: NextRouter) => {
+  router.back()
+  toastWarn('ゲストユーザーは設定を変更できません')
+}
+
 export const arrayRandom = (array: Array<any>) => {
   const random = array[Math.floor(Math.random() * array.length)]
   return random

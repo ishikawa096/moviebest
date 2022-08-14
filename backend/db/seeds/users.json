@@ -1,8 +1,6 @@
 [
   {
-    "name": "ゲスト",
-    "email": "guest@example.com",
-    "password": "guestloginpassword",
-    "password_confirmation": "guestloginpassword"
+    "name": "ゲストユーザー",
+    "email": "guest@example.com"
   }
 ]

@@ -10,6 +10,10 @@ export const signIn = (params: SignInParams) => {
   return axios.post('/api/v1/auth/signin', params)
 }
 
+export const guestSignIn = () => {
+  return axios.post('/api/v1/auth/signinAsGuest')
+}
+
 export const signOut = () => {
   return axios.get('/api/v1/auth/signout')
 }
