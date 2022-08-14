@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
 import { useRouter } from 'next/router'
-import dynamic from 'next/dynamic'
 import axios from 'axios'
 import PageHead from 'components/layout/pageHead'
 import type { CreateListParams, List, Theme, User } from 'interfaces/interface'
@@ -9,10 +8,7 @@ import { toastError, toastSuccess, toastWarn } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import NowLoading from 'components/commons/nowLoading'
 import Headline from 'components/commons/headline'
-
-const ListForm = dynamic(() => import('components/lists/form/listForm'), {
-  ssr: false,
-})
+import ListForm from 'components/lists/form/listForm'
 
 interface State {
   state: { isLoading: false; list: List & { user: User; theme: Theme } } | { isLoading: true }
@@ -88,7 +84,6 @@ const EditList: React.FC = () => {
 
     const newList = {
       comment: newData.list.comment,
-      numbered: newData.list.numbered,
       movies: newMovies,
     }
     try {
