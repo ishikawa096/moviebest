@@ -10,6 +10,8 @@ import { useWindowWidth } from 'lib/helpers'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen } from '@fortawesome/free-solid-svg-icons'
 
+const BREAKPOINT_WIDTH = 768
+
 const Header = () => {
   const { loading, isSignedIn, setIsSignedIn, currentUser } = useContext(AuthContext)
   const [settingOpen, setSettingOpen] = useState(false)
@@ -18,10 +20,10 @@ const Header = () => {
   const width = useWindowWidth()
 
   useEffect(() => {
-    if (width >= 768) {
+    if (width >= BREAKPOINT_WIDTH) {
       setMenuOpen(false)
     }
-    if (width < 768) {
+    if (width < BREAKPOINT_WIDTH) {
       setSettingOpen(false)
     }
   }, [width])
@@ -43,17 +45,17 @@ const Header = () => {
     }
   }
 
-  const handleLink = (path: string) => {
+  const handleRouterPush = (path: string) => {
     router.push(path)
     setMenuOpen(false)
     setSettingOpen(false)
   }
 
-  const NavItem = ({ path, name }: { path: string; name: string | React.ReactNode }) => (
+  const NavItem = ({ onClick, name }: { onClick: React.MouseEventHandler<HTMLButtonElement>; name: string | React.ReactNode }) => (
     <div className='flex items-center text-center w-full md:w-auto'>
       <button
-        onClick={() => handleLink(path)}
-        className='block w-full py-3 whitespace-nowrap text-base text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 decoration-transparent hover:decoration-sky-400 md:p-0 hover:underline decoration-4 duration-300'
+        onClick={onClick}
+        className='block w-full py-3 whitespace-nowrap text-base md:text-sm text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 decoration-transparent hover:decoration-sky-400 md:p-0 hover:underline decoration-4 duration-300'
       >
         {name}
       </button>
@@ -67,13 +69,8 @@ const Header = () => {
           <>
             {menuOpen ? undefined : (
               <>
-                <button
-                  onClick={() => setSettingOpen(!settingOpen)}
-                  className='block w-full py-2 px-4 whitespace-nowrap text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 decoration-transparent hover:decoration-sky-400 md:p-0 hover:underline decoration-4 duration-300'
-                >
-                  設定
-                </button>
-                <HeaderButton text='投稿' onClick={() => handleLink('/lists/new')} color='color' />
+                <NavItem name='設定' onClick={() => setSettingOpen(!settingOpen)} />
+                <HeaderButton text='投稿' onClick={() => handleRouterPush('/lists/new')} color='color' />
               </>
             )}
             {!settingOpen && menuOpen ? (
@@ -84,21 +81,14 @@ const Header = () => {
                     投稿する
                   </>
                 }
-                path='/lists/new'
+                onClick={() => handleRouterPush('/lists/new')}
               />
             ) : null}
             {settingOpen || menuOpen ? (
               <div className='w-full shadow-lg md:space-y-7 md:w-60 md:py-8 md:z-20 md:absolute md:top-14 md:right-3 md:bg-white md:border-b'>
-                <NavItem name='マイベスト' path={`/users/${currentUser.id}`} />
-                <NavItem name='ユーザー設定' path='/account' />
-                <div className='flex items-center md:justify-center w-full'>
-                  <button
-                    onClick={handleSignOut}
-                    className='block w-full py-3 px-4 whitespace-nowrap text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 decoration-transparent hover:decoration-sky-400 md:p-0 hover:underline decoration-4 duration-300'
-                  >
-                    ログアウト
-                  </button>
-                </div>
+                <NavItem name='マイベスト' onClick={() => handleRouterPush(`/users/${currentUser.id}`)} />
+                <NavItem name='ユーザー設定' onClick={() => handleRouterPush('/account')} />
+                <NavItem name='ログアウト' onClick={handleSignOut} />
               </div>
             ) : undefined}
           </>
@@ -107,8 +97,8 @@ const Header = () => {
         return (
           <>
             <div className='w-full flex flex-col md:flex-row items-center'>
-              <HeaderButton text='ログイン' onClick={() => handleLink('/signin')} color='white' />
-              <HeaderButton text='新規登録' onClick={() => handleLink('/signup')} color='color' />
+              <HeaderButton text='ログイン' onClick={() => handleRouterPush('/signin')} color='white' />
+              <HeaderButton text='新規登録' onClick={() => handleRouterPush('/signup')} color='color' />
             </div>
           </>
         )
@@ -132,9 +122,9 @@ const Header = () => {
           <Hamburger onClick={() => setMenuOpen(!menuOpen)} isOpen={menuOpen} />
           <div className={`w-full md:block md:w-auto md:pl-3 ${menuOpen ? 'block z-20 absolute top-14 right-0 bg-white' : 'hidden'}`}>
             <div className='flex flex-col items-center shadow-lg md:shadow-none md:flex-row md:space-x-5 md:mt-0 md:text-sm md:font-medium md:w-auto'>
-              <NavItem name='使い方' path='/#about' />
-              <NavItem name='新着ベスト' path='/lists' />
-              <NavItem name='お題をみる' path='/themes' />
+              <NavItem name='使い方' onClick={() => handleRouterPush('/#about')} />
+              <NavItem name='新着ベスト' onClick={() => handleRouterPush('/lists')} />
+              <NavItem name='お題をみる' onClick={() => handleRouterPush('/themes')} />
               <AuthButtons />
             </div>
           </div>
