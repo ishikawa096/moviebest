@@ -8,6 +8,9 @@ import { ToastContainer } from 'react-toastify'
 import Layout from 'components/layout/layout'
 import { getCurrentUser } from 'lib/api/auth'
 import NowLoading from 'components/commons/nowLoading'
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
+config.autoAddCss = false
 
 export const AuthContext = createContext(
   {} as {

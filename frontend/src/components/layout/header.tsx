@@ -115,7 +115,7 @@ const Header = () => {
         <div className='container flex flex-row items-center justify-between mx-auto'>
           <div className='z-40'>
             <Link href='/' className='flex items-center'>
-              <a className='self-center text-xl font-logo whitespace-nowrap'>
+              <a className='self-center text-xl font-logo text-gray-800 whitespace-nowrap'>
                 映画<span className='text-base'>なんでも</span>ベスト
               </a>
             </Link>
