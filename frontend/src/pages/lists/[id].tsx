@@ -10,8 +10,9 @@ import Posters from 'components/lists/posters'
 import FloatingButton from 'components/commons/floatingButton'
 import ListCard from 'components/lists/listCard'
 import PageHead from 'components/layout/pageHead'
-import HeaderButton from 'components/commons/headerButton'
 import TweetButton from 'components/commons/tweetButton'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHashtag } from '@fortawesome/free-solid-svg-icons'
 
 const BLANK_IMAGE = '/342x509.png'
 
@@ -60,15 +61,19 @@ const ListPage = (props: Props) => {
   return (
     <>
       <PageHead title={user.name + 'さんの' + theme.title} />
-      <div className='flex flex-col px-3 py-5 text-center italic w-full underline'>
+      <div className='flex flex-col px-3 py-5 text-center italic w-full'>
         <h3 className='mb-2 text-sm md:text-base lg:text-md px-2 py-1 w-full'>
           <Link href={`/users/${list.userId}`}>
-            <a className='decoration-orange-500 hover:text-orange-600 hover:decoration-6 duration-150'>{user.name} さんの</a>
+            <a className='underline decoration-orange-500 hover:text-orange-600 hover:decoration-6 duration-150'>{user.name}</a>
           </Link>
+          さんの
         </h3>
         <h2 className='text-3xl md:text-4xl lg:text-5xl px-2 py-1'>
           <Link href={`/themes/${theme.id}`}>
-            <a className='decoration-orange-500 hover:text-orange-600 duration-150'># {theme.title}</a>
+            <a className='underline decoration-orange-500 hover:text-orange-600 duration-150'>
+              <FontAwesomeIcon icon={faHashtag} className='px-1' size='xs' />
+              {theme.title}
+            </a>
           </Link>
         </h2>
       </div>

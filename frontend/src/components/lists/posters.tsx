@@ -2,6 +2,8 @@ import Image from 'next/image'
 import { Movie, Theme } from 'interfaces/interface'
 import { useWindowWidth } from 'lib/helpers'
 import { useEffect, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHashtag } from '@fortawesome/free-solid-svg-icons'
 
 const Posters = ({ movies, theme, images, blankImage, onError }: { movies: Array<Movie>; theme: Theme; images: Array<string>; blankImage: string; onError: (m: Movie) => void }) => {
   const width = useWindowWidth()
@@ -45,43 +47,31 @@ const Posters = ({ movies, theme, images, blankImage, onError }: { movies: Array
       {
         // グリッドに空ができる場合、埋める
         movies.length === 7 || (movies.length === 9 && isWideWindow) ? (
-        <div className='relative flex justify-center overflow-hidden'>
-          <div className='text-[0px]'>
-            <Image
-              src={images[0]}
-              alt={theme.title}
-              layout='fill'
-              objectFit='cover'
-              placeholder='blur'
-              blurDataURL='/342x509.png'
-              onError={() => onError(movies[0])}
-            />
+          <div className='relative flex justify-center overflow-hidden'>
+            <div className='text-[0px]'>
+              <Image src={images[0]} alt={theme.title} layout='fill' objectFit='cover' placeholder='blur' blurDataURL='/342x509.png' onError={() => onError(movies[0])} />
 
-            <div className='p-5 text-base text-shadow flex flex-col justify-center text-center items-center top-0 left-0 right-0 bottom-0 absolute z-10 backdrop-blur-xl text-white' >
-              #{theme.title}
+              <div className='p-5 text-base text-shadow flex flex-col justify-center text-center items-center top-0 left-0 right-0 bottom-0 absolute z-10 backdrop-blur-xl text-white'>
+                <FontAwesomeIcon icon={faHashtag} size='sm' className='px-1' />
+                {theme.title}
+              </div>
             </div>
           </div>
-        </div>) : null
+        ) : null
       }
 
-      {movies.length === 10 && !isWideWindow ?
+      {movies.length === 10 && !isWideWindow ? (
         <div className='col-span-2 relative flex justify-center overflow-hidden'>
           <div className='text-[0px]'>
-            <Image
-              src={images[0]}
-              alt={theme.title}
-              layout='fill'
-              objectFit='cover'
-              placeholder='blur'
-              blurDataURL='/342x509.png'
-              onError={() => onError(movies[0])}
-            />
+            <Image src={images[0]} alt={theme.title} layout='fill' objectFit='cover' placeholder='blur' blurDataURL='/342x509.png' onError={() => onError(movies[0])} />
 
-            <div className='p-5 text-base text-shadow flex flex-col justify-center text-center items-center top-0 left-0 right-0 bottom-0 absolute z-10 backdrop-blur-xl text-white' >
-              #{theme.title}
+            <div className='p-5 text-base text-shadow flex flex-col justify-center text-center items-center top-0 left-0 right-0 bottom-0 absolute z-10 backdrop-blur-xl text-white'>
+              <FontAwesomeIcon icon={faHashtag} size='sm' className='px-1' />
+              {theme.title}
             </div>
           </div>
-        </div> : null}
+        </div>
+      ) : null}
     </>
   )
 }

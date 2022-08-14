@@ -5,7 +5,7 @@ import { posterUrl } from 'lib/tmdbHelpers'
 import { useState } from 'react'
 import TweetIcon from './tweetIcon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser } from '@fortawesome/free-solid-svg-icons'
+import { faUser,faHashtag } from '@fortawesome/free-solid-svg-icons'
 
 const BLANK_IMAGE = '/342x509.png'
 const MAX_TITLE_LENGTH = 20
@@ -68,7 +68,9 @@ const ListCard = ({ theme, user, movies }: Props) => {
           <Link href={`/themes/${theme.id}`}>
             <a>
               <div className='p-4 text-center text-xl text-white font-light  bg-opacity-50 bg-gray-400 backdrop-blur-xl backdrop-saturate-[10] hover:underline'>
-                <h1># {theme.title}</h1>
+                <h1>
+                  <FontAwesomeIcon icon={faHashtag} className='px-1 text-lg' />{theme.title}
+                </h1>
               </div>
             </a>
           </Link>

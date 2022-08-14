@@ -6,6 +6,8 @@ import MoviesSelect from './moviesSelect'
 import SubmitButton from 'components/commons/submitButton'
 import { toastWarn } from 'lib/toast'
 import RenderErrors from 'components/renderErrors'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHashtag } from '@fortawesome/free-solid-svg-icons'
 
 const MAX_CAP = 10
 
@@ -98,7 +100,9 @@ const ListForm = ({ onSave, theme, listProp }: Props) => {
         <form name='listForm' className='flex flex-col items-center bg-white rounded-lg'>
           <div className='flex flex-col px-3 py-5 mb-10'>
             <span className='text-lg text-gray-700'>お題</span>
-            <h2 className='text-3xl md:text-5xl lg:text-6xl px-2 py-1 italic underline decoration-orange-500 w-full rounded-lg'># {title}</h2>
+            <h2 className='text-3xl md:text-5xl lg:text-6xl px-2 py-1 italic underline decoration-orange-500 w-full rounded-lg'>
+              <FontAwesomeIcon icon={faHashtag} size='xs' className='px-1' />{title}
+            </h2>
           </div>
 
           <div className='w-full'>
