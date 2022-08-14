@@ -13,7 +13,7 @@ export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
       res.status(200).json(response.data)
     }
   } catch (err) {
-    res.status(500).json(err)
+    res.json(err)
   }
 }
 
