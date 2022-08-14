@@ -1,5 +1,5 @@
 class Api::V1::ListsController < ApplicationController
-  before_action :authenticate_user!, only: %i[create update destroy]
+  before_action :authenticate_api_v1_user!, only: %i[create update destroy]
 
   def index
     lists = List.includes(:user, :theme, :movies)

@@ -1,7 +1,7 @@
 class Api::V1::ThemesController < ApplicationController
   POPULAR_THEMES_MAX_COUNT = 15
 
-  before_action :authenticate_user!, only: %i[create]
+  before_action :authenticate_api_v1_user!, only: %i[create]
 
   def index
     themes = Theme.includes(:lists)
