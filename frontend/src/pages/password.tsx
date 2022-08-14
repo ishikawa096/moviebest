@@ -14,7 +14,7 @@ import NowLoading from 'components/commons/nowLoading'
 
 const Password: React.FC = () => {
   const router = useRouter()
-  const { isSignedIn, currentUser, isGuest } = useContext(AuthContext)
+  const { isSignedIn, isGuest } = useContext(AuthContext)
   const [currentPassword, setCurrentPassword] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>('')
@@ -25,13 +25,10 @@ const Password: React.FC = () => {
   useEffect(() => {
     if (!isSignedIn) {
       redirectToSignIn(router)
-    }
-    if (currentUser) {
-      if (isGuest) {
-        guestUserUnavailable(router)
-      } else {
-        setIsLoading(false)
-      }
+    } else if (isGuest) {
+      guestUserUnavailable(router)
+    } else {
+      setIsLoading(false)
     }
   }, [])
 

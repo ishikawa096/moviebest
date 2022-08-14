@@ -24,16 +24,13 @@ const Setting: React.FC = () => {
 
   useEffect(() => {
     if (!isSignedIn) {
-        redirectToSignIn(router)
-      }
-    if (currentUser) {
-      if (isGuest) {
-        guestUserUnavailable(router)
-      } else {
-        setEmail(currentUser.email)
-        setName(currentUser.name)
-        setIsLoading(false)
-      }
+      redirectToSignIn(router)
+    } else if (isGuest) {
+      guestUserUnavailable(router)
+    } else if (currentUser) {
+      setEmail(currentUser.email)
+      setName(currentUser.name)
+      setIsLoading(false)
     }
   }, [])
 
@@ -72,7 +69,9 @@ const Setting: React.FC = () => {
       <Headline>
         <h1>アカウント情報変更</h1>
       </Headline>
-      {isLoading ? <NowLoading /> :
+      {isLoading ? (
+        <NowLoading />
+      ) : (
         <div className='flex flex-col items-center px-5 md:px-32 text-gray-700'>
           <div className='bg-white w-full rounded-lg flex flex-col md:items-center p-5 md:p-10'>
             <form className='px-2 sm:px-5 py-5 md:min-w-[30rem] flex flex-col'>
@@ -91,7 +90,8 @@ const Setting: React.FC = () => {
             </form>
             <SignInButton onClick={() => router.push('/account')} disabled={false} isSending={false} text='ユーザー情報へ戻る' color='white' />
           </div>
-        </div>}
+        </div>
+      )}
     </>
   )
 }

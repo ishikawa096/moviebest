@@ -4,7 +4,7 @@ import axios from 'axios'
 import PageHead from 'components/layout/pageHead'
 import type { CreateListParams, Theme } from 'interfaces/interface'
 import { errorMessage, redirectToSignIn } from 'lib/helpers'
-import { toastError, toastSuccess, toastWarn } from 'lib/toast'
+import { toastSuccess } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import ThemeSelect from 'components/lists/form/themeSelect'
 import Link from 'next/link'
@@ -21,7 +21,8 @@ const NewList = () => {
   const queryThemeId = router.query.id
   const [themeState, setThemeState] = useState<State>({ state: { isLoading: true } })
   const [themes, setThemes] = useState<Array<Theme>>([])
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
+  const { isSignedIn } = useContext(AuthContext)
 
   const fetchTheme = async () => {
     const res = await axios.get('/api/v1/client', {
@@ -32,7 +33,7 @@ const NewList = () => {
     if (res.status !== 200) throw Error(res.statusText)
     const theme = res.data
     setThemeState({ state: { isLoading: false, theme: theme } })
-    setLoading(false)
+    setIsLoading(false)
   }
 
   const fetchThemes = async () => {
@@ -45,24 +46,20 @@ const NewList = () => {
     const themes = res.data.sort((a: Theme, b: Theme) => (a.createdAt < b.createdAt ? 1 : -1))
     setThemes(themes)
     if (!queryThemeId) {
-      setLoading(false)
+      setIsLoading(false)
     }
   }
 
   useEffect(() => {
-    if (router.isReady) {
+    if (!isSignedIn) {
+      redirectToSignIn(router)
+    } else if (router.isReady) {
       if (queryThemeId) {
         fetchTheme()
       }
       fetchThemes()
     }
   }, [])
-
-  const { isSignedIn } = useContext(AuthContext)
-  if (!isSignedIn && themeState.state.isLoading) {
-    redirectToSignIn(router)
-    return
-  }
 
   const handleThemeChange = (newValue: { value: Theme } | any) => {
     setThemeState({ state: { isLoading: false, theme: newValue.value } })
@@ -90,12 +87,12 @@ const NewList = () => {
       <Headline>
         <h1>新しいベストをつくる</h1>
       </Headline>
-      {loading ? (
+      {isLoading ? (
         <NowLoading />
       ) : themeState.state.isLoading ? (
         <div className='flex flex-col w-full mb-1 p-10'>
           <div className='text-center text-sm md:text-base'>
-            お題を選ぼう。　新しくお題を作るなら→
+            お題を選ぼう。　新しくお題を作るなら
             <Link href='/themes/new'>
               <a className='text-sky-500 hover:text-sky-300'>こちら</a>
             </Link>

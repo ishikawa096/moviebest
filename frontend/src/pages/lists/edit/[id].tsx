@@ -4,7 +4,7 @@ import axios from 'axios'
 import PageHead from 'components/layout/pageHead'
 import type { CreateListParams, List, Theme, User } from 'interfaces/interface'
 import { errorMessage, redirectToSignIn } from 'lib/helpers'
-import { toastError, toastSuccess, toastWarn } from 'lib/toast'
+import { toastSuccess, toastWarn } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import NowLoading from 'components/commons/nowLoading'
 import Headline from 'components/commons/headline'
@@ -19,6 +19,7 @@ const EditList: React.FC = () => {
   const listId = router.query.id
   const [listState, setListState] = useState<State>({ state: { isLoading: true } })
   const [currentList, setCurrentList] = useState<List>()
+  const { isSignedIn, currentUser } = useContext(AuthContext)
 
   const fetchData = async () => {
     try {
@@ -28,40 +29,31 @@ const EditList: React.FC = () => {
         },
       })
       const list = res.data
-      setListState({ state: { isLoading: false, list: list } })
-      setCurrentList(list)
+      if (currentUser && list.userId == currentUser.id) {
+        setListState({ state: { isLoading: false, list: list } })
+        setCurrentList(list)
+      } else {
+        toastWarn('このベストを編集することができません')
+        router.back()
+      }
     } catch (err) {
-      toastError('something wrong...')
-      router.push('/')
+      errorMessage()
+      router.back()
     }
   }
 
   useEffect(() => {
-    if (router.isReady) {
+    if (!isSignedIn) {
+      redirectToSignIn(router)
+    } else if (router.isReady) {
       if (listId) {
         fetchData()
       } else {
-        toastWarn('不明なパラメーターです。トップページに移動します')
-        router.push('/')
+        toastWarn('不明なパラメーターです')
+        router.back()
       }
     }
-  }, [router])
-
-  const { isSignedIn, currentUser } = useContext(AuthContext)
-  if (!isSignedIn && listState.state.isLoading) {
-    redirectToSignIn(router)
-    return <></>
-  }
-
-  if (!listState.state.isLoading) {
-    const { list } = listState.state
-    const user = list.user
-    if (!currentUser || currentUser.id !== user.id) {
-      router.back()
-      toastWarn('このリストを編集することができません')
-      return <></>
-    }
-  }
+  }, [])
 
   const updateList = async (newData: { list: CreateListParams }) => {
     const newMoviesData = newData.list.movies

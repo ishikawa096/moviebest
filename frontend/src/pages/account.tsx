@@ -22,7 +22,9 @@ const UserPage = () => {
   const [showModal, setShowModal] = useState<boolean>(false)
 
   useEffect(() => {
-    if (!loading && currentUser) {
+    if (!isSignedIn) {
+      redirectToSignIn(router)
+    } else if (!loading && currentUser) {
       setUserState({ state: { isLoading: false, user: currentUser } })
     }
   }, [])
@@ -50,11 +52,6 @@ const UserPage = () => {
     } else {
       toastError('削除できませんでした')
     }
-  }
-
-  if (!isSignedIn && userState.state.isLoading) {
-    redirectToSignIn(router)
-    return
   }
 
   return (
