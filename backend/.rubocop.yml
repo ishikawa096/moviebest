@@ -6,6 +6,9 @@ require:
 Rails:
   Enabled: true
 
+Rails/LexicallyScopedActionFilter:
+  Enabled: false
+
 LineLength:
   Max: 100
 
