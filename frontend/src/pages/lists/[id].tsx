@@ -2,9 +2,7 @@ import type { GetServerSidePropsContext } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { client } from 'pages/api/v1/client'
-import { List, Movie, Theme, User } from 'interfaces/interface'
-import { posterUrl } from 'lib/tmdbHelpers'
-import { useState } from 'react'
+import { List, Theme, User } from 'interfaces/interface'
 import PostersContainer from 'components/lists/postersContainer'
 import Posters from 'components/lists/posters'
 import FloatingButton from 'components/commons/floatingButton'
@@ -26,15 +24,6 @@ const ListPage = (props: Props) => {
   const theme = list.theme
   const movies = list.movies.sort((a, b) => a.position - b.position)
   const user = list.user
-  const [update, setUpdate] = useState(false)
-
-  const DefaultImagePath = () => {
-    const imagePaths = movies.map((m) => m.tmdbImage)
-    const result = imagePaths.map((image) => (image ? posterUrl(image, 'w500') : BLANK_IMAGE))
-    return result
-  }
-
-  const [images, setImages] = useState<Array<string>>(DefaultImagePath)
 
   const buttonHandler = () => {
     router.push({
@@ -50,13 +39,6 @@ const ListPage = (props: Props) => {
       新規作成
     </>
   )
-
-  const onError = (movie: Movie) => {
-    const prevImages = images
-    prevImages[movie.position] = BLANK_IMAGE
-    setImages(prevImages)
-    update ? setUpdate(false) : setUpdate(true)
-  }
 
   return (
     <>
@@ -78,7 +60,7 @@ const ListPage = (props: Props) => {
         </h2>
       </div>
       <PostersContainer movies={movies}>
-        <Posters movies={movies} theme={theme} images={images} blankImage={BLANK_IMAGE} onError={onError} />
+        <Posters movies={movies} theme={theme} blankImage={BLANK_IMAGE} />
       </PostersContainer>
       <div className='w-full flex justify-center mb-6'>
         <TweetButton themeTitle={theme.title} movies={movies} />

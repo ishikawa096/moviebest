@@ -1,7 +1,7 @@
 import { Movie } from 'interfaces/interface'
-import { ReactNode } from 'react'
+import { ReactElement } from 'react'
 
-const PostersContainer = ({ children, movies }: { children: ReactNode; movies: Array<Movie> }) => {
+const PostersContainer = ({ children, movies }: { children: ReactElement; movies: Array<Movie> }) => {
   const length = movies.length
   if (length < 6) {
     return <div className='mb-10 flex flex-row flex-no-wrap justify-center w-screen bg-gray-900'>{children}</div>
