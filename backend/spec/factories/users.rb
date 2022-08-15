@@ -6,6 +6,10 @@ FactoryBot.define do
     uid { email }
     password_confirmation { password }
 
+    factory :guest_user do
+      email { 'guest@example.com' }
+    end
+
     trait :with_association do
       after(:create) do |user, _evaluator|
         create(:list,
