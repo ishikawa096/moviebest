@@ -10,7 +10,7 @@ import ThemeSelect from 'components/lists/form/themeSelect'
 import Link from 'next/link'
 import ListForm from 'components/lists/form/listForm'
 import NowLoading from 'components/commons/nowLoading'
-import Headline from 'components/commons/headline'
+import Headline from 'components/layout/headline'
 
 interface State {
   state: { isLoading: false; theme: Theme } | { isLoading: true }

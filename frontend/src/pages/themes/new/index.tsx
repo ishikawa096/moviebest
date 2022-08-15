@@ -7,7 +7,7 @@ import { toastSuccess } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import { useContext, useEffect, useState } from 'react'
 import ThemeForm from 'components/themes/themeForm'
-import Headline from 'components/commons/headline'
+import Headline from 'components/layout/headline'
 import NowLoading from 'components/commons/nowLoading'
 
 const NewTheme = () => {

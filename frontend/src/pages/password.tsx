@@ -9,7 +9,7 @@ import SignInButton from 'components/commons/signInButton'
 import SignInInput from 'components/signInInput'
 import { validatePassword } from 'lib/validates'
 import { errorMessage, guestUserUnavailable, isEmptyObject, redirectToSignIn } from 'lib/helpers'
-import Headline from 'components/commons/headline'
+import Headline from 'components/layout/headline'
 import NowLoading from 'components/commons/nowLoading'
 
 const Password: React.FC = () => {

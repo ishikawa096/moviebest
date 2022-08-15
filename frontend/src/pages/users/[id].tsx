@@ -9,7 +9,7 @@ import { toastSuccess } from 'lib/toast'
 import ImportantModal from 'lib/importantModal'
 import ListCard from 'components/lists/listCard'
 import PageHead from 'components/layout/pageHead'
-import Headline from 'components/commons/headline'
+import Headline from 'components/layout/headline'
 import { InView } from 'react-intersection-observer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen, faTrashCan } from '@fortawesome/free-solid-svg-icons'
@@ -36,13 +36,11 @@ const UserPage = (props: Props) => {
     </button>
   )
 
-  const DeleteButton = (list: { id: number; title: string }) => {
-    return (
-      <button onClick={() => openModal(list)} title='ベストを削除' className='w-5 h-5 ml-5 hover:-translate-y-1 hover:scale-110 hover:text-gray-300 duration-150 ease-in-out'>
-        <FontAwesomeIcon icon={faTrashCan} />
-      </button>
-    )
-  }
+  const DeleteButton = (list: { id: number; title: string }) => (
+    <button onClick={() => openModal(list)} title='ベストを削除' className='w-5 h-5 ml-5 hover:-translate-y-1 hover:scale-110 hover:text-gray-300 duration-150 ease-in-out'>
+      <FontAwesomeIcon icon={faTrashCan} />
+    </button>
+  )
 
   const openModal = (list: { id: number; title: string }) => {
     const id = list.id

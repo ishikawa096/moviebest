@@ -7,7 +7,7 @@ import { errorMessage, redirectToSignIn } from 'lib/helpers'
 import { toastSuccess, toastWarn } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import NowLoading from 'components/commons/nowLoading'
-import Headline from 'components/commons/headline'
+import Headline from 'components/layout/headline'
 import ListForm from 'components/lists/form/listForm'
 
 interface State {

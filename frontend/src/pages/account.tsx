@@ -7,7 +7,7 @@ import { toastError, toastSuccess } from 'lib/toast'
 import ImportantModal from 'lib/importantModal'
 import { destroyCookies } from 'lib/api/authHelper'
 import NowLoading from 'components/commons/nowLoading'
-import Headline from 'components/commons/headline'
+import Headline from 'components/layout/headline'
 import SubmitButton from 'components/commons/submitButton'
 import { redirectToSignIn } from 'lib/helpers'
 

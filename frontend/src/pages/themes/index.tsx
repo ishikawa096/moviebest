@@ -5,7 +5,7 @@ import PopularThemes from 'components/themes/popularThemes'
 import PageHead from 'components/layout/pageHead'
 import FloatingButton from 'components/commons/floatingButton'
 import { useRouter } from 'next/router'
-import Headline from 'components/commons/headline'
+import Headline from 'components/layout/headline'
 
 interface Props {
   themes: Array<Theme & { lists: Array<List> }>

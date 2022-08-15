@@ -1,12 +1,11 @@
 import type { GetServerSidePropsContext } from 'next'
-import Link from 'next/link'
 import { client } from 'pages/api/v1/client'
 import { List, Theme, User } from 'interfaces/interface'
 import FloatingButton from 'components/commons/floatingButton'
 import { useRouter } from 'next/router'
 import ListsContainer from 'components/lists/listsContainer'
 import PageHead from 'components/layout/pageHead'
-import Headline from 'components/commons/headline'
+import Headline from 'components/layout/headline'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHashtag } from '@fortawesome/free-solid-svg-icons'
 
