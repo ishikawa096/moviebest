@@ -42,12 +42,12 @@ RSpec.describe 'Api::V1::Lists', type: :request do
   end
 
   describe '#index' do
-    it 'レスポンスに成功する' do
+    it 'レスポンスに成功すること' do
       get api_v1_lists_path, headers: api_auth
       expect(response).to have_http_status(:ok)
     end
 
-    it '返したjsonに関連モデルを含む' do
+    it '返したjsonに関連モデルを含むこと' do
       list = create(:list, :with_movies, :with_theme)
       get api_v1_lists_path, headers: api_auth
       expect(subject[0]['id']).to eq list.id
@@ -58,7 +58,7 @@ RSpec.describe 'Api::V1::Lists', type: :request do
       end
     end
 
-    it 'APIトークンがないとき:unauthorizedを返す' do
+    it 'APIトークンがないとき:unauthorizedを返すこと' do
       get api_v1_lists_path
       expect(response).to have_http_status(:unauthorized)
     end
@@ -69,18 +69,18 @@ RSpec.describe 'Api::V1::Lists', type: :request do
       create(:list, :skip_validation, id: 1)
     end
 
-    it 'レスポンスに成功する' do
+    it 'レスポンスに成功すること' do
       get api_v1_list_path(1), headers: api_auth
       expect(response).to have_http_status(:ok)
     end
 
-    it 'クエリのidを持つlistだけ含む' do
+    it 'クエリのidを持つlistだけ含むこと' do
       create(:list, :skip_validation, id: 2)
       get api_v1_list_path(1), headers: api_auth
       expect(subject['id']).to eq 1
     end
 
-    it '返したjsonに関連モデルを含む' do
+    it '返したjsonに関連モデルを含むこと' do
       list = create(:list, :with_movies, :with_theme, id: 2)
       get api_v1_list_path(2), headers: api_auth
       expect(subject['user']['id']).to eq list.user_id
@@ -90,14 +90,14 @@ RSpec.describe 'Api::V1::Lists', type: :request do
       end
     end
 
-    it 'APIトークンがないとき:unauthorizedを返す' do
+    it 'APIトークンがないとき:unauthorizedを返すこと' do
       get api_v1_list_path(1)
       expect(response).to have_http_status(:unauthorized)
     end
   end
 
   describe '#create' do
-    it 'listと関連moviesを新規作成できる' do
+    it 'listと関連moviesを新規作成できること' do
       create(:theme, id: create_params[:list][:theme_id],
               capacity: create_params[:list][:movies].count)
       post api_v1_lists_path, headers: api_and_user_auth, params: create_params
@@ -106,26 +106,26 @@ RSpec.describe 'Api::V1::Lists', type: :request do
       expect(Movie.count).to eq 2
     end
 
-    it 'バリデーションエラーがあるときエラーコードとエラー内容を返す' do
+    it 'バリデーションエラーがあるときエラーコードとエラー内容を返すこと' do
       create(:theme, id: create_params[:list][:theme_id], capacity: 5)
       post api_v1_lists_path, headers: api_and_user_auth, params: create_params
       expect(response).to have_http_status(:unprocessable_entity)
       expect(subject['movies']).to include 'を5つ入力してください(現在：2)'
     end
 
-    it 'APIトークンがないとき:unauthorizedを返す' do
+    it 'APIトークンがないとき:unauthorizedを返すこと' do
       post api_v1_lists_path, headers: user_auth, params: create_params
       expect(response).to have_http_status(:unauthorized)
     end
 
-    it 'ユーザートークンがないとき:unauthorizedを返す' do
+    it 'ユーザートークンがないとき:unauthorizedを返すこと' do
       post api_v1_lists_path, headers: api_auth, params: create_params
       expect(response).to have_http_status(:unauthorized)
     end
   end
 
   describe '#edit' do
-    it 'レコードを更新できる' do
+    it 'レコードを更新できること' do
       create(:list, :with_theme, theme_capacity: 2, id: update_params[:id], user:,
               movies: [create(:movie, id: 1, list:), create(:movie, id: 2, list:)])
       patch api_v1_list_path(update_params[:id]), headers: api_and_user_auth, params: update_params
@@ -133,16 +133,16 @@ RSpec.describe 'Api::V1::Lists', type: :request do
       expect(List.find(update_params[:id]).comment).to eq 'update comment'
     end
 
-    it 'バリデーションエラーがあるときエラーコードとエラー内容を返す' do
+    it 'バリデーションエラーがあるときエラーコードとエラー内容を返すこと' do
       create(:list, :with_theme, theme_capacity: 2, id: invalid_params[:id], user:,
               movies: [create(:movie, id: 1, list:), create(:movie, id: 2, list:)])
       patch api_v1_list_path(invalid_params[:id]), headers: api_and_user_auth,
                                                    params: invalid_params
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(subject).not_to be_blank
+      expect(subject).to be_present
     end
 
-    it 'listの作者でないユーザーは更新できない' do
+    it 'listの作者でないユーザーは更新できないこと' do
       another_user = create(:user)
       create(:list, :with_theme, theme_capacity: 2, id: update_params[:id], user: another_user,
               movies: [create(:movie, id: 1, list:), create(:movie, id: 2, list:)])
@@ -150,39 +150,43 @@ RSpec.describe 'Api::V1::Lists', type: :request do
       expect(response).to have_http_status(:unauthorized)
     end
 
-    it 'APIトークンがないときcode:unauthorizedを返す' do
+    it 'APIトークンがないときcode:unauthorizedを返すこと' do
       patch api_v1_list_path(update_params[:id]), headers: user_auth, params: update_params
       expect(response).to have_http_status(:unauthorized)
     end
 
-    it 'ユーザートークンがないときcode:unauthorizedを返す' do
+    it 'ユーザートークンがないときcode:unauthorizedを返すこと' do
       patch api_v1_list_path(update_params[:id]), headers: api_auth, params: update_params
       expect(response).to have_http_status(:unauthorized)
     end
   end
 
   describe '#destroy' do
-    it 'レコードを削除できる' do
+    it 'レスポンスに成功すること' do
       create(:list, :skip_validation, id: 1, user:)
       delete api_v1_list_path(1), headers: api_and_user_auth
       expect(response).to have_http_status(:ok)
-      expect(List.count).to eq 0
     end
 
-    it 'listの作者でないユーザーは削除できない' do
+    it 'レコードを削除できること' do
+      create(:list, :skip_validation, id: 1, user:)
+      expect do
+        delete api_v1_list_path(1), headers: api_and_user_auth
+      end.to change(List, :count).by(-1)
+    end
+
+    it 'listの作者でないユーザーは削除できないこと' do
       another_user = create(:user)
       create(:list, :skip_validation, id: 1, user: another_user)
-      delete api_v1_list_path(1), headers: api_and_user_auth
-      expect(response).to have_http_status(:unauthorized)
-      expect(List.count).to eq 1
+      expect { delete api_v1_list_path(1), headers: api_and_user_auth }.not_to change(List, :count)
     end
 
-    it 'APIトークンがないときcode:unauthorizedを返す' do
+    it 'APIトークンがないときcode:unauthorizedを返すこと' do
       delete api_v1_list_path(list.id), headers: user_auth, params: update_params
       expect(response).to have_http_status(:unauthorized)
     end
 
-    it 'ユーザートークンがないときcode:unauthorizedを返す' do
+    it 'ユーザートークンがないときcode:unauthorizedを返すこと' do
       delete api_v1_list_path(list.id), headers: api_auth, params: update_params
       expect(response).to have_http_status(:unauthorized)
     end

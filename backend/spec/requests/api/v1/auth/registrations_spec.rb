@@ -43,7 +43,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       expect(response).to have_http_status(:ok)
     end
 
-    it '新規user登録できる' do
+    it '新規user登録できること' do
       expect { post path, headers: api_auth, params: sign_up_params }.to change(User, :count).by(1)
     end
 

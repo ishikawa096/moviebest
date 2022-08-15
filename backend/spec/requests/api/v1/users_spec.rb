@@ -32,7 +32,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
       end
     end
 
-    it 'APIトークンがないとき:unauthorizedを返す' do
+    it 'APIトークンがないとき:unauthorizedを返すこと' do
       get api_v1_user_path(1)
       expect(response).to have_http_status(:unauthorized)
     end
