@@ -45,6 +45,9 @@ RSpec/NamedSubject:
 RSpec/ExampleLength:
   Max: 10
 
+RSpec/ContextWording:
+  Enabled: false
+
 
 AllCops:
   NewCops: enable
