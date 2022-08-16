@@ -12,6 +12,8 @@ import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 config.autoAddCss = false
 
+const GUEST_USER_EMAIL = 'guest@example.com'
+
 export const AuthContext = createContext(
   {} as {
     loading: boolean
@@ -37,7 +39,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       if (res?.data.isLogin === true) {
         setIsSignedIn(true)
         setCurrentUser(res?.data.data)
-        if (res?.data.data.email === process.env.NEXT_PUBLIC_GUEST_EMAIL) {
+        if (res?.data.data.email === GUEST_USER_EMAIL) {
           setIsGuest(true)
         }
         console.log(res?.data.data)
