@@ -6,7 +6,7 @@ import { posterUrl } from 'lib/tmdbHelpers'
 export const FormatOptionLabel = ({ option, onError }: { option: MovieSelectOption; onError: (option: MovieSelectOption) => void }) => (
   <div className='flex items-center justify-center relative m-0 h-[193px] sm:h-[275px] lg:h-[372px]'>
     <Image
-      src={option.label === formatCreateLabel(option.value) || !option.posterPath ? '/342x509.png' : posterUrl(option.posterPath, 'w342')}
+      src={option.label === formatCreateLabel(option.value) || !option.posterPath ? '/noimage.png' : posterUrl(option.posterPath, 'w342')}
       alt={option.label}
       layout='fill'
       objectFit='cover'

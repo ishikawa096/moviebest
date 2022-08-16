@@ -12,7 +12,7 @@ import TweetButton from 'components/commons/tweetButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHashtag } from '@fortawesome/free-solid-svg-icons'
 
-const BLANK_IMAGE = '/342x509.png'
+const BLANK_IMAGE = '/noimage.png'
 
 interface Props {
   list: List & { user: User; theme: Theme }

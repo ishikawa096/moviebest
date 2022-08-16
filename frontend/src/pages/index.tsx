@@ -30,8 +30,8 @@ const Home = (props: Props) => {
             <Image src={'/Kander.svg'} alt='背景画像' priority={true} layout='fill' objectFit='cover' />
           </div>
           <div className='p-5 flex flex-col justify-center text-center items-center bg-white absolute top-1/2 bottom-1/2 right-1/3 left-1/3 z-10'>
-            <h1 className='mb-10 font-logo text-3xl md:text-4xl bg-white whitespace-nowrap px-20 py-14 lg:px-32 lg:py-16 drop-shadow-[30px_30px_0px_rgba(0,30,50,0.50)] motion-safe:animate-fadeIn'>
-              映画<span className='text-2xl md:text-3xl'>なんでも</span>ベスト
+            <h1 className='mb-10 min-w-[22rem] md:min-w-[30rem] lg:min-w-[40rem] bg-white whitespace-nowrap px-20 py-14 lg:px-32 lg:py-16 drop-shadow-[30px_30px_0px_rgba(0,30,50,0.50)] motion-safe:animate-fadeIn'>
+              <Image src={'/logo.png'} alt='映画なんでもベスト' width={676} height={139} />
             </h1>
           </div>
           <h3 className='absolute font-light italic top-3/4 left-1/4 md:left-1/3 right-5 z-10 bg-white px-5 py-3 md:px-10 md:py-5 drop-shadow-[30px_30px_0px_rgba(0,30,50,0.50)]'>

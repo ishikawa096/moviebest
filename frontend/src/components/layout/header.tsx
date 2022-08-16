@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 import { AuthContext } from 'pages/_app'
 import { signOut } from 'lib/api/auth'
 import { toastSuccess, toastError } from 'lib/toast'
@@ -115,8 +116,8 @@ const Header = () => {
         <div className='container flex flex-row items-center justify-between mx-auto'>
           <div className='z-40'>
             <Link href='/' className='flex items-center'>
-              <a className='self-center text-xl font-logo text-gray-800 whitespace-nowrap'>
-                映画<span className='text-base'>なんでも</span>ベスト
+              <a className='self-center whitespace-nowrap'>
+                <Image src={'/logo.png'} alt='映画なんでもベスト' width={150} height={30} />
               </a>
             </Link>
           </div>
