@@ -11,8 +11,6 @@ class Api::V1::ListsController < ApplicationController
     list = List.includes(:user, :theme, :movies).find(params[:id])
     json = list.as_json(include: [:theme, :movies, { user: { only: %i[name id] } }])
     render json:, status: :ok
-  rescue ActiveRecord::RecordNotFound => e
-    render json: e.record.errors, status: :not_found
   end
 
   def create

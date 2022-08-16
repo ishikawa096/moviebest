@@ -53,9 +53,7 @@ const ListsSlider = ({ lists }: Props) => {
       <div className='overflow-hidden w-full'>
         <Slider {...settings} className='relative'>
           {lists.map((list) => (
-            // <div key={list.id} className=''>
             <ListCard key={list.id} user={list.user} movies={list.movies} theme={list.theme} />
-            // </div>
           ))}
         </Slider>
       </div>
