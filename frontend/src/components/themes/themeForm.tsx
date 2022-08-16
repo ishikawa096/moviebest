@@ -3,7 +3,7 @@ import { isEmptyObject } from 'lib/helpers'
 import { useState } from 'react'
 import SubmitButton from '../commons/submitButton'
 import { validateTheme } from 'lib/validates'
-import TitleForm from './titleForm'
+import TitleInput from './titleInput'
 import CapacitySelect from './capacitySelect'
 
 const CAP_MIN = 2
@@ -23,10 +23,6 @@ const ThemeForm = ({ onSave, isError }: Props) => {
     capacity: 5,
   }
   const [theme, setTheme] = useState<CreateThemeParams>({ ...defaultsTheme })
-
-  const capacities = [...Array(CAP_MAX - CAP_MIN + 1)].map((_, i) => {
-    return i + CAP_MIN
-  })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { target } = e
@@ -52,9 +48,9 @@ const ThemeForm = ({ onSave, isError }: Props) => {
         <form onSubmit={handleSubmit} name='listForm' className=' rounded-2xl w-full min-w-max sm:max-w-4xl overflow-hidden bg-white p-10 items-center text-gray-700'>
           <div className='mb-8'>
             <div className='w-full border-orange-500 border-l-8 text-lg tracking-wide p-3'>
-              <label htmlFor='themeTitleForm'>お題を入力</label>
+              <label htmlFor='titleInput'>お題を入力</label>
             </div>
-            <TitleForm theme={theme} onChange={handleInputChange} formErrors={formErrors} />
+            <TitleInput theme={theme} onChange={handleInputChange} formError={formErrors.title} />
           </div>
           <div className='FormItem'>
             <div className='w-full border-orange-500 border-l-8 text-lg tracking-wide p-3'>選べる作品の数を設定（最大10）</div>
@@ -62,7 +58,7 @@ const ThemeForm = ({ onSave, isError }: Props) => {
               <label htmlFor='themeCapacity'>
                 <strong>作品数</strong>
               </label>
-              <CapacitySelect theme={theme} capacities={capacities} onChange={handleInputChange} formErrors={formErrors} />
+              <CapacitySelect theme={theme} capMin={CAP_MIN} capMax={CAP_MAX} onChange={handleInputChange} formError={formErrors.capacity} />
             </div>
           </div>
           <div className='p-4 px-10 items-center text-center'>
