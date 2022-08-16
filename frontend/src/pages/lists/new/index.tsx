@@ -83,9 +83,9 @@ const NewList = () => {
 
   return (
     <>
-      <PageHead title='新規リスト作成' />
+      <PageHead title='新規ベスト投稿' />
       <Headline>
-        <h1>新しいベストをつくる</h1>
+        <h1>ベストを投稿する</h1>
       </Headline>
       {isLoading ? (
         <NowLoading />
