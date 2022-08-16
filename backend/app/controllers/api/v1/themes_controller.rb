@@ -14,8 +14,6 @@ class Api::V1::ThemesController < ApplicationController
     json = theme.as_json(include: { lists: { include: [:movies,
                                                        { user: { only: %i[name id] } }] } })
     render json:, status: :ok
-  rescue ActiveRecord::RecordNotFound => e
-    render json: e.record.errors, status: :not_found
   end
 
   def create
