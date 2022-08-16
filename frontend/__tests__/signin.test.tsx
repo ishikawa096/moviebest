@@ -1,8 +1,17 @@
-import { act, renderHook, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/extend-expect'
 import SignIn from '../src/pages/signin'
-import { useSignIn } from '../src/components/useSignIn'
+
+jest.mock('next/router', () => ({
+  useRouter() {
+    return {
+      query: { id: 1 },
+      push: jest.fn(),
+      back: jest.fn(),
+    }
+  },
+}))
 
 describe('useSignIn', () => {
   const user = userEvent.setup()
@@ -20,8 +29,6 @@ describe('useSignIn', () => {
     expect(inputPassword.value).toBe('password')
     expect(button).toBeEnabled()
   })
-  test.todo('emailのバリデーションエラーが出る')
-  test.todo('パスワードのバリデーションエラーが出る')
   test('ゲストログインボタンを押せる', async () => {
     expect(screen.getByRole('button', { name: 'ゲストログイン' })).toBeEnabled()
   })
