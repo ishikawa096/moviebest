@@ -10,7 +10,7 @@ import ListCard from 'components/lists/listCard'
 import PageHead from 'components/layout/pageHead'
 import TweetButton from 'components/commons/tweetButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHashtag } from '@fortawesome/free-solid-svg-icons'
+import { faHashtag, faPlus } from '@fortawesome/free-solid-svg-icons'
 
 const BLANK_IMAGE = '/noimage.png'
 
@@ -32,27 +32,19 @@ const ListPage = (props: Props) => {
     })
   }
 
-  const buttonContent = (
-    <>
-      同じお題で
-      <br />
-      新規作成
-    </>
-  )
-
   return (
     <>
       <PageHead title={user.name + 'さんの' + theme.title} />
-      <div className='flex flex-col px-3 py-5 text-center italic w-full'>
+      <div className='flex flex-col px-3 py-5 text-center text-gray-700 italic w-full'>
         <h3 className='mb-2 text-sm md:text-base lg:text-md px-2 py-1 w-full'>
           <Link href={`/users/${list.userId}`}>
-            <a className='underline decoration-orange-500 hover:text-orange-600 hover:decoration-6 duration-150'>{user.name}</a>
+            <a className='underline decoration-sky-500 hover:text-sky-400 hover:decoration-6 duration-150'>{user.name}</a>
           </Link>
           さんの
         </h3>
         <h2 className='text-3xl md:text-4xl lg:text-5xl px-2 py-1'>
           <Link href={`/themes/${theme.id}`}>
-            <a className='underline decoration-orange-500 hover:text-orange-600 duration-150'>
+            <a className='underline decoration-sky-500 hover:text-sky-400 duration-150'>
               <FontAwesomeIcon icon={faHashtag} className='px-1' size='xs' />
               {theme.title}
             </a>
@@ -77,7 +69,7 @@ const ListPage = (props: Props) => {
         </div>
       </div>
 
-      <FloatingButton onClick={buttonHandler} content={buttonContent} />
+      <FloatingButton onClick={buttonHandler} content={<FontAwesomeIcon icon={faPlus} />} />
     </>
   )
 }

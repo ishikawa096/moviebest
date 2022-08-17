@@ -7,7 +7,7 @@ import ListsContainer from 'components/lists/listsContainer'
 import PageHead from 'components/layout/pageHead'
 import Headline from 'components/layout/headline'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHashtag } from '@fortawesome/free-solid-svg-icons'
+import { faHashtag, faFilePen } from '@fortawesome/free-solid-svg-icons'
 
 interface Props {
   theme: Theme & { lists: Array<List & { user: User; theme?: Theme }> }
@@ -26,25 +26,18 @@ const ThemePage = (props: Props) => {
     })
   }
 
-  const buttonContent = (
-    <>
-      このお題で
-      <br />
-      投稿
-    </>
-  )
-
   return (
     <>
       <PageHead title={theme.title + 'の一覧'} />
       <div>
         <Headline>
           <h1 className='italic text-3xl'>
-            <FontAwesomeIcon icon={faHashtag} className='px-1' size='xs' />{theme.title}
+            <FontAwesomeIcon icon={faHashtag} className='px-1' size='xs' />
+            {theme.title}
           </h1>
         </Headline>
         <ListsContainer lists={lists} />
-        <FloatingButton onClick={buttonHandler} content={buttonContent} />
+        <FloatingButton onClick={buttonHandler} content={<FontAwesomeIcon icon={faFilePen} />} />
       </div>
     </>
   )

@@ -17,8 +17,6 @@ const Themes = (props: Props) => {
   const themes = props.themes
   const router = useRouter()
 
-  const buttonContent = <FontAwesomeIcon icon={faPlus} />
-
   return (
     <>
       <PageHead title='お題一覧' />
@@ -26,7 +24,7 @@ const Themes = (props: Props) => {
         <h1>お題一覧</h1>
       </Headline>
       <PopularThemes themes={themes} />
-      <FloatingButton onClick={() => router.push('/themes/new')} content={buttonContent} />
+      <FloatingButton onClick={() => router.push('/themes/new')} content={<FontAwesomeIcon icon={faPlus} />} />
     </>
   )
 }

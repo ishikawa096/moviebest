@@ -86,7 +86,7 @@ const UserPage = (props: Props) => {
                 return (
                   <div ref={ref} className={`min-h-[300px] relative ${inView ? 'motion-safe:animate-fade' : ''} `}>
                     {inView && currentUser?.id === user.id ? (
-                      <div className='absolute bottom-2 left-1/2 z-20 flex-row flex-nowrap text-lg text-white space-x-7'>
+                      <div className='absolute bottom-0 sm:bottom-2 left-1/2 z-20 flex-row flex-nowrap text-lg text-white space-x-7'>
                         <EditButton id={list.id} />
                         <DeleteButton id={list.id} title={list.theme.title} />
                       </div>
