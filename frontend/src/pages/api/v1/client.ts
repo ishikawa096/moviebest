@@ -14,7 +14,7 @@ export const client = applyCaseMiddleware(
   { ignoreHeaders: true }
 )
 
-const revalidatePaths = ['/', '/lis', '/themes']
+const revalidatePaths = ['/', '/lists', '/themes']
 
 export const revalidate = (res: NextApiResponse) => {
   revalidatePaths.map(async (path) => {
