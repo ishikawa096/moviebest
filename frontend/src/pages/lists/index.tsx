@@ -31,8 +31,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const response = await client.get('/lists')
   const data = response.data
   return {
-    props: { lists: data },
-    revalidate: 60,
+    props: { lists: data }
   }
 }
 

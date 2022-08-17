@@ -34,8 +34,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const response = await client.get('/themes')
   const data = response.data
   return {
-    props: { themes: data },
-    revalidate: 60,
+    props: { themes: data }
   }
 }
 

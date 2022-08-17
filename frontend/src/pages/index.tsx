@@ -118,8 +118,7 @@ export const getStaticProps = async () => {
     const listsRes = await client.get('/lists')
     const lists = listsRes.data
     return {
-      props: { themes: themes, lists: lists },
-      revalidate: 60,
+      props: { themes: themes, lists: lists }
     }
   } catch (err) {
     if (err instanceof Error) {
