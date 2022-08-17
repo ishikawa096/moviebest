@@ -4,6 +4,9 @@ import TweetButton from './tweetButton'
 import { movieMock } from 'mocks/mockData'
 
 const movies = [movieMock]
+jest.mock('@fortawesome/react-fontawesome', () => ({
+  FontAwesomeIcon: 'tweet-icon',
+}))
 
 describe('TweetButton', () => {
   test('tweetと表示されること', async () => {
