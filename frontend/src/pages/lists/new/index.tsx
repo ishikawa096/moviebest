@@ -90,19 +90,13 @@ const NewList = () => {
       {isLoading ? (
         <NowLoading />
       ) : themeState.state.isLoading ? (
-        <div className='flex flex-col w-full mb-1 p-10'>
-          <div className='text-center text-sm md:text-base'>
-            お題を選ぼう。　新しくお題を作るなら
-            <Link href='/themes/new'>
-              <a className='text-sky-500 hover:text-sky-300'>こちら</a>
-            </Link>
-          </div>
+        <div className='flex flex-col w-full mb-1 p-3 md:p-10'>
           <ThemeSelect onChange={handleThemeChange} themes={themes} />
         </div>
       ) : (
         <>
           <div className='w-full'>
-            <div className='w-full mb-1 p-10'>
+            <div className='w-full mb-1 p-3 md:p-10'>
               <ThemeSelect onChange={handleThemeChange} theme={themeState.state.theme} themes={themes} />
             </div>
             <ListForm onSave={createList} theme={themeState.state.theme} />

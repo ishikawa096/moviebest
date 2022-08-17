@@ -25,16 +25,16 @@ const Home = (props: Props) => {
     <>
       <PageHead />
       <section>
-        <div className='relative justify-center mb-10 w-screen h-[80vh] text-center'>
+        <div className='relative justify-center mb-10 w-screen h-[80vh] text-center overflow-hidden'>
           <div className='text-[0px] bg-white'>
             <Image src={'/Kander.svg'} alt='背景画像' priority={true} layout='fill' objectFit='cover' />
           </div>
           <div className='p-5 flex flex-col justify-center text-center items-center bg-white absolute top-1/2 bottom-1/2 right-1/3 left-1/3 z-10'>
-            <h1 className='mb-10 min-w-[22rem] md:min-w-[30rem] lg:min-w-[40rem] bg-white whitespace-nowrap px-20 py-14 lg:px-32 lg:py-16 drop-shadow-[30px_30px_0px_rgba(0,30,50,0.50)] motion-safe:animate-fadeIn'>
+            <h1 className='mb-10 min-w-[18rem] md:min-w-[30rem] lg:min-w-[40rem] bg-white whitespace-nowrap px-5 py-7 md:px-20 md:py-14 lg:px-32 lg:py-16 drop-shadow-[30px_30px_0px_rgba(0,30,50,0.50)] motion-safe:animate-fadeIn'>
               <Image src={'/logo.png'} alt='映画なんでもベスト' width={676} height={139} />
             </h1>
           </div>
-          <h3 className='absolute font-light italic top-3/4 left-1/4 md:left-1/3 right-5 z-10 bg-white px-5 py-3 md:px-10 md:py-5 drop-shadow-[30px_30px_0px_rgba(0,30,50,0.50)]'>
+          <h3 className='absolute font-light italic top-3/4 left-1/4 md:left-1/3 right-5 z-10 bg-white px-3 py-2 md:px-10 md:py-5 drop-shadow-[30px_30px_0px_rgba(0,30,50,0.50)]'>
             お題 に合わせて
             <span className='underline decoration-orange-500 underline-offset-4 decoration-2 decoration-wavy'>自分だけの映画ベストランキング</span>を作ろう
           </h3>
@@ -42,7 +42,7 @@ const Home = (props: Props) => {
       </section>
       <section className='w-screen'>
         <div className='mb-5 w-full'>
-          <div className='w-screen px-10 py-2 text-2xl text-bold'>
+          <div className='w-screen px-3 md:px-10 py-2 text-2xl text-bold'>
             <FontAwesomeIcon icon={faFilm} className='px-1' />
             みんなの新着ベスト
           </div>
@@ -59,7 +59,7 @@ const Home = (props: Props) => {
       </section>
       <section>
         <div className='mb-5'>
-          <div className='w-screen px-10 py-2 text-2xl text-bold'>
+          <div className='w-screen px-3 md:px-10 py-2 text-2xl text-bold'>
             <FontAwesomeIcon icon={faRankingStar} className='px-1' />
             人気のお題
           </div>

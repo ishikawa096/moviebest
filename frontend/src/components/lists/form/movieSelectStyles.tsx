@@ -4,7 +4,7 @@ import { components, ControlProps, InputProps, StylesConfig, Theme, ValueContain
 import { posterUrl } from 'lib/tmdbHelpers'
 
 export const FormatOptionLabel = ({ option, onError }: { option: MovieSelectOption; onError: (option: MovieSelectOption) => void }) => (
-  <div className='flex items-center justify-center relative m-0 h-[193px] sm:h-[275px] lg:h-[372px]'>
+  <div className='flex items-center justify-center relative m-0 h-[195px] sm:h-[277px] lg:h-[374px]'>
     <Image
       src={option.label === formatCreateLabel(option.value) || !option.posterPath ? '/noimage.png' : posterUrl(option.posterPath, 'w342')}
       alt={option.label}
@@ -65,7 +65,7 @@ export const movieFormStyles: StylesConfig = {
       borderStyle: 'solid',
       borderColor: 'rgb(209 213 219)',
       boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-      padding: isFocused ? 10 : 3,
+      padding: isFocused ? 6 : 3,
     }
   },
   indicatorsContainer: (styles) => ({ ...styles, display: 'none' }),

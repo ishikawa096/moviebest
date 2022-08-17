@@ -4,7 +4,7 @@ import { InView } from 'react-intersection-observer'
 
 const ListsContainer = ({ lists }: { lists: Array<List & { user: User; theme: Theme }> }) => {
   return (
-    <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-9 px-2 grid-flow-row-dense'>
+    <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-9 grid-flow-row-dense'>
       {lists.map((list) => (
         <InView triggerOnce={true} rootMargin='-100px' key={list.id}>
           {({ inView, ref }) => {

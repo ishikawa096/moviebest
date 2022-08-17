@@ -6,6 +6,8 @@ import PageHead from 'components/layout/pageHead'
 import FloatingButton from 'components/commons/floatingButton'
 import { useRouter } from 'next/router'
 import Headline from 'components/layout/headline'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 interface Props {
   themes: Array<Theme & { lists: Array<List> }>
@@ -14,18 +16,17 @@ interface Props {
 const Themes = (props: Props) => {
   const themes = props.themes
   const router = useRouter()
+
+  const buttonContent = <FontAwesomeIcon icon={faPlus} />
+
   return (
     <>
       <PageHead title='お題一覧' />
       <Headline>
         <h1>お題一覧</h1>
       </Headline>
-      <div className='px-10 w-full'>
-        <div className='flex flex-col flex-wrap items-center justify-center gap-3 w-full'>
-          <PopularThemes themes={themes} />
-        </div>
-      </div>
-      <FloatingButton onClick={() => router.push('/themes/new')} content={<>お題を作る</>} />
+      <PopularThemes themes={themes} />
+      <FloatingButton onClick={() => router.push('/themes/new')} content={buttonContent} />
     </>
   )
 }
@@ -34,7 +35,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const response = await client.get('/themes')
   const data = response.data
   return {
-    props: { themes: data }
+    props: { themes: data },
   }
 }
 
