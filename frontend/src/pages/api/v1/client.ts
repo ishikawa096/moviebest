@@ -14,6 +14,14 @@ export const client = applyCaseMiddleware(
   { ignoreHeaders: true }
 )
 
+const revalidatePaths = ['/', '/lis', '/themes']
+
+export const revalidate = (res: NextApiResponse) => {
+  revalidatePaths.map(async (path) => {
+    await res.unstable_revalidate(path)
+  })
+}
+
 export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   let cookies
   let path
@@ -46,6 +54,7 @@ export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
             headers: authHeaders(cookies),
           })
           if (response.status !== 200) throw Error(response.statusText)
+          revalidate(res)
           res.status(200).json(response.data)
           break
         } catch (err) {
@@ -67,6 +76,7 @@ export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
             headers: authHeaders(cookies),
           })
           if (response.status !== 200) throw Error(response.statusText)
+          revalidate(res)
           res.status(200).json(response.data)
           break
         } catch (err) {
@@ -87,6 +97,7 @@ export const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
             headers: authHeaders(cookies),
           })
           if (response.status === 200) {
+            revalidate(res)
             res.status(200).json(response.data)
             break
           } else {
