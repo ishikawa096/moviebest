@@ -9,7 +9,7 @@ import HeaderButton from 'components/commons/headerButton'
 import Hamburger from 'components/commons/hamburger'
 import { useWindowWidth } from 'lib/helpers'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPen } from '@fortawesome/free-solid-svg-icons'
+import { faPen, faFilePen } from '@fortawesome/free-solid-svg-icons'
 
 const BREAKPOINT_WIDTH = 768
 
@@ -57,7 +57,7 @@ const Header = () => {
     <div className='flex items-center text-center w-full md:w-auto'>
       <button
         onClick={onClick}
-        className='block w-full py-3 whitespace-nowrap text-base md:text-sm text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 decoration-transparent hover:decoration-sky-400 md:p-0 hover:underline decoration-4 duration-300'
+        className='block w-full py-3 whitespace-nowrap text-bold md:text-sm text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 decoration-transparent hover:decoration-sky-400 md:p-0 hover:underline decoration-4 duration-300'
       >
         {name}
       </button>
@@ -72,22 +72,34 @@ const Header = () => {
             {menuOpen ? undefined : (
               <>
                 <NavItem name='設定' onClick={() => setSettingOpen(!settingOpen)} />
-                <HeaderButton text='投稿' onClick={() => handleRouterPush('/lists/new')} color='color' />
+                <HeaderButton text='お題投稿' onClick={() => handleRouterPush('/themes/new')} color='white' />
+                <HeaderButton text='ベスト投稿' onClick={() => handleRouterPush('/lists/new')} color='color' />
               </>
             )}
             {!settingOpen && menuOpen ? (
-              <NavItem
-                name={
-                  <>
-                    <FontAwesomeIcon icon={faPen} className='px-1' />
-                    投稿する
-                  </>
-                }
-                onClick={() => handleRouterPush('/lists/new')}
-              />
+              <>
+                <NavItem
+                  name={
+                    <>
+                      <FontAwesomeIcon icon={faPen} className='px-1' />
+                      お題を投稿
+                    </>
+                  }
+                  onClick={() => handleRouterPush('/themes/new')}
+                />
+                <NavItem
+                  name={
+                    <>
+                      <FontAwesomeIcon icon={faFilePen} className='px-1' />
+                      ベストを投稿
+                    </>
+                  }
+                  onClick={() => handleRouterPush('/lists/new')}
+                />
+              </>
             ) : null}
             {settingOpen || menuOpen ? (
-              <div className='w-full shadow-lg md:space-y-7 md:w-64 md:py-8 md:z-20 md:absolute md:top-16 md:right-0 md:bg-white md:border-b md:motion-safe:animate-slideIn'>
+              <div className='w-full shadow-lg md:space-y-7 md:w-96 md:py-8 md:z-20 md:absolute md:top-16 md:right-0 md:bg-white md:border-b md:motion-safe:animate-slideIn'>
                 <NavItem name='マイベスト' onClick={() => handleRouterPush(`/users/${currentUser.id}`)} />
                 <NavItem name='ユーザー設定' onClick={() => handleRouterPush('/account')} />
                 <NavItem name='ログアウト' onClick={handleSignOut} />
@@ -125,8 +137,8 @@ const Header = () => {
           <div className={`w-full md:block md:w-auto md:pl-3 ${menuOpen ? 'block z-20 absolute top-14 right-0 bg-white motion-safe:animate-dropdown' : 'hidden'}`}>
             <div className='flex flex-col items-center shadow-lg md:shadow-none md:flex-row md:space-x-5 md:mt-0 md:text-sm md:font-medium md:w-auto'>
               <NavItem name='使い方' onClick={() => handleRouterPush('/#about')} />
+              <NavItem name='お題一覧' onClick={() => handleRouterPush('/themes')} />
               <NavItem name='新着ベスト' onClick={() => handleRouterPush('/lists')} />
-              <NavItem name='お題をみる' onClick={() => handleRouterPush('/themes')} />
               <AuthButtons />
             </div>
           </div>
