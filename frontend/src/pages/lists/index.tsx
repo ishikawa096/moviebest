@@ -17,7 +17,7 @@ const Lists = (props: Props) => {
   return (
     <>
       <PageHead title='新着ベスト' />
-      <div className='px-10 w-full'>
+      <div className='w-full'>
         <Headline>
           <h1>新着ベスト</h1>
         </Headline>

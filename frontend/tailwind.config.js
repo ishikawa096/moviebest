@@ -11,6 +11,7 @@ module.exports = {
         fadeIn: 'fadeIn 1s ease-in forwards',
         dropdown: 'dropdown 0.3s ease-in forwards',
         slideIn: 'slideIn 0.2s ease-out forwards',
+        zoomIn: 'zoomIn 0.2s ease-in forwards',
       },
       keyframes: {
         fade: {
@@ -47,6 +48,14 @@ module.exports = {
           },
           '100%': {
             transform: 'translateX(0)',
+          },
+        },
+        zoomIn: {
+          '0%': {
+            transform: 'translateY(-4rem) scale(0)',
+          },
+          '100%': {
+            transform: 'translateY(0) scale(1)',
           },
         },
       },
