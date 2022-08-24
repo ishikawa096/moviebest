@@ -15,6 +15,9 @@ interface Props {
   lists: Array<List & { theme: Theme; user: User }>
 }
 
+const BG_IMAGE = '/asset/image/Kander.svg'
+const LOGO_IMAGE = '/asset/image/logo.png'
+
 const Home = (props: Props) => {
   const router = useRouter()
   const themes = props.themes
@@ -27,11 +30,11 @@ const Home = (props: Props) => {
       <section>
         <div className='relative justify-center mb-10 w-screen h-[80vh] text-center overflow-hidden'>
           <div className='text-[0px] bg-white'>
-            <Image src={'/Kander.svg'} alt='背景画像' priority={true} layout='fill' objectFit='cover' />
+            <Image src={BG_IMAGE} alt='背景画像' priority={true} layout='fill' objectFit='cover' />
           </div>
           <div className='p-5 flex flex-col justify-center text-center items-center bg-white absolute top-1/2 bottom-1/2 right-1/3 left-1/3 z-10'>
             <h1 className='mb-10 min-w-[18rem] md:min-w-[30rem] lg:min-w-[40rem] bg-white whitespace-nowrap px-5 py-7 md:px-20 md:py-14 lg:px-32 lg:py-16 drop-shadow-[30px_30px_0px_rgba(0,30,50,0.50)] motion-safe:animate-fadeIn'>
-              <Image src={'/logo.png'} alt='映画なんでもベスト' width={676} height={139} />
+              <Image src={LOGO_IMAGE} alt='映画なんでもベスト' width={676} height={139} />
             </h1>
           </div>
           <h3 className='absolute font-light italic top-3/4 left-1/4 md:left-1/3 right-5 z-10 bg-white px-3 py-2 md:px-10 md:py-5 drop-shadow-[30px_30px_0px_rgba(0,30,50,0.50)]'>
@@ -86,7 +89,7 @@ const Home = (props: Props) => {
       <section>
         <div className='relative min-h-[28rem] py-20 mx-30 py-5 px-10  md:px-28 lg:px-40 w-full flex flex-col text-center items-center bg-white text-gray-700'>
           <div className='text-[0px] bg-white'>
-            <Image src={'/Kander.svg'} alt='背景画像' priority={true} layout='fill' objectFit='cover' />
+            <Image src={BG_IMAGE} alt='背景画像' priority={true} layout='fill' objectFit='cover' />
           </div>
           <div className='p-5 flex flex-col justify-center text-center items-center absolute top-1/2 bottom-1/2 z-10'>
             <h3 className='mb-10 text-3xl font-light bg-white italic  px-10 py-7 drop-shadow-[30px_30px_0px_rgba(0,30,50,0.50)] '>はじめよう</h3>
