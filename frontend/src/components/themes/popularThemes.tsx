@@ -1,19 +1,27 @@
-import { randomBackGroundColors } from 'components/layout/styles'
+import { backGroundColors } from 'lib/colors'
 import { List, Theme } from 'interfaces/interface'
 import { arrayRandom } from 'lib/helpers'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { MouseEventHandler, ReactElement, useEffect, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPen, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
 interface Props {
   themes: Array<Theme & { lists: Array<List> }>
 }
 
-const ThemeCard = ({ theme, selected, onClick, color }: { theme: Theme & { lists: Array<List> }; selected: any; onClick: any; color: string }) => (
+const PopUpItem = ({ children, path }: { children: ReactElement; path: string }) => (
+  <Link href={path}>
+    <a className='block flex flex-col hover:text-sky-600 hover:bg-sky-100 m-3 rounded-lg cursor-pointer duration-150'>{children}</a>
+  </Link>
+)
+
+const ThemeCard = ({ theme, selected, onMouseEnter, color }: { theme: Theme & { lists: Array<List> }; selected: any; onMouseEnter: MouseEventHandler<HTMLDivElement>; color: string }) => (
   <div
-    onClick={onClick}
-    className={`${selected === theme.id ? 'text-yellow-400 bg-white' : color} ${
+    onMouseEnter={onMouseEnter}
+    className={`${selected === theme.id ? 'bg-gray-700 text-gray-100' : color} ${
       theme.lists.length > 3 ? 'text-2xl md:text-4xl' : 'text-base md:text-2xl'
-    } relative flex items-center font-medium px-3 py-1 hover:text-yellow-400 hover:bg-white hover:shadow-sm cursor-pointer rounded-md duration-150 ease-in-out`}
+    } relative flex items-center font-medium px-3 py-1 hover:bg-gray-700 hover:text-gray-100 hover:shadow-sm cursor-pointer rounded-md duration-150 ease-in-out`}
   >
     {theme.title}
     <span className='rounded-full text-sm md:text-xl'>／{theme.lists.length}</span>
@@ -21,14 +29,21 @@ const ThemeCard = ({ theme, selected, onClick, color }: { theme: Theme & { lists
     <div
       className={`${
         selected === theme.id ? 'block' : 'hidden'
-      } absolute top-10 min-w-[10rem] md:min-w-[12rem] flex flex-col bg-white text-center text-base md:text-lg text-sky-600 rounded-lg border z-10 motion-safe:animate-zoomIn`}
+      } absolute top-10 min-w-[6rem] md:min-w-[10rem] flex flex-col bg-white text-center text-xs md:text-sm text-sky-500 rounded-lg z-10 shadow-lg motion-safe:animate-zoomIn`}
     >
-      <Link href={`/lists/new?id=${theme.id}`}>
-        <a className='block hover:text-sky-500 hover:bg-sky-100 p-2 cursor-pointer border-b'>このお題でつくる</a>
-      </Link>
-      <Link href={`/themes/${theme.id}`}>
-        <a className='block hover:text-sky-500 hover:bg-sky-100 p-2 cursor-pointer'>投稿を見る</a>
-      </Link>
+      <span className='absolute -top-8 left-3 border-[1rem] border-transparent border-b-white' />
+      <PopUpItem path={`/lists/new?id=${theme.id}`}>
+        <>
+          <FontAwesomeIcon icon={faPen} className='p-1' size='3x' />
+          このお題でつくる
+        </>
+      </PopUpItem>
+      <PopUpItem path={`/themes/${theme.id}`}>
+        <>
+          <FontAwesomeIcon icon={faMagnifyingGlass} className='p-1' size='3x' />
+          投稿を見る
+        </>
+      </PopUpItem>
     </div>
   </div>
 )
@@ -39,15 +54,19 @@ const PopularThemes = ({ themes }: Props) => {
 
   useEffect(() => {
     const colorArray = [...Array(themes.length)].fill(null).map((_, i) => {
-      return arrayRandom(randomBackGroundColors) as string
+      return arrayRandom(backGroundColors) as string
     })
     setColors(colorArray)
   }, [])
 
+  const handleMouseEnter = (themeId: number) => {
+    selected === themeId ? setSelected(undefined) : setSelected(themeId)
+  }
+
   return (
     <div className='flex px-3 md:px-10 flex-row flex-wrap justify-center gap-3'>
       {themes.map((theme, i) => (
-        <ThemeCard key={'theme-card-' + theme.id} theme={theme} selected={selected} onClick={() => (selected === theme.id ? setSelected(undefined) : setSelected(theme.id))} color={colors[i]} />
+        <ThemeCard key={'theme-card-' + theme.id} theme={theme} selected={selected} onMouseEnter={() => handleMouseEnter(theme.id)} color={colors[i]} />
       ))}
     </div>
   )

@@ -4,8 +4,8 @@ import PopularThemes from './popularThemes'
 import { listMock, themeMock } from 'mocks/mockData'
 import userEvent from '@testing-library/user-event'
 
-jest.mock('components/layout/styles', () => ({
-  randomBackGroundColors: ['bg-yellow-300'],
+jest.mock('lib/colors', () => ({
+  backGroundColors: ['bg-yellow-300'],
 }))
 jest.mock('lib/helpers', () => ({
   arrayRandom: () => 'bg-yellow-300',
@@ -20,11 +20,11 @@ describe('PopularThemes', () => {
     expect(container.innerHTML).toMatch('0')
   })
 
-  test('クリックで一覧と作成へのリンクが出ること', async () => {
+  test('マウスオーバーで一覧と作成へのリンクが出ること', async () => {
     const user = userEvent.setup()
     render(<PopularThemes themes={themes} />)
     const card = screen.getByText('THEME')
-    await waitFor(() => user.click(card))
+    await waitFor(() => user.hover(card))
     expect(screen.getByText(/このお題でつくる/).closest('div')).toHaveClass('block')
     expect(screen.getByText(/投稿を見る/).closest('div')).toHaveClass('block')
   })
