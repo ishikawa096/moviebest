@@ -73,7 +73,6 @@ const SignIn: React.FC = () => {
         router.back()
       } else {
         setIsSending(false)
-        console.log(res)
         setFormError('Emailかパスワードが違います')
       }
     } catch (err) {

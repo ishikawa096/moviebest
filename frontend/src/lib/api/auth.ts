@@ -15,7 +15,11 @@ export const guestSignIn = () => {
 }
 
 export const signOut = () => {
-  return axios.get('/api/v1/auth/signout')
+  return axios.delete('/api/v1/auth/signout')
+}
+
+export const userDelete = () => {
+  return axios.delete('/api/v1/auth/delete')
 }
 
 export const getCurrentUser = () => {

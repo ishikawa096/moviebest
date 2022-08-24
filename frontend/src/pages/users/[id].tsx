@@ -6,7 +6,7 @@ import { AuthContext } from 'pages/_app'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import { toastSuccess } from 'lib/toast'
-import ImportantModal from 'lib/importantModal'
+import ImportantModal from 'components/importantModal'
 import ListCard from 'components/lists/listCard'
 import PageHead from 'components/layout/pageHead'
 import Headline from 'components/layout/headline'
@@ -23,6 +23,7 @@ const UserPage = (props: Props) => {
   const router = useRouter()
   const user = props.user
   const userLists = user.lists
+  userLists.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
   const [update, setUpdate] = useState<boolean>(false)
   const [lists, setLists] = useState(userLists)
   const [showModal, setShowModal] = useState<boolean>(false)
@@ -54,9 +55,9 @@ const UserPage = (props: Props) => {
     setShowModal(false)
     if (targetId) {
       try {
-        const response = await axios.delete('/api/v1/client', {
+        const response = await axios.delete('/api/v1/lists', {
           params: {
-            path: `/lists/${targetId}`,
+            id: targetId
           },
         })
         if (response.status !== 200 || response.data.status) throw Error(response.data.message)
@@ -81,7 +82,7 @@ const UserPage = (props: Props) => {
       <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-9 px-2 grid-flow-row-dense'>
         {lists.map((list) =>
           list.isDeleted ? null : (
-            <InView triggerOnce={true} rootMargin='-100px' key={list.id}>
+            <InView triggerOnce={true} rootMargin='-100px' key={'list-card-' + list.id}>
               {({ inView, ref }) => {
                 return (
                   <div ref={ref} className={`min-h-[300px] relative ${inView ? 'motion-safe:animate-fade' : ''} `}>

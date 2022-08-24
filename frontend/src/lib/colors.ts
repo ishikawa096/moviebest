@@ -9,4 +9,4 @@ export const buttonColor = ({ color }: ButtonColor) => {
   }
 }
 
-export const randomBackGroundColors = ['bg-yellow-300', 'bg-orange-400', 'bg-red-400', 'bg-blue-400', 'bg-sky-400']
+export const backGroundColors = ['bg-yellow-300', 'bg-orange-400', 'bg-red-400', 'bg-blue-400', 'bg-sky-400']

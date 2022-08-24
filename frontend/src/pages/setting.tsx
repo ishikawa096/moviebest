@@ -14,7 +14,7 @@ import NowLoading from 'components/commons/nowLoading'
 
 const Setting: React.FC = () => {
   const router = useRouter()
-  const { isSignedIn, currentUser, isGuest } = useContext(AuthContext)
+  const { isSignedIn, currentUser, setCurrentUser, isGuest } = useContext(AuthContext)
   const [name, setName] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   const [currentPassword, setCurrentPassword] = useState<string>('')
@@ -52,6 +52,7 @@ const Setting: React.FC = () => {
       const res = await axios.put('/api/v1/auth/update', params)
       if (res.status === 200 && res.data.status === 'success') {
         toastSuccess('ユーザー情報を変更しました')
+        setCurrentUser(res.data.data)
         router.push('/account')
       } else {
         setIsSending(false)

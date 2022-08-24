@@ -1,4 +1,4 @@
-import { buttonColor } from 'components/layout/styles'
+import { buttonColor } from 'lib/colors'
 import { ButtonColor } from 'interfaces/interface'
 import LoadingButton from './loadingButton'
 

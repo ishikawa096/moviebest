@@ -11,7 +11,7 @@ export const authHeaders = (cookies: { [key: string]: string }) => ({
 export const setCookies = (res: AxiosResponse, ctx?: NextPageContext | { res: NextApiResponse }) => {
   const options = {
     maxAge: 14 * 24 * 60 * 60,
-    sameSite: 'lax',
+    sameSite: 'lax' as 'lax',
     path: '/',
   }
   setCookie(ctx, '_access_token', res.headers['access-token'], options)

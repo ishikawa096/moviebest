@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen, faFilePen } from '@fortawesome/free-solid-svg-icons'
 
 const BREAKPOINT_WIDTH = 768
+const LOGO_IMAGE = '/asset/image/logo.png'
 
 const Header = () => {
   const { loading, isSignedIn, setIsSignedIn, currentUser, setIsGuest } = useContext(AuthContext)
@@ -54,14 +55,12 @@ const Header = () => {
   }
 
   const NavItem = ({ onClick, name }: { onClick: React.MouseEventHandler<HTMLButtonElement>; name: string | React.ReactNode }) => (
-    <div className='flex items-center text-center w-full md:w-auto'>
-      <button
-        onClick={onClick}
-        className='block w-full py-3 whitespace-nowrap text-bold md:text-sm text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 decoration-transparent hover:decoration-sky-400 md:p-0 hover:underline decoration-4 duration-300'
-      >
-        {name}
-      </button>
-    </div>
+    <button
+      onClick={onClick}
+      className='block w-full py-3 whitespace-nowrap text-bold md:text-sm text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 decoration-transparent hover:decoration-sky-400 md:p-0 hover:underline decoration-4 duration-300'
+    >
+      {name}
+    </button>
   )
 
   const AuthButtons = () => {
@@ -109,12 +108,10 @@ const Header = () => {
         )
       } else {
         return (
-          <>
-            <div className='w-full flex flex-col md:flex-row items-center'>
-              <HeaderButton text='ログイン' onClick={() => handleRouterPush('/signin')} color='white' />
-              <HeaderButton text='新規登録' onClick={() => handleRouterPush('/signup')} color='color' />
-            </div>
-          </>
+          <div className='w-full flex flex-col md:flex-row items-center'>
+            <HeaderButton text='ログイン' onClick={() => handleRouterPush('/signin')} color='white' />
+            <HeaderButton text='新規登録' onClick={() => handleRouterPush('/signup')} color='color' />
+          </div>
         )
       }
     } else {
@@ -129,12 +126,12 @@ const Header = () => {
           <div className='z-40'>
             <Link href='/' className='flex items-center'>
               <a className='self-center whitespace-nowrap'>
-                <Image src={'/logo.png'} alt='映画なんでもベスト' width={150} height={30} />
+                <Image src={LOGO_IMAGE} alt='映画なんでもベスト' width={150} height={30} />
               </a>
             </Link>
           </div>
           <Hamburger onClick={() => setMenuOpen(!menuOpen)} isOpen={menuOpen} />
-          <div className={`w-full md:block md:w-auto md:pl-3 ${menuOpen ? 'block z-20 absolute top-14 right-0 bg-white motion-safe:animate-dropdown' : 'hidden'}`}>
+          <div data-testid='header-menu' className={`w-full md:block md:w-auto md:pl-3 ${menuOpen ? 'block z-20 absolute top-14 right-0 bg-white motion-safe:animate-dropdown' : 'hidden'}`}>
             <div className='flex flex-col items-center shadow-lg md:shadow-none md:flex-row md:space-x-5 md:mt-0 md:text-sm md:font-medium md:w-auto'>
               <NavItem name='使い方' onClick={() => handleRouterPush('/#about')} />
               <NavItem name='お題一覧' onClick={() => handleRouterPush('/themes')} />

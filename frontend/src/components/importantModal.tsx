@@ -1,6 +1,19 @@
 import Modal from 'react-modal'
 import { ModalProps } from 'interfaces/interface'
 import CloseButton from 'components/commons/closeButton'
+import { MouseEventHandler } from 'react'
+
+const ModalButton = ({ onClick, text, isColored }: { onClick: MouseEventHandler; text: string; isColored: boolean }) => (
+  <button
+    type='button'
+    className={`${
+      isColored ? 'text-white border-transparent bg-red-600 hover:bg-red-700 focus:ring-red-500' : 'text-gray-700 border-gray-300 bg-white hover:bg-gray-300 focus:ring-sky-500'
+    } mt-3 w-full inline-flex justify-center rounded-lg border shadow-sm px-4 py-2 text-base font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}
+    onClick={onClick}
+  >
+    {text}
+  </button>
+)
 
 const ImportantModal = ({ showModal, title, description, confirmationText, cancellationText, handleConfirm, handleCancel }: ModalProps) => {
   if (typeof window !== 'undefined') {
@@ -26,7 +39,7 @@ const ImportantModal = ({ showModal, title, description, confirmationText, cance
 
   return (
     <Modal style={customStyles} isOpen={showModal}>
-      <CloseButton onClick={handleCancel} srOnly='close modal' />
+      <CloseButton onClick={handleCancel} srOnly='閉じる' />
       <div className='mt-3'>
         <svg aria-hidden='true' className='mx-auto mb-4 w-14 h-14 text-gray-400' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
           <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'></path>
@@ -39,25 +52,8 @@ const ImportantModal = ({ showModal, title, description, confirmationText, cance
         </div>
       </div>
       <div className='px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse'>
-
-        <button
-          type='button'
-          className='w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white
-            hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm'
-          onClick={handleConfirm}
-        >
-          {confirmationText}
-        </button>
-
-        <button
-          type='button'
-          className='mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700
-            hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm'
-          onClick={handleCancel}
-        >
-          {cancellationText}
-        </button>
-
+        <ModalButton onClick={handleConfirm} text={confirmationText} isColored={true} />
+        <ModalButton onClick={handleCancel} text={cancellationText} isColored={false} />
       </div>
     </Modal>
   )

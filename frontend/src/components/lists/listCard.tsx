@@ -1,13 +1,13 @@
 import { Movie, Theme, User } from 'interfaces/interface'
 import Link from 'next/link'
 import Image from 'next/image'
-import { posterUrl } from 'lib/tmdbHelpers'
+import { setImageUrl } from 'lib/tmdbHelpers'
 import { useState } from 'react'
 import TweetIcon from './tweetIcon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser,faHashtag } from '@fortawesome/free-solid-svg-icons'
 
-const BLANK_IMAGE = '/noimage.png'
+const BLANK_IMAGE = '/asset/image/noimage.png'
 const MAX_TITLE_LENGTH = 20
 
 interface Props {
@@ -18,11 +18,11 @@ interface Props {
 
 const ListCard = ({ theme, user, movies }: Props) => {
   const [update, setUpdate] = useState(false)
-  const [image, setImage] = useState(movies[0].tmdbImage)
+  const [image, setImage] = useState(setImageUrl(movies[0]))
 
   const onError = () => {
-    setImage('')
-    update ? setUpdate(false) : setUpdate(true)
+    setImage(BLANK_IMAGE)
+    setUpdate(!update)
   }
 
   const titleOmit = (title: string) => {
@@ -35,7 +35,7 @@ const ListCard = ({ theme, user, movies }: Props) => {
   }
 
   const listColumn = movies.map((movie) => (
-    <div key={movie.id} className='flex flex-row text-white rounded-sm overflow-hidden'>
+    <div key={'list-column-' + movie.id} className='flex flex-row text-white rounded-sm overflow-hidden'>
       <div
         className={`text-center mr-[1px] flex font-sans w-5 items-center text-sm sm:text-base bg-opacity-50 bg-gray-400 backdrop-blur-xl backdrop-saturate-[10] ${movie.position + 1 >= 10 ? 'pl-0.5' : 'pl-1.5'}`}
       >
@@ -55,8 +55,8 @@ const ListCard = ({ theme, user, movies }: Props) => {
     <>
       <div className='relative flex flex-col w-72 sm:w-[22rem] h-[fit-content] min-h-[25rem] sm:min-h-[30rem] mr-auto ml-auto justify-center items-center rounded-xl overflow-hidden hover:shadow-lg duration-150'>
         <Image
-          src={image ? posterUrl(image, 'w500') : BLANK_IMAGE}
-          alt={'このベストのメイン画像'}
+          src={image}
+          alt={movies[0] + 'の画像'}
           layout='fill'
           objectFit='cover'
           placeholder='blur'

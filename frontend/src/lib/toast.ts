@@ -1,4 +1,3 @@
-// import 'react-toastify/dist/ReactToastify.css'
 import { toast, Flip } from 'react-toastify'
 
 const defaults = {

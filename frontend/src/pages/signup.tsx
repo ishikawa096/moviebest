@@ -13,9 +13,7 @@ import { alreadySignIn, errorMessage, isEmptyObject } from 'lib/helpers'
 
 const SignUp: React.FC = () => {
   const router = useRouter()
-
   const { isSignedIn, setIsSignedIn, setCurrentUser } = useContext(AuthContext)
-
   const [name, setName] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')

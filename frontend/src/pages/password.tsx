@@ -11,8 +11,9 @@ import { validatePassword } from 'lib/validates'
 import { errorMessage, guestUserUnavailable, isEmptyObject, redirectToSignIn } from 'lib/helpers'
 import Headline from 'components/layout/headline'
 import NowLoading from 'components/commons/nowLoading'
+import { NextPage } from 'next/types'
 
-const Password: React.FC = () => {
+const Password: NextPage = () => {
   const router = useRouter()
   const { isSignedIn, isGuest } = useContext(AuthContext)
   const [currentPassword, setCurrentPassword] = useState<string>('')

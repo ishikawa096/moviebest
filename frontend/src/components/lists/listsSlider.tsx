@@ -49,15 +49,13 @@ const ListsSlider = ({ lists }: Props) => {
     ],
   }
   return (
-    <>
-      <div className='overflow-hidden w-full'>
-        <Slider {...settings} className='relative'>
-          {lists.map((list) => (
-            <ListCard key={list.id} user={list.user} movies={list.movies} theme={list.theme} />
-          ))}
-        </Slider>
-      </div>
-    </>
+    <div className='overflow-hidden w-full'>
+      <Slider {...settings} className='relative'>
+        {lists.map((list) => (
+          <ListCard key={'list-slider-' + list.id} user={list.user} movies={list.movies} theme={list.theme} />
+        ))}
+      </Slider>
+    </div>
   )
 }
 export default ListsSlider

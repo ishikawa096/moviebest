@@ -1,7 +1,6 @@
 import type { List, Theme, User } from 'interfaces/interface'
 import type { GetStaticProps } from 'next'
 import { client } from 'pages/api/v1/client'
-import Link from 'next/link'
 import ListsContainer from 'components/lists/listsContainer'
 import Headline from 'components/layout/headline'
 import PageHead from 'components/layout/pageHead'
@@ -17,12 +16,10 @@ const Lists = (props: Props) => {
   return (
     <>
       <PageHead title='新着ベスト' />
-      <div className='w-full'>
         <Headline>
           <h1>新着ベスト</h1>
         </Headline>
         <ListsContainer lists={lists} />
-      </div>
     </>
   )
 }

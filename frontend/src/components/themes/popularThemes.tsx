@@ -47,7 +47,7 @@ const PopularThemes = ({ themes }: Props) => {
   return (
     <div className='flex px-3 md:px-10 flex-row flex-wrap justify-center gap-3'>
       {themes.map((theme, i) => (
-        <ThemeCard key={theme.id} theme={theme} selected={selected} onClick={() => (selected === theme.id ? setSelected(undefined) : setSelected(theme.id))} color={colors[i]} />
+        <ThemeCard key={'theme-card-' + theme.id} theme={theme} selected={selected} onClick={() => (selected === theme.id ? setSelected(undefined) : setSelected(theme.id))} color={colors[i]} />
       ))}
     </div>
   )

@@ -29,16 +29,14 @@ const ThemePage = (props: Props) => {
   return (
     <>
       <PageHead title={theme.title + 'の一覧'} />
-      <div>
-        <Headline>
-          <h1 className='italic text-3xl'>
-            <FontAwesomeIcon icon={faHashtag} className='px-1' size='xs' />
-            {theme.title}
-          </h1>
-        </Headline>
-        <ListsContainer lists={lists} />
-        <FloatingButton onClick={buttonHandler} content={<FontAwesomeIcon icon={faFilePen} />} />
-      </div>
+      <Headline>
+        <h1 className='italic text-3xl'>
+          <FontAwesomeIcon icon={faHashtag} className='px-1' size='xs' />
+          {theme.title}
+        </h1>
+      </Headline>
+      <ListsContainer lists={lists} />
+      <FloatingButton onClick={buttonHandler} content={<FontAwesomeIcon icon={faFilePen} />} />
     </>
   )
 }

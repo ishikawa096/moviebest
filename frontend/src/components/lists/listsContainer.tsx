@@ -7,7 +7,7 @@ const ListsContainer = ({ lists }: { lists: Array<List & { user: User; theme: Th
   return (
     <div className='md:px-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-9 grid-flow-row-dense'>
       {lists.map((list) => (
-        <InView triggerOnce={true} rootMargin='-100px' key={list.id}>
+        <InView triggerOnce={true} rootMargin='-100px' key={'list-card-' + list.id}>
           {({ inView, ref }) => {
             return (
               <div ref={ref} className={`min-h-[300px] ${inView ? 'motion-safe:animate-fade' : ''} `}>

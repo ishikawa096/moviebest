@@ -33,7 +33,7 @@ export interface MovieSelectOption {
   label: string
   value: string
   posterPath: string
-  tmdbId?: number
+  tmdbId: number
 }
 
 export interface List {

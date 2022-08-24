@@ -1,10 +1,8 @@
-import axios from 'axios'
 import { authHeaders, setCookies } from 'lib/api/authHelper'
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 import nookies from 'nookies'
 import { client } from '../client'
 import { revalidate } from '../client'
-
 
 const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const params = req.body
