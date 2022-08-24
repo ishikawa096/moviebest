@@ -19,14 +19,16 @@ const ThemeSelect = ({ onChange, themes, theme }: Props) => {
   }
 
   return (
-    <Select
-      defaultValue={theme ? { label: theme.title, value: theme } : { label: 'お題を選択', value: {} }}
-      onChange={(newValue: any) => onChange(newValue)}
-      options={options()}
-      components={{ Input, Control }}
-      styles={styles}
-      theme={formTheme}
-    />
+    <div className='w-full mb-1 p-3 md:p-10'>
+      <Select
+        defaultValue={theme ? { label: theme.title, value: theme } : { label: 'お題を選択', value: {} }}
+        onChange={(newValue: any) => onChange(newValue)}
+        options={options()}
+        components={{ Input, Control }}
+        styles={styles}
+        theme={formTheme}
+      />
+    </div>
   )
 }
 export default ThemeSelect
