@@ -10,6 +10,7 @@ import { getCurrentUser } from 'lib/api/auth'
 import NowLoading from 'components/commons/nowLoading'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
+import PageError from 'components/pageError'
 config.autoAddCss = false
 
 const GUEST_USER_EMAIL = 'guest@example.com'
@@ -31,7 +32,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState<boolean>(true)
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<User | undefined>(undefined)
-  const [isGuest, setIsGuest] =useState<boolean>(false)
+  const [isGuest, setIsGuest] = useState<boolean>(false)
 
   const handleGetCurrentUser = async () => {
     try {
@@ -42,14 +43,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         if (res?.data.data.email === GUEST_USER_EMAIL) {
           setIsGuest(true)
         }
-        console.log(res?.data.data)
-      } else {
-        console.log(res)
-        console.log('No current user')
       }
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
     setLoading(false)
   }
 
@@ -57,9 +52,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     handleGetCurrentUser()
   }, [setCurrentUser])
 
-  if (pageProps.error) {
-    return <Error statusCode={pageProps.error.statusCode} title={pageProps.error.message} />
-  }
   if (loading) {
     return <NowLoading />
   }
@@ -67,7 +59,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setIsSignedIn, currentUser, setCurrentUser, isGuest, setIsGuest }}>
         <Layout>
-          <Component {...pageProps} />
+          {pageProps.error
+            ? <PageError code={pageProps.error.statusCode} text={pageProps.error.message} />
+            : <Component {...pageProps} />}
         </Layout>
         <ToastContainer />
       </AuthContext.Provider>
