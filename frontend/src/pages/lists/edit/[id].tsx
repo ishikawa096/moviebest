@@ -9,6 +9,7 @@ import { AuthContext } from 'pages/_app'
 import NowLoading from 'components/commons/nowLoading'
 import Headline from 'components/layout/headline'
 import ListForm from 'components/lists/form/listForm'
+import PageError from 'components/pageError'
 
 interface State {
   state: { isLoading: false; list: List & { user: User; theme: Theme } } | { isLoading: true }
@@ -23,9 +24,9 @@ const EditList: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get('/api/v1/client', {
+      const res = await axios.get('/api/v1/lists', {
         params: {
-          path: `/lists/${listId}`,
+          id: listId,
         },
       })
       const list = res.data
@@ -65,8 +66,8 @@ const EditList: React.FC = () => {
                 id: cm.id,
                 title: m.title,
                 position: m.position,
-                tmdbId: m.tmdbId,
-                tmdbImage: m.tmdbImage,
+                tmdbId: m.tmdbId || 0,
+                tmdbImage: m.tmdbImage || '',
               }
             : null
         )
@@ -79,11 +80,11 @@ const EditList: React.FC = () => {
       movies: newMovies,
     }
     try {
-      const response = await axios.patch('/api/v1/client', {
+      const response = await axios.patch('/api/v1/lists', {
         params: { list: newList },
-        path: `/lists/${listId}`,
+        id: listId,
       })
-      if (response.status !== 200 || response.data.status) throw Error(response.statusText)
+      if (response.status !== 200 || response.data.status) throw Error(response.data.message)
 
       const savedList = response.data
       toastSuccess('リストが更新されました')

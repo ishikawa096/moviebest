@@ -27,8 +27,7 @@ const NewTheme = () => {
   const createTheme = async (newData: { theme: CreateThemeParams }) => {
     setIsError(false)
     try {
-      const response = await axios.post('/api/v1/client', {
-        path: '/themes',
+      const response = await axios.post('/api/v1/themes', {
         params: { theme: newData.theme },
       })
       if (response.status !== 200 || response.data.status) throw Error(response.data.message)

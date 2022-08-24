@@ -7,7 +7,6 @@ import { errorMessage, redirectToSignIn } from 'lib/helpers'
 import { toastSuccess } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import ThemeSelect from 'components/lists/form/themeSelect'
-import Link from 'next/link'
 import ListForm from 'components/lists/form/listForm'
 import NowLoading from 'components/commons/nowLoading'
 import Headline from 'components/layout/headline'
@@ -25,28 +24,32 @@ const NewList = () => {
   const { isSignedIn } = useContext(AuthContext)
 
   const fetchTheme = async () => {
-    const res = await axios.get('/api/v1/client', {
-      params: {
-        path: `/themes/${queryThemeId}`,
-      },
-    })
-    if (res.status !== 200) throw Error(res.statusText)
-    const theme = res.data
-    setThemeState({ state: { isLoading: false, theme: theme } })
-    setIsLoading(false)
+    try {
+      const res = await axios.get('/api/v1/themes', {
+        params: {
+          id: queryThemeId,
+        },
+      })
+      if (res.status !== 200 || res.data.status) throw Error(res.data.message)
+      const theme = res.data
+      setThemeState({ state: { isLoading: false, theme: theme } })
+      setIsLoading(false)
+    } catch (err) {
+      errorMessage()
+    }
   }
 
   const fetchThemes = async () => {
-    const res = await axios.get('/api/v1/client', {
-      params: {
-        path: `/themes`,
-      },
-    })
-    if (res.status !== 200) throw Error(res.statusText)
-    const themes = res.data.sort((a: Theme, b: Theme) => (a.createdAt < b.createdAt ? 1 : -1))
-    setThemes(themes)
-    if (!queryThemeId) {
-      setIsLoading(false)
+    try {
+      const res = await axios.get('/api/v1/themes')
+      if (res.status !== 200 || res.data.status) throw Error(res.data.message)
+      const themes = res.data.sort((a: Theme, b: Theme) => (a.createdAt < b.createdAt ? 1 : -1))
+      setThemes(themes)
+      if (!queryThemeId) {
+        setIsLoading(false)
+      }
+    } catch (err) {
+      errorMessage()
     }
   }
 
@@ -67,14 +70,13 @@ const NewList = () => {
 
   const createList = async (newData: { list: CreateListParams }) => {
     try {
-      const response = await axios.post('/api/v1/client', {
+      const response = await axios.post('/api/v1/lists', {
         params: { list: newData.list },
-        path: '/lists',
       })
       if (response.status !== 200 || response.data.status) throw Error(response.data.message)
 
       const savedList = response.data
-      toastSuccess('リストが作成されました')
+      toastSuccess('ベストが作成されました')
       router.push(`/lists/${savedList.id}`)
     } catch (err) {
       errorMessage()
@@ -90,17 +92,11 @@ const NewList = () => {
       {isLoading ? (
         <NowLoading />
       ) : themeState.state.isLoading ? (
-        <div className='flex flex-col w-full mb-1 p-3 md:p-10'>
-          <ThemeSelect onChange={handleThemeChange} themes={themes} />
-        </div>
+        <ThemeSelect onChange={handleThemeChange} themes={themes} />
       ) : (
         <>
-          <div className='w-full'>
-            <div className='w-full mb-1 p-3 md:p-10'>
-              <ThemeSelect onChange={handleThemeChange} theme={themeState.state.theme} themes={themes} />
-            </div>
-            <ListForm onSave={createList} theme={themeState.state.theme} />
-          </div>
+          <ThemeSelect onChange={handleThemeChange} theme={themeState.state.theme} themes={themes} />
+          <ListForm onSave={createList} theme={themeState.state.theme} />
         </>
       )}
     </>
