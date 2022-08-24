@@ -9,6 +9,15 @@ import { server } from 'mocks/server'
 const setIsSignedIn = jest.fn()
 const setIsGuest = jest.fn()
 
+const mockedRouterPush = jest.fn()
+jest.mock('next/router', () => ({
+  useRouter() {
+    return {
+      push: mockedRouterPush,
+    }
+  },
+}))
+
 describe('Header', () => {
   const user = userEvent.setup()
   describe('ログインしていないとき', () => {
@@ -38,6 +47,20 @@ describe('Header', () => {
       expect(screen.getByRole('button', { name: 'ログイン' })).toBeEnabled()
       expect(screen.getByRole('button', { name: '新規登録' })).toBeEnabled()
     })
+
+    test('クリックで移動できること', async () => {
+      await waitFor(() => user.click(screen.getByText(/使い方/)))
+      expect(mockedRouterPush).lastCalledWith('/#about')
+      await waitFor(() => user.click(screen.getByText(/お題一覧/)))
+      expect(mockedRouterPush).lastCalledWith('/themes')
+      await waitFor(() => user.click(screen.getByText(/新着ベスト/)))
+      expect(mockedRouterPush).lastCalledWith('/lists')
+      await waitFor(() => user.click(screen.getByRole('button', { name: 'ログイン' })))
+      expect(mockedRouterPush).lastCalledWith('/signin')
+      await waitFor(() => user.click(screen.getByRole('button', { name: '新規登録' })))
+      expect(mockedRouterPush).lastCalledWith('/signup')
+    })
+
     test('画面幅が小さいときハンバーガーメニューになること', async () => {
       act(() => {
         Object.defineProperty(window, 'innerWidth', {
@@ -45,9 +68,23 @@ describe('Header', () => {
         })
         window.dispatchEvent(new Event('resize'))
       })
-      expect(screen.getByTestId('header-menu')).toHaveClass('hidden')
-      await waitFor(() => user.click(screen.getByText('メニューを開く')))
-      expect(screen.getByTestId('header-menu')).toHaveClass('block')
+      const menuButton = screen.getByText('メニューを開く')
+      await waitFor(() => user.click(menuButton))
+      await waitFor(() => user.click(screen.getByText(/使い方/)))
+      await waitFor(() => user.click(menuButton))
+      expect(mockedRouterPush).lastCalledWith('/#about')
+      await waitFor(() => user.click(screen.getByText(/お題一覧/)))
+      await waitFor(() => user.click(menuButton))
+      expect(mockedRouterPush).lastCalledWith('/themes')
+      await waitFor(() => user.click(menuButton))
+      await waitFor(() => user.click(screen.getByText(/新着ベスト/)))
+      expect(mockedRouterPush).lastCalledWith('/lists')
+      await waitFor(() => user.click(menuButton))
+      await waitFor(() => user.click(screen.getByRole('button', { name: 'ログイン' })))
+      expect(mockedRouterPush).lastCalledWith('/signin')
+      await waitFor(() => user.click(menuButton))
+      await waitFor(() => user.click(screen.getByRole('button', { name: '新規登録' })))
+      expect(mockedRouterPush).lastCalledWith('/signup')
     })
   })
 
@@ -86,28 +123,69 @@ describe('Header', () => {
       expect(screen.getByRole('button', { name: 'ベスト投稿' })).toBeEnabled()
     })
 
-    test('設定をクリックして設定メニューが開くこと', async () => {
-      await waitFor(() => user.click(screen.getByText('設定')))
-      expect(screen.getByText(/マイベスト/)).toBeTruthy()
-      expect(screen.getByText(/ユーザー設定/)).toBeTruthy()
-      expect(screen.getByText(/ログアウト/)).toBeTruthy()
+    test('クリックで移動できること', async () => {
+      await waitFor(() => user.click(screen.getByText(/使い方/)))
+      expect(mockedRouterPush).lastCalledWith('/#about')
+      await waitFor(() => user.click(screen.getByText(/お題一覧/)))
+      expect(mockedRouterPush).lastCalledWith('/themes')
+      await waitFor(() => user.click(screen.getByText(/新着ベスト/)))
+      expect(mockedRouterPush).lastCalledWith('/lists')
+      await waitFor(() => user.click(screen.getByRole('button', { name: 'お題投稿' })))
+      expect(mockedRouterPush).lastCalledWith('/themes/new')
+      await waitFor(() => user.click(screen.getByRole('button', { name: 'ベスト投稿' })))
+      expect(mockedRouterPush).lastCalledWith('/lists/new')
     })
 
-    test('画面幅が小さいときハンバーガーメニューになり設定ボタンは無いこと', async () => {
+    test('設定をクリックしてマイベストに移動できること', async () => {
+      await waitFor(() => user.click(screen.getByText('設定')))
+      await waitFor(() => user.click(screen.getByText(/マイベスト/)))
+      expect(mockedRouterPush).lastCalledWith(`/users/${userMock.id}`)
+    })
+
+    test('設定をクリックしてユーザー設定に移動できること', async () => {
+      await waitFor(() => user.click(screen.getByText('設定')))
+      await waitFor(() => user.click(screen.getByText(/ユーザー設定/)))
+      expect(mockedRouterPush).lastCalledWith('/account')
+    })
+
+    test('ログアウトできること', async () => {
+      await waitFor(() => user.click(screen.getByText('設定')))
+      await waitFor(() => user.click(screen.getByText(/ログアウト/)))
+      expect(setIsSignedIn).toBeCalledWith(false)
+      expect(setIsGuest).toBeCalledWith(false)
+    })
+
+    test('画面幅が小さいときハンバーガーメニューになり設定メニューと統合されること', async () => {
       act(() => {
         Object.defineProperty(window, 'innerWidth', {
           value: 400,
         })
         window.dispatchEvent(new Event('resize'))
       })
-      expect(screen.getByTestId('header-menu')).toHaveClass('hidden')
-      await waitFor(() => user.click(screen.getByText('メニューを開く')))
-      expect(screen.getByTestId('header-menu')).toHaveClass('block')
+      const menuButton = screen.getByText('メニューを開く')
+      await waitFor(() => user.click(menuButton))
       expect(screen.queryByText('設定')).toBeNull()
-    })
-
-    test('ログアウトできること', async () => {
-      await waitFor(() => user.click(screen.getByText(/設定/)))
+      await waitFor(() => user.click(screen.getByText(/使い方/)))
+      expect(mockedRouterPush).lastCalledWith('/#about')
+      await waitFor(() => user.click(menuButton))
+      await waitFor(() => user.click(screen.getByText(/お題一覧/)))
+      expect(mockedRouterPush).lastCalledWith('/themes')
+      await waitFor(() => user.click(menuButton))
+      await waitFor(() => user.click(screen.getByText(/新着ベスト/)))
+      expect(mockedRouterPush).lastCalledWith('/lists')
+      await waitFor(() => user.click(menuButton))
+      await waitFor(() => user.click(screen.getByText(/お題を投稿/)))
+      expect(mockedRouterPush).lastCalledWith('/themes/new')
+      await waitFor(() => user.click(menuButton))
+      await waitFor(() => user.click(screen.getByText(/ベストを投稿/)))
+      expect(mockedRouterPush).lastCalledWith('/lists/new')
+      await waitFor(() => user.click(menuButton))
+      await waitFor(() => user.click(screen.getByText(/マイベスト/)))
+      expect(mockedRouterPush).lastCalledWith(`/users/${userMock.id}`)
+      await waitFor(() => user.click(menuButton))
+      await waitFor(() => user.click(screen.getByText(/ユーザー設定/)))
+      expect(mockedRouterPush).lastCalledWith('/account')
+      await waitFor(() => user.click(menuButton))
       await waitFor(() => user.click(screen.getByText(/ログアウト/)))
       expect(setIsSignedIn).toBeCalledWith(false)
       expect(setIsGuest).toBeCalledWith(false)
