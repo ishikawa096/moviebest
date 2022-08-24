@@ -8,7 +8,7 @@ import SignInLayout from 'components/layout/signInLayout'
 import SignInButton from 'components/commons/signInButton'
 import SignInInput from 'components/signInInput'
 import PageHead from 'components/layout/pageHead'
-import { validateSignUp } from 'lib/validates'
+import { validateSignUp } from 'lib/validations'
 import { alreadySignIn, errorMessage, isEmptyObject } from 'lib/helpers'
 
 const SignUp: React.FC = () => {

@@ -2,7 +2,7 @@ import { CreateThemeParams } from 'interfaces/interface'
 import { isEmptyObject } from 'lib/helpers'
 import { useState } from 'react'
 import SubmitButton from '../commons/submitButton'
-import { validateTheme } from 'lib/validates'
+import { validateTheme } from 'lib/validations'
 import TitleInput from './titleInput'
 import CapacitySelect from './capacitySelect'
 

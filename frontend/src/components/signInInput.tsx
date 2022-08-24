@@ -1,4 +1,4 @@
-import RenderErrors from "./renderErrors"
+import FormError from "./formError"
 
 interface Props {
   value: string
@@ -29,7 +29,7 @@ const SignInInput = ({ value, label, name, type, autoComplete, onChange, error }
     >
       {label}
     </label>
-    {error ? <RenderErrors error={label + error} /> : undefined }
+    {error ? <FormError error={label + error} /> : undefined }
   </div>
 )
 

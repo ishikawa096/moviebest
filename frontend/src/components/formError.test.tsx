@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react'
-import RenderErrors from './renderErrors'
+import FormError from './formError'
 
-describe('RenderErrors', () => {
+describe('FormError', () => {
   beforeEach(() => {
-    render(<RenderErrors error='エラーがあります' />)
+    render(<FormError error='エラーがあります' />)
   })
 
   test('props errorが表示されること', async () => {

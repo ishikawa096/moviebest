@@ -5,7 +5,7 @@ import type { SignInParams } from 'interfaces/interface'
 import { toastSuccess } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import SignInButton from 'components/commons/signInButton'
-import RenderErrors from 'components/renderErrors'
+import FormError from 'components/formError'
 import PageHead from 'components/layout/pageHead'
 import SignInLayout from 'components/layout/signInLayout'
 import SignInInput from 'components/signInInput'
@@ -86,7 +86,7 @@ const SignIn: React.FC = () => {
       <PageHead title='ログイン' />
       <SignInLayout title='ログイン'>
         <form className='px-2 sm:px-5 py-5 flex flex-col'>
-          {formError ? <RenderErrors error={formError} /> : undefined}
+          {formError ? <FormError error={formError} /> : undefined}
           <SignInInput value={email} label='Email' name='email' type='email' autoComplete='email' onChange={handleEmailChange} />
           <SignInInput value={password} label='パスワード' name='password' type='password' autoComplete='current-password' onChange={handlePasswordChange} />
           <SignInButton onClick={handleSubmit} disabled={!email || !password ? true : false} isSending={isSending} text='ログイン' color='color' />

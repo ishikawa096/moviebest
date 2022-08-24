@@ -1,4 +1,4 @@
-import RenderErrors from 'components/renderErrors'
+import FormError from 'components/formError'
 import React from 'react'
 
 interface Props {
@@ -21,7 +21,7 @@ const CommentArea = React.memo(({ onChange, comment, formError }: Props) => (
       className={`${formError ? 'border-red-300' : 'border-gray-300'} block p-2.5 w-full text-gray-900 rounded-lg border focus:ring-sky-400 focus:border-sky-400 duration-150 ease-in-out`}
       placeholder='コメント'
     />
-    {formError ? <RenderErrors error={formError} /> : undefined}
+    {formError ? <FormError error={formError} /> : undefined}
   </>
 ))
 

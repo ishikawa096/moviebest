@@ -1,4 +1,4 @@
-import RenderErrors from 'components/renderErrors'
+import FormError from 'components/formError'
 import { CreateThemeParams } from 'interfaces/interface'
 
 interface Props {
@@ -30,7 +30,7 @@ const CapacitySelect = ({ onChange, theme, capMin, capMax, formError }: Props) =
           </option>
         ))}
       </select>
-      {formError ? <RenderErrors error={formError} /> : undefined}
+      {formError ? <FormError error={formError} /> : undefined}
     </>
   )
 }

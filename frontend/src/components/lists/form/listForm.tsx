@@ -1,10 +1,10 @@
 import type { CreateListParams, List, MovieSelectOption, Theme, User } from 'interfaces/interface'
 import { useState, useCallback } from 'react'
 import { isEmptyObject } from 'lib/helpers'
-import { validateList } from 'lib/validates'
+import { validateList } from 'lib/validations'
 import SubmitButton from 'components/commons/submitButton'
 import { toastWarn } from 'lib/toast'
-import RenderErrors from 'components/renderErrors'
+import FormError from 'components/formError'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHashtag } from '@fortawesome/free-solid-svg-icons'
 import CommentArea from './commentArea'
@@ -102,7 +102,7 @@ const ListForm = ({ onSave, theme, listProp }: Props) => {
           {[...Array(MAX_CAP)].fill(null).map((_, i) => (
             <MovieSelect key={'movie-select-' + i} movie={list.movies[i]} onChange={(newValue, i) => handleMovieSelect(newValue, i)} clear={(i) => handleClear(i)} index={i} cap={cap} />
           ))}
-          {formErrors.movies ? <RenderErrors error={formErrors.movies} /> : undefined}
+          {formErrors.movies ? <FormError error={formErrors.movies} /> : undefined}
         </div>
 
         <div className='w-full mb-10 px-5 md:px-20 lg:px-30'>
