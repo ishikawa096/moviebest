@@ -4,11 +4,10 @@ Rails.application.routes.draw do
       get :health_checks, to: 'health_checks#index'
       resources :lists, only: %i[index show create update destroy]
       resources :themes, only: %i[index show create]
+      resources :users, only: %i[show]
       resources :tmdb, only: [] do
         get :search, on: :collection
       end
-      get :health_checks, to: 'health_checks#index'
-      resources :users, only: %i[show]
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
         registrations: 'api/v1/auth/registrations',
         passwords: 'api/v1/auth/passwords',
