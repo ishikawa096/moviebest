@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-const BG_IMAGE = '/asset/image/Kander.svg'
+const BG_IMAGE = '/assets/images/Kander.svg'
 
 const SignInLayout = ({ children, title }: { children: React.ReactElement; title: string }) => (
   <div className='relative text-gray-700 bg-white h-full text-[0px]'>

@@ -3,8 +3,8 @@ import Image from 'next/image'
 import { components, ControlProps, InputProps, StylesConfig, Theme, ValueContainerProps } from 'react-select'
 import { posterUrl } from 'lib/tmdbHelpers'
 
-const BLUR_IMAGE = '/asset/image/342x509.png'
-const NO_IMAGE = '/asset/image/noimage.png'
+const BLUR_IMAGE = '/assets/images/342x509.png'
+const NO_IMAGE = '/assets/images/noimage.png'
 
 export const FormatOptionLabel = ({ option, onError }: { option: MovieSelectOption; onError: (option: MovieSelectOption) => void }) => (
   <div className='flex items-center justify-center relative m-0 h-[195px] sm:h-[277px] lg:h-[374px]'>

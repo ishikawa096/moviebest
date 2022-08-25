@@ -15,8 +15,8 @@ interface Props {
   lists: Array<List & { theme: Theme; user: User }>
 }
 
-const BG_IMAGE = '/asset/image/Kander.svg'
-const LOGO_IMAGE = '/asset/image/logo.png'
+const BG_IMAGE = '/assets/images/Kander.svg'
+const LOGO_IMAGE = '/assets/images/logo.png'
 
 const Home = (props: Props) => {
   const router = useRouter()

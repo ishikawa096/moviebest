@@ -31,6 +31,6 @@ describe('ListCard', () => {
   test('一番目のmovieのtmdbImageが空のとき/noimage.pngが表示されること', async () => {
     movies[0].tmdbImage = ''
     render(<ListCard movies={movies} theme={themeMock} user={userMock} />)
-    expect(screen.getByRole('img').attributes.getNamedItem('src')?.value).toBe('/asset/image/noimage.png')
+    expect(screen.getByRole('img').attributes.getNamedItem('src')?.value).toBe('/assets/images/noimage.png')
   })
 })

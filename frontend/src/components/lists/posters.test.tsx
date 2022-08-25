@@ -17,7 +17,7 @@ jest.mock('./poster', () => {
 
 describe('Posters', () => {
   test('posterが表示されること', async () => {
-    render(<Posters movies={movies} theme={themeMock} blankImage='/asset/image/noimage.png' />)
+    render(<Posters movies={movies} theme={themeMock} blankImage='/assets/images/noimage.png' />)
     expect(screen.getByTestId('poster')).toBeTruthy
   })
 })

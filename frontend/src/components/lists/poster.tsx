@@ -3,7 +3,7 @@ import { setImageUrl } from 'lib/tmdbHelpers'
 import Image from 'next/image'
 import { useState } from 'react'
 
-const BLUR_IMAGE = '/asset/image/342x509.png'
+const BLUR_IMAGE = '/assets/images/342x509.png'
 
 interface Props {
   movie: Movie

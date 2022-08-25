@@ -7,7 +7,7 @@ import { faHashtag } from '@fortawesome/free-solid-svg-icons'
 import { setImageUrl } from 'lib/tmdbHelpers'
 import Poster from './poster'
 
-const BLUR_IMAGE = '/asset/image/342x509.png'
+const BLUR_IMAGE = '/assets/images/342x509.png'
 
 const Posters = ({ movies, theme, blankImage }: { movies: Array<Movie>; theme: Theme; blankImage: string }) => {
   const [update, setUpdate] = useState(false)

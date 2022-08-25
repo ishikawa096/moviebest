@@ -37,7 +37,7 @@ describe('PageHead', () => {
 
   test('デフォルトのog:imageがあること', () => {
     render(<PageHead />)
-    expect(document.querySelector("meta[property='og:image']")?.attributes.getNamedItem('content')?.value).toBe('/asset/image/summary.png')
+    expect(document.querySelector("meta[property='og:image']")?.attributes.getNamedItem('content')?.value).toBe('/assets/images/summary.png')
   })
 
   test('デフォルトのog:urlがあること', () => {

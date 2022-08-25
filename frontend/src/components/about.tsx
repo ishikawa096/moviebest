@@ -2,12 +2,12 @@ import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
 
-const CREATE_LIST_IMAGE = '/asset/image/createList.gif'
-const CREATE_LIST_IMAGE2 = '/asset/image/undraw_appreciation_vmef.svg'
-const SHARE_IMAGE = '/asset/image/tweet.png'
-const SHARE_IMAGE2 = '/asset/image/undraw_winners_re_wr1l.svg'
-const CREATE_THEME_IMAGE = '/asset/image/createTheme.gif'
-const CREATE_THEME_IMAGE2 = '/asset/image/undraw_lightbulb_moment_re_ulyo_y.svg'
+const CREATE_LIST_IMAGE = '/assets/images/createList.gif'
+const CREATE_LIST_IMAGE2 = '/assets/images/undraw_appreciation_vmef.svg'
+const SHARE_IMAGE = '/assets/images/tweet.png'
+const SHARE_IMAGE2 = '/assets/images/undraw_winners_re_wr1l.svg'
+const CREATE_THEME_IMAGE = '/assets/images/createTheme.gif'
+const CREATE_THEME_IMAGE2 = '/assets/images/undraw_lightbulb_moment_re_ulyo_y.svg'
 
 const TopicContainer = ({ children }: { children: React.ReactElement }) => <div className='relative p-1 mb-10 bg-white w-full flex-col flex items-center gap-3 rounded-lg'>{children}</div>
 

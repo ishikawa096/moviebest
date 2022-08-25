@@ -18,7 +18,7 @@ const PageHead: NextPage<HeadProps> = ({ title, thumbnailUrl, description }) => 
   }
 
   if (thumbnailUrl === undefined) {
-    thumbnailUrl = '/asset/image/summary.png'
+    thumbnailUrl = '/assets/images/summary.png'
   }
 
   if (description === undefined) {
