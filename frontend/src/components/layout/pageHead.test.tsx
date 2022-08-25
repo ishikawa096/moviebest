@@ -37,12 +37,12 @@ describe('PageHead', () => {
 
   test('デフォルトのog:imageがあること', () => {
     render(<PageHead />)
-    expect(document.querySelector("meta[property='og:image']")?.attributes.getNamedItem('content')?.value).toBe('/assets/images/summary.png')
+    expect(document.querySelector("meta[property='og:image']")?.attributes.getNamedItem('content')?.value).toMatch(/summary.png/)
   })
 
   test('デフォルトのog:urlがあること', () => {
     render(<PageHead />)
-    expect(document.querySelector("meta[property='og:url']")?.attributes.getNamedItem('content')?.value).toBe('/')
+    expect(document.querySelector("meta[property='og:url']")?.attributes.getNamedItem('content')?.value).toMatch(/\//)
   })
 
   test('twitter:cardが設定されていること', () => {

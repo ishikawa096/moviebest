@@ -18,7 +18,7 @@ const PageHead: NextPage<HeadProps> = ({ title, thumbnailUrl, description }) => 
   }
 
   if (thumbnailUrl === undefined) {
-    thumbnailUrl = '/assets/images/summary.png'
+    thumbnailUrl = process.env.NEXT_PUBLIC_APP_HOST + '/assets/images/summary.png'
   }
 
   if (description === undefined) {
@@ -29,8 +29,9 @@ const PageHead: NextPage<HeadProps> = ({ title, thumbnailUrl, description }) => 
     <Head>
       <title>{title}</title>
       <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+      <meta property='og:type' content='website' />
       <meta property='og:title' content={title} />
-      <meta property='og:url' content={router.asPath} />
+      <meta property='og:url' content={process.env.NEXT_PUBLIC_APP_HOST + router.asPath} />
       <meta property='og:image' content={thumbnailUrl} />
       <meta property='og:description' content={description} />
       <meta name='twitter:card' content='summary_large_image' />
