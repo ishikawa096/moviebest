@@ -94,22 +94,20 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          name: Yarn パッケージのキャッシュの復元
           keys:
             - yarn-packages-v1-{{ .Branch }}-{{ checksum "frontend/yarn.lock" }}
             - yarn-packages-v1-{{ .Branch }}-
             - yarn-packages-v1-master-
       - run:
-          name: 依存関係のインストール
+          name: yarn install
           command: yarn install --immutable
           working_directory: frontend
       - save_cache:
-          name: Yarn パッケージのキャッシュの保存
           key: yarn-packages-v1-{{ .Branch }}-{{ checksum "frontend/yarn.lock" }}
           paths:
             - frontend/node_modules
       - run:
-          command: yarn test
+          command: yarn test --maxWorkers=2
           name: Run yarn tests
           working_directory: frontend
 

@@ -6,7 +6,7 @@ import { userMock } from 'mocks/mockData'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/extend-expect'
 
-jest.setTimeout(10000)
+jest.setTimeout(20000)
 
 const routerPush = jest.fn()
 jest.mock('next/router', () => ({
@@ -22,12 +22,14 @@ jest.mock('next/router', () => ({
 }))
 
 describe('NewList', () => {
+  const user = userEvent.setup()
   beforeAll(() => {
     server.listen()
   })
   afterAll(() => {
     server.close()
   })
+
   describe('ログインしていないとき', () => {
     test('リダイレクトされること', async () => {
       render(
@@ -50,43 +52,13 @@ describe('NewList', () => {
       expect(routerPush).toBeCalledWith('/signin')
     })
   })
+
   describe('query.idがあるとき', () => {
     beforeEach(() => {
       const useRouter = jest.spyOn(require('next/router'), 'useRouter')
       useRouter.mockImplementation(() => ({
         isReady: true,
         query: { id: 1 },
-      }))
-      render(
-        <AuthContext.Provider
-          value={{
-            loading: false,
-            setLoading: jest.fn(),
-            isSignedIn: true,
-            setIsSignedIn: jest.fn(),
-            currentUser: userMock,
-            setCurrentUser: jest.fn(),
-            isGuest: false,
-            setIsGuest: jest.fn(),
-          }}
-        >
-          <NewList />
-        </AuthContext.Provider>
-      )
-    })
-    test('queryのthemeが選択済みであること', async () => {
-      await waitFor(() => expect(screen.getByRole('heading', { name: 'THEME' })).toBeTruthy)
-      expect(screen.getAllByText(/入力/)).toHaveLength(5)
-    })
-  })
-
-  describe('query.idがないとき', () => {
-    const user = userEvent.setup()
-    beforeEach(() => {
-      const useRouter = jest.spyOn(require('next/router'), 'useRouter')
-      useRouter.mockImplementation(() => ({
-        isReady: true,
-        query: {},
         push: routerPush,
       }))
       render(
@@ -107,14 +79,13 @@ describe('NewList', () => {
       )
     })
 
-    test('選択、入力して送信できること', async () => {
-      await waitFor(() => expect(screen.queryAllByText(/入力/)).toBeNull)
-      await waitFor(() => user.click(screen.getByText('お題を選択')))
-      await waitFor(() => user.click(screen.getByText('THEME')))
+    test('queryのthemeが選択済みであること', async () => {
       await waitFor(() => expect(screen.getByRole('heading', { name: 'THEME' })).toBeTruthy)
       expect(screen.getAllByText(/入力/)).toHaveLength(5)
-      const button = screen.getByText('作成')
-      expect(button).toBeDisabled
+    })
+
+    test('入力して送信できること', async () => {
+      await waitFor(() => expect(screen.getByText('作成')).toBeDisabled)
       await user.type(screen.getByLabelText('1'), 'MO')
       await waitFor(() => user.click(screen.getByText('MOVIE')))
       await user.type(screen.getByLabelText('2'), 'MOVIE2')
@@ -126,11 +97,45 @@ describe('NewList', () => {
       await user.type(screen.getByLabelText('5'), 'MOVIE5')
       await waitFor(() => user.click(screen.getByText('MOVIE5')))
       expect(screen.getByText('MOVIE5')).toBeInTheDocument
-      expect(button).toBeEnabled
+      expect(screen.getByText('作成')).toBeEnabled
       await waitFor(() => user.type(screen.getByLabelText('コメント'), 'COMMENT TEXT'))
       expect(screen.getByText('COMMENT TEXT')).toBeInTheDocument
-      await waitFor(() => user.click(button))
+      await waitFor(() => user.click(screen.getByText('作成')))
       await waitFor(() => expect(routerPush).toBeCalledWith('/lists/1'))
+    })
+  })
+
+  describe('query.idがないとき', () => {
+    beforeEach(() => {
+      const useRouter = jest.spyOn(require('next/router'), 'useRouter')
+      useRouter.mockImplementation(() => ({
+        isReady: true,
+        query: {},
+      }))
+      render(
+        <AuthContext.Provider
+          value={{
+            loading: false,
+            setLoading: jest.fn(),
+            isSignedIn: true,
+            setIsSignedIn: jest.fn(),
+            currentUser: userMock,
+            setCurrentUser: jest.fn(),
+            isGuest: false,
+            setIsGuest: jest.fn(),
+          }}
+        >
+          <NewList />
+        </AuthContext.Provider>
+      )
+    })
+
+    test('お題を選択できること', async () => {
+      await waitFor(() => expect(screen.queryAllByText(/入力/)).toBeNull)
+      await waitFor(() => user.click(screen.getByText('お題を選択')))
+      await waitFor(() => user.click(screen.getByText('THEME')))
+      await waitFor(() => expect(screen.getByRole('heading', { name: 'THEME' })).toBeTruthy)
+      expect(screen.getAllByText(/入力/)).toHaveLength(5)
     })
   })
 })
