@@ -1,0 +1,189 @@
+version: 2.1
+
+jobs:
+  rubocop:
+    working_directory: ~/app
+    docker:
+      - image: 'cimg/ruby:3.1.2'
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - gemfiles-v1-{{ .Branch }}-{{ checksum "backend/Gemfile.lock" }}
+            - gemfiles-v1-{{ .Branch }}-
+            - gemfiles-v1-master-
+      - run:
+          command: bundle config --local path vendor/bundle
+          working_directory: backend
+      - run:
+          name: bundle install
+          command: bundle check || bundle install -j4 --clean
+          working_directory: backend
+      - run:
+          name: Run rubocop
+          command: bundle exec rubocop --parallel
+          working_directory: backend
+      - save_cache:
+          key: gemfiles-v1-{{ .Branch }}-{{ checksum "backend/Gemfile.lock" }}
+          paths:
+            - backend/vendor/bundle
+
+  rspec:
+    working_directory: ~/app
+    docker:
+      - image: 'cimg/ruby:3.1.2'
+        environment:
+          BUNDLE_JOBS: '3'
+          BUNDLE_RETRY: '3'
+          BUNDLER_VERSION: 2.3.7
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_PASSWORD: password
+          MYSQL_PORT: 3306
+          MYSQL_HOST: db
+          RAILS_ENV: test
+          TZ: Japan
+      - image: 'cimg/mysql:8.0'
+        command: '--authentication_policy=mysql_native_password'
+        environment:
+          MYSQL_USER: test
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_PASSWORD: password
+          MYSQL_DATABASE: backend_test
+          MYSQL_HOST: db
+        name: db
+    parallelism: 3
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - gemfiles-v1-{{ .Branch }}-{{ checksum "backend/Gemfile.lock" }}
+            - gemfiles-v1-{{ .Branch }}-
+            - gemfiles-v1-master-
+      - run:
+          command: bundle config --local path vendor/bundle
+          working_directory: backend
+      - run:
+          name: bundle install
+          command: bundle check || bundle install -j4 --clean
+          working_directory: backend
+      - run:
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.6.1
+      - run:
+          name: Wait for db
+          command: dockerize -wait tcp://db:3306 -timeout 30s
+      - run:
+          command: bundle exec rails db:schema:load --trace
+          name: Database setup
+          working_directory: backend
+      - run:
+          command: bundle exec rspec
+          name: Run rspec
+          working_directory: backend
+      - save_cache:
+          key: gemfiles-v1-{{ .Branch }}-{{ checksum "backend/Gemfile.lock" }}
+          paths:
+            - backend/vendor/bundle
+
+  jest:
+    working_directory: ~/app
+    docker:
+      - image: 'cimg/node:16.15.1'
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-packages-v1-{{ .Branch }}-{{ checksum "frontend/yarn.lock" }}
+            - yarn-packages-v1-{{ .Branch }}-
+            - yarn-packages-v1-master-
+      - run:
+          name: yarn install
+          command: yarn install --immutable
+          working_directory: frontend
+      - save_cache:
+          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "frontend/yarn.lock" }}
+          paths:
+            - frontend/node_modules
+      - run:
+          command: yarn test --maxWorkers=2
+          name: Run yarn tests
+          working_directory: frontend
+
+  push_backend:
+    machine:
+      image: ubuntu-2004:2022.04.1
+    resource_class: arm.medium
+    steps:
+      - checkout
+      - aws-ecr/build-and-push-image:
+          repo: "${APP_PREFIX}-backend"
+          tag: "${CIRCLE_SHA1}"
+          path: ./backend/
+          dockerfile: Dockerfile.production
+          platform: linux/arm64
+
+  push_frontend:
+    machine:
+      image: ubuntu-2004:2022.04.1
+    resource_class: arm.medium
+    steps:
+      - checkout
+      - run:
+          name: next env setup
+          command: |
+            touch ./frontend/.env.production.local
+            echo "BACKEND_API_HOST=$BACKEND_API_HOST" > ./frontend/.env.production.local
+            echo "BACKEND_API_KEY=$BACKEND_API_KEY" >> ./frontend/.env.production.local
+      - aws-ecr/build-and-push-image:
+          repo: "${APP_PREFIX}-frontend"
+          tag: "${CIRCLE_SHA1}"
+          path: ./frontend/
+          dockerfile: Dockerfile.production
+          platform: linux/arm64
+
+orbs:
+  aws-ecr: circleci/aws-ecr@8.1.2
+  aws-ecs: circleci/aws-ecs@2.3.0
+
+workflows:
+  test_and_deploy:
+    jobs:
+      - rubocop
+      - rspec
+      - jest
+      - push_backend:
+          requires:
+            - rubocop
+            - rspec
+            - jest
+          filters:
+            branches:
+              only: deploy
+      - push_frontend:
+          requires:
+            - rubocop
+            - rspec
+            - jest
+          filters:
+            branches:
+              only: deploy
+      - aws-ecs/deploy-service-update:
+          name: deploy_backend
+          aws-region: AWS_REGION
+          cluster-name: $AWS_CLUSTER
+          family: $ECS_FAMILY_BACKEND
+          service-name: $ECS_SERVICE_BACKEND
+          container-image-name-updates: "container=backend,tag=${CIRCLE_SHA1}"
+          requires:
+            - push_backend
+      - aws-ecs/deploy-service-update:
+          name: deploy_frontend
+          aws-region: AWS_REGION
+          cluster-name: $AWS_CLUSTER
+          family: $ECS_FAMILY_FRONTEND
+          service-name: $ECS_SERVICE_FRONTEND
+          container-image-name-updates: "container=frontend,tag=${CIRCLE_SHA1}"
+          requires:
+            - push_frontend

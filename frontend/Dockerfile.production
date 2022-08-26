@@ -1,0 +1,31 @@
+FROM node:16.15.1-alpine3.16 as base
+
+WORKDIR /base
+COPY package.json .
+COPY yarn.lock .
+COPY tsconfig.json .
+
+RUN yarn install
+COPY . .
+
+FROM node:16.15.1-alpine3.16 as build
+
+WORKDIR /build
+ENV NODE_ENV=production
+COPY --from=base /base ./
+RUN yarn build
+
+FROM node:16.15.1-alpine3.16
+
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=build /build/package.json ./
+COPY --from=build /build/.next ./.next
+COPY --from=build /build/next.config.js ./next.config.js
+COPY --from=build /build/public ./public
+COPY --from=build /build/node_modules ./node_modules
+COPY .env* ./
+
+EXPOSE 3000
+
+CMD [ "node_modules/.bin/next", "start" ]

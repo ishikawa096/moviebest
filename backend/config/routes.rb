@@ -1,3 +1,23 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  namespace :api do
+    namespace :v1 do
+      get :health_checks, to: 'health_checks#index'
+      resources :lists, only: %i[index show create update destroy]
+      resources :themes, only: %i[index show create]
+      resources :users, only: %i[show]
+      resources :tmdb, only: [] do
+        get :search, on: :collection
+      end
+      mount_devise_token_auth_for 'User', at: 'auth', controllers: {
+        registrations: 'api/v1/auth/registrations',
+        passwords: 'api/v1/auth/passwords',
+      }
+      namespace :auth do
+        devise_scope :api_v1_user do
+          get :sessions, to: 'sessions#index'
+          post :guest_sign_in, to: 'sessions#guest_sign_in'
+        end
+      end
+    end
+  end
 end

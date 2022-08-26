@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
-rm -f /moviebest/tmp/pids/server.pid
-
-exec "$@"
+sudo service nginx start
+cd /backend
+bin/setup
+bundle exec pumactl start

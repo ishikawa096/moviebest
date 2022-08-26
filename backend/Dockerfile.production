@@ -1,0 +1,36 @@
+FROM ruby:3.1.2-slim-bullseye AS build
+
+ENV RAILS_ENV production
+
+RUN apt update && apt install -y --no-install-recommends \
+  build-essential \
+  default-libmysqlclient-dev \
+  && gem install bundler:2.3.7
+
+WORKDIR /backend
+COPY Gemfile* /backend/
+RUN bundle install -j4
+
+FROM ruby:3.1.2-slim-bullseye
+
+RUN apt update && apt install -y --no-install-recommends \
+  default-libmysqlclient-dev \
+  sudo \
+  nginx \
+  && apt clean \
+  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /backend
+COPY --from=build /usr/local/bundle /usr/local/bundle
+
+COPY . /backend
+
+RUN mkdir -p tmp/sockets
+RUN groupadd nginx && useradd -g nginx nginx
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80
+
+COPY entrypoint.sh /usr/bin/
+RUN chmod +x /usr/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
