@@ -1,10 +1,8 @@
 import ThemePage from 'pages/themes/[id]'
 import { mockAllIsIntersecting } from 'react-intersection-observer/test-utils'
-import { render, screen } from '@testing-library/react'
-import { listMock, themeMock, userMock } from 'mocks/mockData'
+import { render, screen, waitFor } from '@testing-library/react'
 import { Movie, Theme, User } from 'interfaces/interface'
-
-const mockedTheme = { ...themeMock, lists: [{ ...listMock, user: userMock }] }
+import { server } from 'mocks/server'
 
 jest.mock('components/lists/listCard', () => {
   const MockListCard = ({ theme: theme, user: user, movies: movies }: { theme: Theme; user: User; movies: Array<Movie> }) => (
@@ -18,23 +16,26 @@ jest.mock('components/lists/listCard', () => {
 jest.mock('next/router', () => ({
   useRouter() {
     return {
+      isReady: true,
+      query: { id: 1 },
       asPath: '/',
     }
   },
 }))
 
 describe('ThemePage', () => {
+  beforeAll(() => {
+    server.listen()
+  })
+  afterAll(() => {
+    server.close()
+  })
   beforeEach(() => {
-    render(<ThemePage theme={mockedTheme} />)
+    render(<ThemePage />)
     mockAllIsIntersecting(true)
   })
 
   test('ページタイトルがあること', async () => {
-    expect(screen.getByRole('heading', { name: /THEME/ })).toBeTruthy
-  })
-
-  test('関連データが表示されること', async () => {
-    expect(screen.getAllByText(/MOVIE/)).toBeTruthy
-    expect(screen.getByText(/USER/)).toBeTruthy
+    await waitFor(() => expect(screen.getByRole('heading', { name: /THEME/ })).toBeTruthy)
   })
 })

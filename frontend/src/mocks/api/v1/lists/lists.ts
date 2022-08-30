@@ -1,5 +1,5 @@
 import { listMock, themeMock, userMock } from 'mocks/mockData'
-import { ResponseResolver, MockedRequest, restContext, RestRequest } from 'msw'
+import { ResponseResolver, MockedRequest, restContext } from 'msw'
 
 const mockedList = { ...listMock, theme: themeMock, user: userMock }
 
