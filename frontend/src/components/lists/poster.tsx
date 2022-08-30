@@ -3,7 +3,7 @@ import { setImageUrl } from 'lib/tmdbHelpers'
 import Image from 'next/image'
 import { useState } from 'react'
 
-const BLUR_IMAGE = '/assets/images/342x509.png'
+const BLUR_IMAGE = '/assets/images/blur.webp'
 
 interface Props {
   movie: Movie
@@ -22,7 +22,7 @@ const Poster = ({ movie, blankImage }: Props) => {
   return (
     <div className='relative flex justify-center overflow-hidden max-w-[342px]'>
       <div className='text-[0px]'>
-        <Image src={image} alt={`${movie.title}のポスター画像`} width={342} height={509} objectFit='cover' placeholder='blur' blurDataURL={BLUR_IMAGE} onError={() => onError()} />
+        <Image src={image} alt={`${movie.title}のポスター画像`} width={342} height={509} objectFit='cover' placeholder='blur' blurDataURL={BLUR_IMAGE} onError={() => onError()} priority={true} />
 
         <div
           className={`${

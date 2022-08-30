@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen, faFilePen } from '@fortawesome/free-solid-svg-icons'
 
 const BREAKPOINT_WIDTH = 768
-const LOGO_IMAGE = '/assets/images/logo.png'
+const LOGO_IMAGE = '/assets/images/logo.webp'
 
 const Header = () => {
   const { loading, isSignedIn, setIsSignedIn, currentUser, setIsGuest } = useContext(AuthContext)

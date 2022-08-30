@@ -14,7 +14,7 @@ import { getList } from 'lib/fetcher'
 import PageError from 'components/pageError'
 import NowLoading from 'components/commons/nowLoading'
 
-const BLANK_IMAGE = '/assets/images/noimage.png'
+const BLANK_IMAGE = '/assets/images/noimage.webp'
 
 const ListPage = () => {
   const router = useRouter()
