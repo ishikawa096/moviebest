@@ -6,6 +6,9 @@ module.exports = {
       fontFamily: {
         base: ['Roboto', 'Noto Sans JP', '游ゴシック', 'YuGothic', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', 'Meiryo', 'ＭＳ Ｐゴシック', 'MS PGothic', 'sans-serif'],
       },
+      dropShadow: {
+        text: ['1px 1px 3px rgba(0, 0, 0, 0.7)', '1px 2px 2px rgba(0, 0, 0.2, 0.6)'],
+      },
       animation: {
         fade: 'fade 1s ease-in forwards',
         fadeIn: 'fadeIn 1s ease-in forwards',

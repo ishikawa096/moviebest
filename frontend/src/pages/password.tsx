@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import type { PasswordParams, UserEditParams } from 'interfaces/interface'
 import { toastSuccess, toastError } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
-import axios from 'axios'
 import PageHead from 'components/layout/pageHead'
 import SignInButton from 'components/commons/signInButton'
 import SignInInput from 'components/signInInput'
@@ -12,6 +11,7 @@ import { errorMessage, guestUserUnavailable, isEmptyObject, redirectToSignIn } f
 import Headline from 'components/layout/headline'
 import NowLoading from 'components/commons/nowLoading'
 import { NextPage } from 'next/types'
+import { putPassword } from 'lib/api/auth'
 
 const Password: NextPage = () => {
   const router = useRouter()
@@ -48,7 +48,7 @@ const Password: NextPage = () => {
       return
     }
     try {
-      const res = await axios.put('/api/v1/auth/update', params)
+      const res = await putPassword(params)
       if (res.status === 200 && res.data.status === 'success') {
         toastSuccess('パスワードを変更しました')
         router.push('/account')

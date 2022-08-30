@@ -9,6 +9,7 @@ import Image from 'next/image'
 import About from 'components/about'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRankingStar, faFilm } from '@fortawesome/free-solid-svg-icons'
+import { sortByNewest } from 'lib/helpers'
 
 interface Props {
   themes: Array<Theme & { lists: Array<List> }>
@@ -17,12 +18,13 @@ interface Props {
 
 const BG_IMAGE = '/assets/images/Kander.svg'
 const LOGO_IMAGE = '/assets/images/logo.png'
+const THEMES_MAX_COUNT = 15
+const LISTS_MAX_COUNT = 8
 
 const Home = (props: Props) => {
   const router = useRouter()
-  const themes = props.themes
-  const lists = props.lists.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)).slice(0, 8)
-  themes.sort((a, b) => b.lists.length - a.lists.length)
+  const themes = props.themes.sort((a, b) => b.lists.length - a.lists.length).slice(0, THEMES_MAX_COUNT)
+  const lists = sortByNewest(props.lists).slice(0, LISTS_MAX_COUNT)
 
   return (
     <>

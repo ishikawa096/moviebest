@@ -1,6 +1,5 @@
 import type { CreateThemeParams } from 'interfaces/interface'
 import { useRouter } from 'next/router'
-import axios from 'axios'
 import PageHead from 'components/layout/pageHead'
 import { errorMessage, redirectToSignIn } from 'lib/helpers'
 import { toastSuccess } from 'lib/toast'
@@ -9,6 +8,7 @@ import { useContext, useEffect, useState } from 'react'
 import ThemeForm from 'components/themes/themeForm'
 import Headline from 'components/layout/headline'
 import NowLoading from 'components/commons/nowLoading'
+import { postTheme } from 'lib/fetcher'
 
 const NewTheme = () => {
   const router = useRouter()
@@ -27,9 +27,7 @@ const NewTheme = () => {
   const createTheme = async (newData: { theme: CreateThemeParams }) => {
     setIsError(false)
     try {
-      const response = await axios.post('/api/v1/themes', {
-        params: { theme: newData.theme },
-      })
+      const response = await postTheme(newData.theme)
       if (response.status !== 200 || response.data.status) throw Error(response.data.message)
       const savedTheme = response.data
       toastSuccess('お題が作成されました')

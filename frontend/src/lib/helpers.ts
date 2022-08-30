@@ -2,7 +2,7 @@ import { toastError, toastInfo, toastWarn } from 'lib/toast'
 import { NextRouter } from 'next/router'
 import { useLayoutEffect, useState } from 'react'
 
-export const isEmptyObject = (obj: {} | { any: any }) => Object.keys(obj).length === 0
+export const isEmptyObject = (obj: { [key: string]: any }) => Object.keys(obj).length === 0
 
 export const errorMessage = () => {
   toastError('エラーにより処理ができませんでした')
@@ -41,4 +41,9 @@ export const useWindowWidth = (): number => {
     return () => window.removeEventListener('resize', updateSize)
   }, [])
   return size
+}
+
+export const sortByNewest = (data: Array<any>) => {
+  const result = data.sort((a: typeof data[number], b: typeof data[number]) => (a.createdAt < b.createdAt ? 1 : -1))
+  return result
 }

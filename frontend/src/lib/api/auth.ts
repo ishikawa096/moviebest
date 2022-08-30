@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { parseCookies } from 'nookies'
-import { SignUpParams, SignInParams } from 'interfaces/interface'
+import { SignUpParams, SignInParams, PasswordParams, UserEditParams } from 'interfaces/interface'
 
 export const signUp = (params: SignUpParams) => {
   return axios.post('/api/v1/auth/signup', params)
@@ -16,6 +16,14 @@ export const guestSignIn = () => {
 
 export const signOut = () => {
   return axios.delete('/api/v1/auth/signout')
+}
+
+export const putPassword = (params: PasswordParams) => {
+  return axios.put('/api/v1/auth/update', params)
+}
+
+export const putUserUpdate = (params: UserEditParams) => {
+  return axios.put('/api/v1/auth/update', params)
 }
 
 export const userDelete = () => {
