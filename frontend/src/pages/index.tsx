@@ -17,7 +17,7 @@ interface Props {
 }
 
 const BG_IMAGE = '/assets/images/Kander.svg'
-const LOGO_IMAGE = '/assets/images/logo.png'
+const LOGO_IMAGE = '/assets/images/logo.webp'
 const THEMES_MAX_COUNT = 15
 const LISTS_MAX_COUNT = 8
 

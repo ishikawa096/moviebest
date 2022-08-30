@@ -4,6 +4,7 @@ import ListCard from './listCard'
 import { moviesMock, themeMock, userMock } from 'mocks/mockData'
 
 const movies = moviesMock
+const noImage = '/assets/images/noimage.webp'
 
 jest.mock('next/image', () => ({
   __esModule: true,
@@ -28,9 +29,9 @@ describe('ListCard', () => {
     expect(screen.getByRole('link', { name: userMock.name })).toHaveAttribute('href', `/users/${userMock.id}`)
   })
 
-  test('一番目のmovieのtmdbImageが空のとき/noimage.pngが表示されること', async () => {
+  test('一番目のmovieのtmdbImageが空のときnoImage画像が表示されること', async () => {
     movies[0].tmdbImage = ''
     render(<ListCard movies={movies} theme={themeMock} user={userMock} />)
-    expect(screen.getByRole('img').attributes.getNamedItem('src')?.value).toBe('/assets/images/noimage.png')
+    expect(screen.getByRole('img').attributes.getNamedItem('src')?.value).toBe(noImage)
   })
 })

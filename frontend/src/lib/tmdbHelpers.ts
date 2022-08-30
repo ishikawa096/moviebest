@@ -2,7 +2,7 @@ import { Movie } from 'interfaces/interface'
 
 const POSTER_BASE_URL = 'https://image.tmdb.org/t/p/'
 
-const NO_IMAGE_PIC = '/assets/images/noimage.png'
+const NO_IMAGE_PIC = '/assets/images/noimage.webp'
 
 export const posterUrl = (posterPath: string, size: string) => `${POSTER_BASE_URL}${size}${posterPath}`
 

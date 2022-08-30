@@ -5,6 +5,7 @@ import { movieMock, themeMock } from 'mocks/mockData'
 import { Movie } from 'interfaces/interface'
 
 const movies = [movieMock]
+const blankImage = '/assets/images/noimage.webp'
 
 jest.mock('./poster', () => {
   const MockPoster = ({ blankImage: blankImage, movie: movie }: { blankImage: string; movie: Movie }) => (
@@ -17,7 +18,7 @@ jest.mock('./poster', () => {
 
 describe('Posters', () => {
   test('posterが表示されること', async () => {
-    render(<Posters movies={movies} theme={themeMock} blankImage='/assets/images/noimage.png' />)
+    render(<Posters movies={movies} theme={themeMock} blankImage={blankImage} />)
     expect(screen.getByTestId('poster')).toBeTruthy
   })
 })

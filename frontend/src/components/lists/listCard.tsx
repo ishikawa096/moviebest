@@ -7,7 +7,7 @@ import TweetIcon from './tweetIcon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser,faHashtag } from '@fortawesome/free-solid-svg-icons'
 
-const BLANK_IMAGE = '/assets/images/noimage.png'
+const BLANK_IMAGE = '/assets/images/noimage.webp'
 const MAX_TITLE_LENGTH = 20
 
 interface Props {

@@ -6,7 +6,7 @@ import { faHashtag } from '@fortawesome/free-solid-svg-icons'
 import { setImageUrl } from 'lib/tmdbHelpers'
 import Poster from './poster'
 
-const BLUR_IMAGE = '/assets/images/342x509.png'
+const BLUR_IMAGE = '/assets/images/blur.webp'
 
 const FillingEmptyGrid = ({ length, mainMovie, title, blankImage }: { length: number; mainMovie: Movie; title: string; blankImage: string }) => {
   const [update, setUpdate] = useState(false)

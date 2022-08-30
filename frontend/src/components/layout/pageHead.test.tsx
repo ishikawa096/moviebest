@@ -19,6 +19,7 @@ jest.mock('next/router', () => ({
   },
 }))
 
+
 describe('PageHead', () => {
   test('デフォルトのtitleがあること', async () => {
     render(<PageHead />)
@@ -37,7 +38,7 @@ describe('PageHead', () => {
 
   test('デフォルトのog:imageがあること', () => {
     render(<PageHead />)
-    expect(document.querySelector("meta[property='og:image']")?.attributes.getNamedItem('content')?.value).toMatch(/summary.png/)
+    expect(document.querySelector("meta[property='og:image']")?.attributes.getNamedItem('content')?.value).toMatch(/summary.webp/)
   })
 
   test('デフォルトのog:urlがあること', () => {
