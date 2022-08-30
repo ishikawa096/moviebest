@@ -2,12 +2,10 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get :health_checks, to: 'health_checks#index'
+      get '/tmdb/search', to: 'tmdb#search'
       resources :lists, only: %i[index show create update destroy]
       resources :themes, only: %i[index show create]
       resources :users, only: %i[show]
-      resources :tmdb, only: [] do
-        get :search, on: :collection
-      end
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
         registrations: 'api/v1/auth/registrations',
         passwords: 'api/v1/auth/passwords',

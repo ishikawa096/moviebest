@@ -23,7 +23,7 @@ describe('validations', () => {
 
   describe('validateList', () => {
     test('moviesに空があるとエラーが出ること', async () => {
-      expect(validateList({ ...listMock, movies: [{ title: '', position: 0 }] }).movies).toMatch(/入力してください/)
+      expect(validateList({ ...listMock, movies: [{ title: '', position: 0, tmdbId: 0, tmdbImage: '' }] }).movies).toMatch(/入力してください/)
     })
   })
 

@@ -1,15 +1,15 @@
 import { useState, useEffect, useContext } from 'react'
 import { useRouter } from 'next/router'
-import axios from 'axios'
 import PageHead from 'components/layout/pageHead'
 import type { CreateListParams, Theme } from 'interfaces/interface'
-import { errorMessage, redirectToSignIn } from 'lib/helpers'
+import { errorMessage, redirectToSignIn, sortByNewest } from 'lib/helpers'
 import { toastSuccess } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import ThemeSelect from 'components/lists/form/themeSelect'
 import ListForm from 'components/lists/form/listForm'
 import NowLoading from 'components/commons/nowLoading'
 import Headline from 'components/layout/headline'
+import { getThemes, postList } from 'lib/fetcher'
 
 interface State {
   state: { isLoading: false; theme: Theme } | { isLoading: true }
@@ -17,37 +17,25 @@ interface State {
 
 const NewList = () => {
   const router = useRouter()
-  const queryThemeId = router.query.id
+  const queryThemeId = Number(router.query.id)
   const [themeState, setThemeState] = useState<State>({ state: { isLoading: true } })
   const [themes, setThemes] = useState<Array<Theme>>([])
   const [isLoading, setIsLoading] = useState(true)
   const { isSignedIn } = useContext(AuthContext)
 
-  const fetchTheme = async () => {
-    try {
-      const res = await axios.get('/api/v1/themes', {
-        params: {
-          id: queryThemeId,
-        },
-      })
-      if (res.status !== 200 || res.data.status) throw Error(res.data.message)
-      const theme = res.data
-      setThemeState({ state: { isLoading: false, theme: theme } })
-      setIsLoading(false)
-    } catch (err) {
-      errorMessage()
-    }
-  }
-
   const fetchThemes = async () => {
     try {
-      const res = await axios.get('/api/v1/themes')
+      const res = await getThemes()
       if (res.status !== 200 || res.data.status) throw Error(res.data.message)
-      const themes = res.data.sort((a: Theme, b: Theme) => (a.createdAt < b.createdAt ? 1 : -1))
+      const themes = sortByNewest(res.data)
       setThemes(themes)
-      if (!queryThemeId) {
-        setIsLoading(false)
+      if (queryThemeId) {
+        const queryTheme = themes.find((t: Theme) => t.id === queryThemeId)
+        if (queryTheme) {
+          setThemeState({ state: { isLoading: false, theme: queryTheme } })
+        }
       }
+      setIsLoading(false)
     } catch (err) {
       errorMessage()
     }
@@ -57,9 +45,6 @@ const NewList = () => {
     if (!isSignedIn) {
       redirectToSignIn(router)
     } else if (router.isReady) {
-      if (queryThemeId) {
-        fetchTheme()
-      }
       fetchThemes()
     }
   }, [])
@@ -70,9 +55,7 @@ const NewList = () => {
 
   const createList = async (newData: { list: CreateListParams }) => {
     try {
-      const response = await axios.post('/api/v1/lists', {
-        params: { list: newData.list },
-      })
+      const response = await postList(newData.list)
       if (response.status !== 200 || response.data.status) throw Error(response.data.message)
 
       const savedList = response.data

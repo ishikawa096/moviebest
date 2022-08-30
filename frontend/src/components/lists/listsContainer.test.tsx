@@ -22,9 +22,15 @@ describe('ListsContainer', () => {
     render(<ListsContainer lists={lists} />)
     expect(screen.queryByTestId('list-card')).toBeNull
   })
+
   test('画面に入るとlistCardが表示されること', async () => {
     render(<ListsContainer lists={lists} />)
     mockAllIsIntersecting(true)
     expect(screen.queryByTestId('list-card')).toBeNull
+  })
+
+  test('スクロールボタンがあること', async () => {
+    render(<ListsContainer lists={lists} />)
+    expect(screen.getByTestId('scroll-button')).toBeInTheDocument
   })
 })

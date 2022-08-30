@@ -17,7 +17,7 @@ export const FormatOptionLabel = ({ option, onError }: { option: MovieSelectOpti
       blurDataURL={BLUR_IMAGE}
       onError={() => onError(option)}
     />
-    <div className='absolute p-2 md:p-5 text-center whitespace-normal text-white font-extrabold text-shadow'>{option.label}</div>
+    <div className='absolute p-2 md:p-5 text-center whitespace-normal text-white font-extrabold drop-shadow-text'>{option.label}</div>
   </div>
 )
 

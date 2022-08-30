@@ -7,7 +7,7 @@ RSpec.describe 'tmdb', type: :request do
   let(:uri) { URI.parse(ENV.fetch('TMDB_SEARCH_MOVIE_URI', nil)) }
   let(:tmdb_auth) { { Authorization: "Bearer #{ENV.fetch('TMDB_API_KEY', nil)}" } }
   let(:query) { { language: 'ja', query: 'ミニオンズ' } }
-  let(:path) { search_api_v1_tmdb_index_path }
+  let(:path) { api_v1_tmdb_search_path }
   let(:body) do
     JSON.generate(page: 1,
       results: [

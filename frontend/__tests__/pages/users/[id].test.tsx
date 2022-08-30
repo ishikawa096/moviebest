@@ -1,14 +1,10 @@
 import UserPage from 'pages/users/[id]'
 import { mockAllIsIntersecting } from 'react-intersection-observer/test-utils'
-import { render, screen } from '@testing-library/react'
-import { listMock, themeMock, userMock } from 'mocks/mockData'
+import { render, screen, waitFor } from '@testing-library/react'
+import { userMock } from 'mocks/mockData'
 import { AuthContext } from 'pages/_app'
 import { Movie, Theme, User } from 'interfaces/interface'
-
-const mockedUser = {
-  ...userMock,
-  lists: [{ ...listMock, theme: themeMock, isDeleted: false }],
-}
+import { server } from 'mocks/server'
 
 jest.mock('components/lists/listCard', () => {
   const MockListCard = ({ theme: theme, user: user, movies: movies }: { theme: Theme; user: User; movies: Array<Movie> }) => (
@@ -22,12 +18,21 @@ jest.mock('components/lists/listCard', () => {
 jest.mock('next/router', () => ({
   useRouter() {
     return {
+      isReady: true,
+      query: { id: 1 },
       asPath: '/',
     }
   },
 }))
 
 describe('UserPage', () => {
+  beforeAll(() => {
+    server.listen()
+  })
+  afterAll(() => {
+    server.close()
+  })
+
   describe('自分のユーザーページのとき', () => {
     beforeEach(() => {
       render(
@@ -43,25 +48,14 @@ describe('UserPage', () => {
             setIsGuest: jest.fn(),
           }}
         >
-          <UserPage user={mockedUser} />
+          <UserPage />
         </AuthContext.Provider>
       )
       mockAllIsIntersecting(true)
     })
 
-    test('ユーザー名、関連レコードが表示されること', async () => {
-      expect(
-        screen.getByRole('heading', {
-          name: /USER/,
-        })
-      ).toBeTruthy
-      expect(screen.getByText(/MOVIE/)).toBeTruthy
-      expect(screen.getByText(/THEME/)).toBeTruthy
-    })
-
-    test('list編集、削除ボタンがあること', async () => {
-      expect(screen.getByRole('button', { name: /ベストを編集/ })).toBeTruthy
-      expect(screen.getByRole('button', { name: /ベストを削除/ })).toBeTruthy
+    test('スクロールボタンがあること', async () => {
+      await waitFor(() => expect(screen.getByRole('button', { name: /上へスクロール/ })).toBeInTheDocument)
     })
   })
 
@@ -81,15 +75,19 @@ describe('UserPage', () => {
             setIsGuest: jest.fn(),
           }}
         >
-          <UserPage user={mockedUser} />
+          <UserPage />
         </AuthContext.Provider>
       )
       mockAllIsIntersecting(true)
     })
 
     test('list編集、削除ボタンがないこと', async () => {
-      expect(screen.queryByRole('button', { name: /ベストを編集/ })).toBeNull
-      expect(screen.queryByRole('button', { name: /ベストを削除/ })).toBeNull
+      await waitFor(() => expect(screen.queryByRole('button', { name: /ベストを編集/ })).toBeNull)
+      await waitFor(() => expect(screen.queryByRole('button', { name: /ベストを削除/ })).toBeNull)
+    })
+
+    test('スクロールボタンがあること', async () => {
+      await waitFor(() => expect(screen.getByRole('button', { name: /上へスクロール/ })).toBeInTheDocument)
     })
   })
 })

@@ -4,14 +4,14 @@ import { client } from 'pages/api/v1/client'
 import ListsContainer from 'components/lists/listsContainer'
 import Headline from 'components/layout/headline'
 import PageHead from 'components/layout/pageHead'
+import { sortByNewest } from 'lib/helpers'
 
 interface Props {
   lists: Array<List & { user: User; theme: Theme }>
 }
 
 const Lists = (props: Props) => {
-  const lists = props.lists
-  lists.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
+  const lists = sortByNewest(props.lists)
 
   return (
     <>
