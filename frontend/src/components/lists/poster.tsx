@@ -16,9 +16,9 @@ const Poster = ({ movie, blankImage }: Props) => {
   const [image, setImage] = useState(setImageUrl(movie))
 
   const setRandomBlurImage = () => {
-    const numbers = [...Array(5)].fill(null).map((_, i) => i + 1)
+    const numbers = [...Array(4)].fill(null).map((_, i) => i)
     const number = arrayRandom(numbers)
-    return COLOR_IMAGES_BASE + `/gr${number}.webp`
+    return COLOR_IMAGES_BASE + `/color${number}.webp`
   }
 
   const onError = () => {
