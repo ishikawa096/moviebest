@@ -1,9 +1,10 @@
 import { Movie } from 'interfaces/interface'
+import { arrayRandom } from 'lib/helpers'
 import { setImageUrl } from 'lib/tmdbHelpers'
 import Image from 'next/image'
 import { useState } from 'react'
 
-const BLUR_IMAGE = '/assets/images/blur.webp'
+const COLOR_IMAGES_BASE = '/assets/images/colors'
 
 interface Props {
   movie: Movie
@@ -14,6 +15,12 @@ const Poster = ({ movie, blankImage }: Props) => {
   const [update, setUpdate] = useState(false)
   const [image, setImage] = useState(setImageUrl(movie))
 
+  const setRandomBlurImage = () => {
+    const numbers = [...Array(4)].fill(null).map((_, i) => i)
+    const number = arrayRandom(numbers)
+    return COLOR_IMAGES_BASE + `/color${number}.webp`
+  }
+
   const onError = () => {
     setImage(blankImage)
     setUpdate(!update)
@@ -22,7 +29,7 @@ const Poster = ({ movie, blankImage }: Props) => {
   return (
     <div className='relative flex justify-center overflow-hidden max-w-[342px]'>
       <div className='text-[0px]'>
-        <Image src={image} alt={`${movie.title}のポスター画像`} width={342} height={509} objectFit='cover' placeholder='blur' blurDataURL={BLUR_IMAGE} onError={() => onError()} priority={true} />
+        <Image src={image} alt={`${movie.title}のポスター画像`} width={342} height={509} objectFit='cover' placeholder='blur' blurDataURL={setRandomBlurImage()} onError={() => onError()} priority={true} />
 
         <div
           className={`${
