@@ -112,7 +112,3 @@ export interface ModalProps {
   handleConfirm: React.MouseEventHandler<HTMLButtonElement>,
   handleCancel: React.MouseEventHandler<HTMLButtonElement>
 }
-
-export interface ButtonColor {
-  color: 'color' | 'white'
-}

@@ -1,5 +1,4 @@
-import { buttonColor } from 'lib/colors'
-import { ButtonColor } from 'interfaces/interface'
+import { buttonColor, ButtonColor } from 'lib/colors'
 import LoadingButton from './loadingButton'
 
 interface Props {
@@ -7,7 +6,7 @@ interface Props {
   disabled: boolean
   isSending: boolean
   text: string
-  color: ButtonColor['color']
+  color: ButtonColor
 }
 
 const SignInButton = ({ onClick, disabled, isSending, text, color }: Props) => (
@@ -20,7 +19,7 @@ const SignInButton = ({ onClick, disabled, isSending, text, color }: Props) => (
         onClick={onClick}
         disabled={disabled}
         className={`focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 whitespace-nowrap
-        ${buttonColor({ color })}`}
+        ${buttonColor(color)}`}
       >
         {text}
       </button>
