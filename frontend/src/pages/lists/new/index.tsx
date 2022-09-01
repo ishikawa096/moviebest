@@ -1,15 +1,16 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useCallback } from 'react'
 import { useRouter } from 'next/router'
 import PageHead from 'components/layout/pageHead'
 import type { CreateListParams, Theme } from 'interfaces/interface'
-import { errorMessage, redirectToSignIn, sortByNewest } from 'lib/helpers'
+import { redirectToSignIn, sortByNewest } from 'lib/helpers'
 import { toastSuccess } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import ThemeSelect from 'components/lists/form/themeSelect'
 import ListForm from 'components/lists/form/listForm'
 import NowLoading from 'components/commons/nowLoading'
 import Headline from 'components/layout/headline'
-import { getThemes, postList } from 'lib/fetcher'
+import { fetchData, getThemes, postList } from 'lib/fetcher'
+import PageError from 'components/pageError'
 
 interface State {
   state: { isLoading: false; theme: Theme } | { isLoading: true }
@@ -21,31 +22,29 @@ const NewList = () => {
   const [themeState, setThemeState] = useState<State>({ state: { isLoading: true } })
   const [themes, setThemes] = useState<Array<Theme>>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<number | string | undefined>()
+  const [isSending, setIsSending] = useState(false)
   const { isSignedIn } = useContext(AuthContext)
 
-  const fetchThemes = async () => {
-    try {
-      const res = await getThemes()
-      if (res.status !== 200 || res.data.status) throw Error(res.data.message)
-      const themes = sortByNewest(res.data)
-      setThemes(themes)
+  const fetch = useCallback(async () => {
+    const data = await fetchData(getThemes(), setError)
+    if (data) {
+      setThemes(sortByNewest(data))
       if (queryThemeId) {
-        const queryTheme = themes.find((t: Theme) => t.id === queryThemeId)
+        const queryTheme = data.find((t: Theme) => t.id === queryThemeId)
         if (queryTheme) {
           setThemeState({ state: { isLoading: false, theme: queryTheme } })
         }
       }
       setIsLoading(false)
-    } catch (err) {
-      errorMessage()
     }
-  }
+  }, [queryThemeId])
 
   useEffect(() => {
     if (!isSignedIn) {
       redirectToSignIn(router)
     } else if (router.isReady) {
-      fetchThemes()
+      fetch()
     }
   }, [])
 
@@ -54,32 +53,36 @@ const NewList = () => {
   }
 
   const createList = async (newData: { list: CreateListParams }) => {
-    try {
-      const response = await postList(newData.list)
-      if (response.status !== 200 || response.data.status) throw Error(response.data.message)
-
-      const savedList = response.data
+    setIsSending(true)
+    const savedList = await fetchData(postList(newData.list))
+    if (savedList) {
       toastSuccess('ベストが作成されました')
       router.push(`/lists/${savedList.id}`)
-    } catch (err) {
-      errorMessage()
+    } else {
+      setIsSending(false)
     }
   }
 
   return (
     <>
-      <PageHead title='新規ベスト投稿' />
-      <Headline>
-        <h1>ベストを投稿する</h1>
-      </Headline>
-      {isLoading ? (
-        <NowLoading />
-      ) : themeState.state.isLoading ? (
-        <ThemeSelect onChange={handleThemeChange} themes={themes} />
+      {error ? (
+        <PageError error={error} />
       ) : (
         <>
-          <ThemeSelect onChange={handleThemeChange} theme={themeState.state.theme} themes={themes} />
-          <ListForm onSave={createList} theme={themeState.state.theme} />
+          <PageHead title='新規ベスト投稿' />
+          <Headline>
+            <h1>ベストを投稿する</h1>
+          </Headline>
+          {isLoading ? (
+            <NowLoading />
+          ) : themeState.state.isLoading ? (
+            <ThemeSelect onChange={handleThemeChange} themes={themes} />
+          ) : (
+            <>
+              <ThemeSelect onChange={handleThemeChange} theme={themeState.state.theme} themes={themes} />
+              <ListForm onSave={createList} theme={themeState.state.theme} isSending={isSending} />
+            </>
+          )}
         </>
       )}
     </>

@@ -3,13 +3,17 @@ import 'slick-carousel/slick/slick-theme.css'
 import Slider from 'react-slick'
 import { List, Theme, User } from 'interfaces/interface'
 import ListCard from './listCard'
+import { useMemo } from 'react'
+import React from 'react'
 
 interface Props {
   lists: Array<List & { theme: Theme; user: User }>
 }
 
-const ListsSlider = ({ lists }: Props) => {
-  const settings = {
+const ListsSlider = React.memo(({ lists }: Props) => {
+  const listsData = useMemo(() => lists, [lists])
+
+  const settings = useMemo(()=> ({
     dots: false,
     arrows: false,
     infinite: true,
@@ -47,15 +51,19 @@ const ListsSlider = ({ lists }: Props) => {
         },
       },
     ],
-  }
+  }), [])
+
   return (
     <div className='overflow-hidden w-full'>
       <Slider {...settings} className='relative'>
-        {lists.map((list) => (
+        {listsData.map((list) => (
           <ListCard key={'list-slider-' + list.id} user={list.user} movies={list.movies} theme={list.theme} />
         ))}
       </Slider>
     </div>
   )
-}
+})
+
+ListsSlider.displayName = 'ListsSlider'
+
 export default ListsSlider

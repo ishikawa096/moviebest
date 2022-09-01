@@ -6,54 +6,62 @@ import Posters from 'components/lists/posters'
 import FloatingButton from 'components/commons/floatingButton'
 import ListCard from 'components/lists/listCard'
 import PageHead from 'components/layout/pageHead'
-import TweetButton from 'components/commons/tweetButton'
+import ListPageButton from 'components/commons/listPageButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHashtag, faPlus } from '@fortawesome/free-solid-svg-icons'
-import { useEffect, useState } from 'react'
-import { getList } from 'lib/fetcher'
+import { useCallback, useContext, useEffect, useState } from 'react'
+import { deleteList, fetchData, getList } from 'lib/fetcher'
 import PageError from 'components/pageError'
 import NowLoading from 'components/commons/nowLoading'
+import ImportantModal from 'components/importantModal'
+import { toastSuccess } from 'lib/toast'
+import { AuthContext } from 'pages/_app'
 
 const BLANK_IMAGE = '/assets/images/noimage.webp'
 
 const ListPage = () => {
   const router = useRouter()
   const listId = Number(router.query.id)
-  const [isError, setIsError] = useState(false)
+  const [error, setError] = useState<number | string | undefined>()
   const [list, setList] = useState<(List & { user: User; theme: Theme }) | undefined>()
+  const [showModal, setShowModal] = useState<boolean>(false)
+  const { currentUser } = useContext(AuthContext)
 
-  const fetchData = async () => {
-    try {
-      const res = await getList(listId)
-      if (res.status !== 200 || res.data.status) {
-        setIsError(true)
-      } else {
-        setList(res.data)
-      }
-    } catch (err) {
-      setIsError(true)
+  const fetch = useCallback(async () => {
+    const data = await fetchData(getList(listId), setError)
+    if (data) {
+      setList(data)
     }
-  }
+  }, [listId])
 
   useEffect(() => {
     if (router.isReady) {
       if (listId) {
-        fetchData()
+        fetch()
       } else {
-        setIsError(true)
+        setError(400)
       }
     }
-  }, [])
+  }, [fetch, listId, router.isReady])
 
-  const buttonHandler = () => {
+  const handleNewList = () => {
     router.push({
       pathname: '/lists/new',
       query: { id: list?.theme.id },
     })
   }
 
-  if (isError) {
-    return <PageError />
+  const handleDelete = async () => {
+    setShowModal(false)
+    const data = await fetchData(deleteList(listId))
+    if (data) {
+      toastSuccess('ベストが削除されました')
+      router.push(`/users/${list?.userId}`)
+    }
+  }
+
+  if (error) {
+    return <PageError error={error} />
   } else if (list === undefined) {
     return <NowLoading />
   } else {
@@ -82,22 +90,37 @@ const ListPage = () => {
         <PostersContainer movies={list.movies}>
           <Posters movies={movies} theme={theme} blankImage={BLANK_IMAGE} />
         </PostersContainer>
-        <div className='w-full flex justify-center mb-6'>
-          <TweetButton themeTitle={theme.title} movies={movies} />
+        <div className='w-full flex flex-col items-center justify-center gap-10 mb-6'>
+          <ListPageButton style='tweet' onClick={(e) => e} tweetProps={{ themeTitle: theme.title, movies: movies }} />
+          {currentUser?.id === user.id ? (
+            <div className='flex flex-row gap-10'>
+              <ListPageButton style='edit' onClick={() => router.push(`/lists/edit/${list.id}`)} />
+              <ListPageButton style='delete' onClick={() => setShowModal(true)} />
+            </div>
+          ) : null}
         </div>
         <div className='flex flex-col lg:flex-row justify-start mb-20 mx-40 rounded-lg items-center'>
           <div>
-            <ListCard theme={theme} user={user} movies={movies} />
+            <ListCard theme={theme} user={user} movies={movies} onDelete={() => router.push(`/users/${user.id}`)} />
           </div>
 
-          <div className='flex flex-col min-h-[10rem] min-w-[20rem] w-full p-3 mb-20 mt-10 lg:ml-10 bg-white text-center text-gray-700 rounded-lg'>
-            <div className='text-sm p-3'>COMMENT</div>
+          <div className='flex flex-col min-h-[10rem] min-w-[20rem] w-full px-2 py-3 mt-10 lg:ml-10 bg-white text-center text-gray-700 rounded-lg whitespace-pre-line'>
+            <span className='block text-sm p-3'>COMMENT</span>
             <hr />
-            <div className='px-2 py-3'>{list.comment}</div>
+            {list.comment ? <span className='py-8'>{list.comment}</span> : <span className='text-gray-300 text-sm block py-8'>コメントはありません</span>}
           </div>
         </div>
 
-        <FloatingButton onClick={buttonHandler} content={<FontAwesomeIcon icon={faPlus} />} />
+        <FloatingButton onClick={handleNewList} content={<FontAwesomeIcon icon={faPlus} />} />
+        <ImportantModal
+          showModal={showModal}
+          title='このベストを削除しますか？'
+          description={`タイトル: "${theme.title}"`}
+          confirmationText='削除する'
+          cancellationText='削除しない'
+          handleConfirm={() => handleDelete()}
+          handleCancel={() => setShowModal(false)}
+        />
       </>
     )
   }

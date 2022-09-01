@@ -32,7 +32,7 @@ const About = () => (
         <MainImageOuter>
           <Image src={CREATE_LIST_IMAGE} width={842} height={500} alt='ベスト作成画面' objectFit='contain' />
         </MainImageOuter>
-        <p className={captionStyles + 'pb-2 decoration-blue-400'}>作成後「マイベスト」から編集も可能</p>
+        <p className={captionStyles + 'pb-2 decoration-blue-400'}>作成後の編集も可能</p>
         <div className={miniImageStyles + 'bottom-0 right-0'}>
           <Image src={CREATE_LIST_IMAGE2} width={200} height={200} alt='楽しむ人' objectFit='contain' />
         </div>

@@ -1,14 +1,14 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useCallback } from 'react'
 import { useRouter } from 'next/router'
 import PageHead from 'components/layout/pageHead'
 import type { CreateListParams, UpdateMovieParams, List, Theme, User } from 'interfaces/interface'
-import { errorMessage, redirectToSignIn } from 'lib/helpers'
+import { redirectToSignIn } from 'lib/helpers'
 import { toastSuccess, toastWarn } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import NowLoading from 'components/commons/nowLoading'
 import Headline from 'components/layout/headline'
 import ListForm from 'components/lists/form/listForm'
-import { getList, patchList } from 'lib/fetcher'
+import { fetchData, getList, patchList } from 'lib/fetcher'
 
 interface State {
   state: { isLoading: false; list: List & { user: User; theme: Theme } } | { isLoading: true }
@@ -19,52 +19,48 @@ const EditList: React.FC = () => {
   const listId = Number(router.query.id)
   const [listState, setListState] = useState<State>({ state: { isLoading: true } })
   const [currentList, setCurrentList] = useState<List>()
+  const [isSending, setIsSending] = useState(false)
   const { isSignedIn, currentUser } = useContext(AuthContext)
 
-  const fetchData = async () => {
-    try {
-      const res = await getList(listId)
-      const list = res.data
-      if (currentUser && list.userId == currentUser.id) {
-        setListState({ state: { isLoading: false, list: list } })
-        setCurrentList(list)
-      } else {
-        toastWarn('このベストを編集することができません')
-        router.back()
-      }
-    } catch (err) {
-      errorMessage()
+  const fetch = useCallback(async () => {
+    const list = await fetchData(getList(listId))
+    if (currentUser && list && list.userId == currentUser.id) {
+      setListState({ state: { isLoading: false, list: list } })
+      setCurrentList(list)
+    } else {
+      toastWarn('このベストは編集できません')
       router.back()
     }
-  }
+  }, [listId, currentUser, router])
 
   useEffect(() => {
     if (!isSignedIn) {
       redirectToSignIn(router)
     } else if (router.isReady) {
       if (listId) {
-        fetchData()
+        fetch()
       } else {
         toastWarn('不明なパラメーターです')
         router.back()
       }
     }
-  }, [])
+  }, [fetch, isSignedIn, listId, router])
 
   const updateList = async (newData: { list: CreateListParams }) => {
     if (currentList) {
+      setIsSending(true)
       const newMoviesData = newData.list.movies
       const newMovies: Array<UpdateMovieParams> = currentList.movies
         .map((cm) =>
           newMoviesData.map((m) =>
             m.position === cm.position
               ? {
-                id: cm.id,
-                title: m.title,
-                position: m.position,
-                tmdbId: m.tmdbId || 0,
-                tmdbImage: m.tmdbImage || '',
-              }
+                  id: cm.id,
+                  title: m.title,
+                  position: m.position,
+                  tmdbId: m.tmdbId || 0,
+                  tmdbImage: m.tmdbImage || '',
+                }
               : null
           )
         )
@@ -75,15 +71,13 @@ const EditList: React.FC = () => {
         comment: newData.list.comment,
         movies: newMovies,
       }
-      try {
-        const response = await patchList(listId, newList)
-        if (response.status !== 200 || response.data.status) throw Error(response.data.message)
 
-        const savedList = response.data
-        toastSuccess('リストが更新されました')
-        router.push(`/lists/${savedList.id}`)
-      } catch (err) {
-        errorMessage()
+      const savedList = await fetchData(patchList(listId, newList))
+      if (savedList) {
+        toastSuccess('ベストが更新されました')
+        router.push(`/lists/${currentList.id}`)
+      } else {
+        setIsSending(false)
       }
     }
   }
@@ -94,7 +88,7 @@ const EditList: React.FC = () => {
       <Headline>
         <h1>ベストの編集</h1>
       </Headline>
-      {listState.state.isLoading ? <NowLoading /> : <ListForm onSave={updateList} theme={listState.state.list.theme} listProp={listState.state.list} />}
+      {listState.state.isLoading ? <NowLoading /> : <ListForm onSave={updateList} theme={listState.state.list.theme} listProp={listState.state.list} isSending={isSending} />}
     </>
   )
 }

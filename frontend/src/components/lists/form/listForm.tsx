@@ -16,13 +16,13 @@ interface Props {
   onSave: (formData: { list: CreateListParams }) => void
   theme: Theme
   listProp?: List & { user: User; theme: Theme }
+  isSending: boolean
 }
 
-const ListForm = ({ onSave, theme, listProp }: Props) => {
+const ListForm = ({ onSave, theme, listProp, isSending }: Props) => {
   const title = theme.title
   const cap = theme.capacity
   const themeId = theme.id
-  const [isSending, setIsSending] = useState(false)
 
   const [formErrors, setFormErrors] = useState<{ [K in keyof CreateListParams]?: string }>({})
 
@@ -69,7 +69,6 @@ const ListForm = ({ onSave, theme, listProp }: Props) => {
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    setIsSending(true)
     const submitList = { ...list, comment: comment, themeId: themeId }
     const movies = submitList.movies.slice(0, cap)
     submitList.movies = movies
@@ -79,9 +78,6 @@ const ListForm = ({ onSave, theme, listProp }: Props) => {
     if (isEmptyObject(errors)) {
       const formData = { list: submitList }
       onSave(formData)
-    } else {
-      toastWarn('項目にエラーがあります')
-      setIsSending(false)
     }
   }
 
