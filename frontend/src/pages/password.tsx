@@ -1,17 +1,17 @@
 import { useState, useContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import type { PasswordParams, UserEditParams } from 'interfaces/interface'
-import { toastSuccess, toastError } from 'lib/toast'
+import { toastSuccess } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import PageHead from 'components/layout/pageHead'
 import SignInButton from 'components/commons/signInButton'
 import SignInInput from 'components/signInInput'
 import { validatePassword } from 'lib/validations'
-import { errorMessage, guestUserUnavailable, isEmptyObject, redirectToSignIn } from 'lib/helpers'
+import { guestUserUnavailable, isEmptyObject, redirectToSignIn } from 'lib/helpers'
 import Headline from 'components/layout/headline'
 import NowLoading from 'components/commons/nowLoading'
 import { NextPage } from 'next/types'
-import { putPassword } from 'lib/api/auth'
+import { authClient, putPassword } from 'lib/api/auth'
 
 const Password: NextPage = () => {
   const router = useRouter()
@@ -31,11 +31,10 @@ const Password: NextPage = () => {
     } else {
       setIsLoading(false)
     }
-  }, [])
+  }, [isGuest, isSignedIn, router])
 
   const handlePasswordSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    setIsSending(true)
     const params: PasswordParams = {
       currentPassword: currentPassword,
       password: password,
@@ -43,22 +42,14 @@ const Password: NextPage = () => {
     }
     const errors = validatePassword(params)
     setFormErrors(errors)
-    if (!isEmptyObject(errors)) {
-      setIsSending(false)
-      return
-    }
-    try {
-      const res = await putPassword(params)
-      if (res.status === 200 && res.data.status === 'success') {
+    if (isEmptyObject(errors)) {
+      setIsSending(true)
+
+      const data = await authClient({ method: putPassword(params), setIsSending: setIsSending, failMessage: 'パスワードが違います' })
+      if (data) {
         toastSuccess('パスワードを変更しました')
         router.push('/account')
-      } else {
-        setIsSending(false)
-        toastError('パスワードが違います')
       }
-    } catch (err) {
-      setIsSending(false)
-      errorMessage()
     }
   }
 
