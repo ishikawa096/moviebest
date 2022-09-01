@@ -1,6 +1,8 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { parseCookies } from 'nookies'
 import { SignUpParams, SignInParams, PasswordParams, UserEditParams } from 'interfaces/interface'
+import { errorMessage } from 'lib/helpers'
+import { toastError } from 'lib/toast'
 
 export const signUp = (params: SignUpParams) => {
   return axios.post('/api/v1/auth/signup', params)
@@ -34,4 +36,47 @@ export const getCurrentUser = () => {
   const cookies = parseCookies()
   if (!cookies._access_token || !cookies._client || !cookies._uid) return
   return axios.get('/api/v1/auth/sessions')
+}
+
+export const authClient = async (args: { method: Promise<AxiosResponse<any, any>>; setIsSending?: React.Dispatch<React.SetStateAction<boolean>>; failMessage?: string }) => {
+  try {
+    const res = await args.method
+    if (res.status === 200 && res.data.status === 'success') {
+      return res.data
+    } else {
+      args.setIsSending?.(false)
+      args.failMessage ? toastError(args.failMessage) : undefined
+    }
+  } catch (err) {
+    args.setIsSending?.(false)
+    errorMessage()
+  }
+}
+
+export const signClient = async (args: { method: Promise<AxiosResponse<any, any>>; setIsSending?: React.Dispatch<React.SetStateAction<boolean>>; failMessage?: string }) => {
+  try {
+    const res = await args.method
+    if (res.status === 200 && res.data.data) {
+      return res.data
+    } else {
+      args.setIsSending?.(false)
+      args.failMessage ? toastError(args.failMessage) : undefined
+    }
+  } catch (err) {
+    args.setIsSending?.(false)
+    errorMessage()
+  }
+}
+
+export const signOutClient = async () => {
+  try {
+    const res = await signOut()
+    if (res.data.success === true) {
+      return res.data
+    } else {
+      toastError('ログアウトできませんでした')
+    }
+  } catch (err) {
+    toastError('ログアウトできませんでした')
+  }
 }

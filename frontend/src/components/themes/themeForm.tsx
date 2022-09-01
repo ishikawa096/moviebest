@@ -11,12 +11,11 @@ const CAP_MAX = 10
 
 type Props = {
   onSave: (formData: { theme: CreateThemeParams }) => void
-  isError: boolean
+  isSending: boolean
 }
 
-const ThemeForm = ({ onSave, isError }: Props) => {
+const ThemeForm = ({ onSave, isSending }: Props) => {
   const [formErrors, setFormErrors] = useState<{ [K in keyof CreateThemeParams]?: string }>({})
-  const [isSending, setIsSending] = useState<boolean>(false)
 
   const defaultsTheme = {
     title: '',
@@ -38,7 +37,6 @@ const ThemeForm = ({ onSave, isError }: Props) => {
     if (isEmptyObject(errors)) {
       const formData = { theme }
       onSave(formData)
-      setIsSending(true)
     }
   }
 
@@ -61,7 +59,7 @@ const ThemeForm = ({ onSave, isError }: Props) => {
           </div>
         </div>
         <div className='p-4 px-10 items-center text-center'>
-          <SubmitButton onClick={handleSubmit} disabled={theme.title ? false : true} isSending={isError ? false : isSending} title='作成' />
+          <SubmitButton onClick={handleSubmit} disabled={theme.title ? false : true} isSending={isSending} title='作成' />
           <span className='block mt-4 text-sm'>作品を選ぶ画面に移ります</span>
         </div>
       </form>

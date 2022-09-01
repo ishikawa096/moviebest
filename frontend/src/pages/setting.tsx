@@ -1,16 +1,16 @@
 import { useState, useContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import type { UserEditParams } from 'interfaces/interface'
-import { toastSuccess, toastError } from 'lib/toast'
+import { toastSuccess } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
 import PageHead from 'components/layout/pageHead'
 import SignInButton from 'components/commons/signInButton'
 import SignInInput from 'components/signInInput'
 import { validateUserEdit } from 'lib/validations'
-import { errorMessage, guestUserUnavailable, isEmptyObject, redirectToSignIn } from 'lib/helpers'
+import { guestUserUnavailable, isEmptyObject, redirectToSignIn } from 'lib/helpers'
 import Headline from 'components/layout/headline'
 import NowLoading from 'components/commons/nowLoading'
-import { putUserUpdate } from 'lib/api/auth'
+import { authClient, putUserUpdate } from 'lib/api/auth'
 
 const Setting: React.FC = () => {
   const router = useRouter()
@@ -36,7 +36,6 @@ const Setting: React.FC = () => {
 
   const handleAccountSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    setIsSending(true)
     const params: UserEditParams = {
       name: name,
       email: email,
@@ -44,23 +43,15 @@ const Setting: React.FC = () => {
     }
     const errors = validateUserEdit(params)
     setFormErrors(errors)
-    if (!isEmptyObject(errors)) {
-      setIsSending(false)
-      return
-    }
-    try {
-      const res = await putUserUpdate(params)
-      if (res.status === 200 && res.data.status === 'success') {
+    if (isEmptyObject(errors)) {
+      setIsSending(true)
+
+      const data = await authClient({ method: putUserUpdate(params), setIsSending: setIsSending, failMessage: 'パスワードが違うか無効な内容です' })
+      if (data) {
         toastSuccess('ユーザー情報を変更しました')
-        setCurrentUser(res.data.data)
+        setCurrentUser(data.data)
         router.push('/account')
-      } else {
-        setIsSending(false)
-        toastError('パスワードが違うか無効な内容です')
       }
-    } catch (err) {
-      setIsSending(false)
-      errorMessage()
     }
   }
 

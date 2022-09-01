@@ -17,7 +17,7 @@ describe('ListForm', () => {
 
   test('フォームに入力して送信ボタンを押せること', async () => {
     themeMock.capacity = 1
-    render(<ListForm onSave={onSave} theme={themeMock} />)
+    render(<ListForm onSave={onSave} theme={themeMock} isSending={false} />)
     const button = screen.getByRole('button', { name: '作成' })
     expect(button).toBeDisabled()
     await fireEvent.change(screen.getByLabelText('1'), { target: { value: 'MO' } })
@@ -29,7 +29,7 @@ describe('ListForm', () => {
   })
 
   test('コメントを入力できること', async () => {
-    render(<ListForm onSave={onSave} theme={themeMock} />)
+    render(<ListForm onSave={onSave} theme={themeMock} isSending={false} />)
     const user = userEvent.setup()
     const commentArea = screen.getByRole('textbox', { name: 'コメント' }) as HTMLTextAreaElement
     await waitFor(() => user.type(commentArea, 'test'))
@@ -38,7 +38,7 @@ describe('ListForm', () => {
 
   test('capacity数と同じ数のmovie入力欄があること', async () => {
     themeMock.capacity = 10
-    render(<ListForm onSave={onSave} theme={themeMock} />)
+    render(<ListForm onSave={onSave} theme={themeMock} isSending={false} />)
     const movieSelect = screen.getAllByText('ここに映画のタイトルを入力')
     expect(movieSelect).toHaveLength(10)
   })

@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { guestSignIn, signIn } from 'lib/api/auth'
+import { guestSignIn, signClient, signIn } from 'lib/api/auth'
 import type { SignInParams } from 'interfaces/interface'
 import { toastSuccess } from 'lib/toast'
 import { AuthContext } from 'pages/_app'
@@ -9,7 +9,7 @@ import FormError from 'components/formError'
 import PageHead from 'components/layout/pageHead'
 import SignInLayout from 'components/layout/signInLayout'
 import SignInInput from 'components/signInInput'
-import { alreadySignIn, errorMessage } from 'lib/helpers'
+import { alreadySignIn } from 'lib/helpers'
 
 const SignIn: React.FC = () => {
   const router = useRouter()
@@ -43,41 +43,27 @@ const SignIn: React.FC = () => {
     handleSignIn(params)
   }
 
-  const handleGuestSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    try {
-      const res = await guestSignIn()
-      if (res.status === 200 && res.data.data) {
-        setIsSignedIn(true)
-        setCurrentUser(res.data.data)
-        setIsGuest(true)
-        toastSuccess('ゲストログインしました')
-        router.back()
-      } else {
-        setIsSending(false)
-        errorMessage()
-      }
-    } catch (err) {
-      setIsSending(false)
-      errorMessage()
+  const handleSignIn = async (params: SignInParams) => {
+    const data = await signClient({ method: signIn(params), setIsSending: setIsSending })
+    if (data) {
+      setIsSignedIn(true)
+      setCurrentUser(data.data)
+      toastSuccess('ログインしました')
+      router.back()
+    } else {
+      setFormError('Emailかパスワードが違います')
     }
   }
 
-  const handleSignIn = async (params: SignInParams) => {
-    try {
-      const res = await signIn(params)
-      if (res.status === 200 && res.data.data) {
-        setIsSignedIn(true)
-        setCurrentUser(res.data.data)
-        toastSuccess('ログインしました')
-        router.back()
-      } else {
-        setIsSending(false)
-        setFormError('Emailかパスワードが違います')
-      }
-    } catch (err) {
-      setIsSending(false)
-      errorMessage()
+  const handleGuestSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    const data = await signClient({ method: guestSignIn(), setIsSending: setIsSending })
+    if (data) {
+      setIsSignedIn(true)
+      setCurrentUser(data.data)
+      setIsGuest(true)
+      toastSuccess('ゲストログインしました')
+      router.back()
     }
   }
 

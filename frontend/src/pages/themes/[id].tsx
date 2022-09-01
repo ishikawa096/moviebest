@@ -7,8 +7,8 @@ import Headline from 'components/layout/headline'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHashtag, faFilePen } from '@fortawesome/free-solid-svg-icons'
 import { sortByNewest } from 'lib/helpers'
-import { useEffect, useState } from 'react'
-import { getTheme } from 'lib/fetcher'
+import { useCallback, useEffect, useState } from 'react'
+import { fetchData, getTheme } from 'lib/fetcher'
 import PageError from 'components/pageError'
 import NowLoading from 'components/commons/nowLoading'
 
@@ -19,31 +19,25 @@ interface State {
 const ThemePage = () => {
   const router = useRouter()
   const themeId = Number(router.query.id)
-  const [isError, setIsError] = useState(false)
+  const [error, setError] = useState<number | string | undefined>()
   const [themeState, setThemeState] = useState<State>({ state: { isLoading: true } })
 
-  const fetchData = async () => {
-    try {
-      const res = await getTheme(themeId)
-      if (res.status !== 200 || res.data.status) {
-        setIsError(true)
-      } else {
-        setThemeState({ state: { isLoading: false, theme: res.data } })
-      }
-    } catch (err) {
-      setIsError(true)
+  const fetch = useCallback(async () => {
+    const data = await fetchData(getTheme(themeId), setError)
+    if (data) {
+      setThemeState({ state: { isLoading: false, theme: data } })
     }
-  }
+  }, [themeId])
 
   useEffect(() => {
     if (router.isReady) {
       if (themeId) {
-        fetchData()
+        fetch()
       } else {
-        setIsError(true)
+        setError(400)
       }
     }
-  }, [])
+  }, [fetch, router.isReady, themeId])
 
   const buttonHandler = () => {
     if (!themeState.state.isLoading) {
@@ -55,8 +49,8 @@ const ThemePage = () => {
     }
   }
 
-  if (isError) {
-    return <PageError />
+  if (error) {
+    return <PageError error={error} />
   } else if (themeState.state.isLoading) {
     return <NowLoading />
   } else {

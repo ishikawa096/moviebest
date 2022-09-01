@@ -2,21 +2,21 @@ import { User } from 'interfaces/interface'
 import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from 'pages/_app'
 import { useRouter } from 'next/router'
-import { toastError, toastSuccess } from 'lib/toast'
+import { toastSuccess } from 'lib/toast'
 import ImportantModal from 'components/importantModal'
 import { destroyCookies } from 'lib/api/authHelper'
 import NowLoading from 'components/commons/nowLoading'
 import Headline from 'components/layout/headline'
 import SubmitButton from 'components/commons/submitButton'
 import { redirectToSignIn } from 'lib/helpers'
-import { userDelete } from 'lib/api/auth'
+import { authClient, userDelete } from 'lib/api/auth'
 
 interface UserState {
   state: { isLoading: false; user: User } | { isLoading: true }
 }
 
 const Account = () => {
-  const { loading, isSignedIn, setIsSignedIn, currentUser, isGuest } = useContext(AuthContext)
+  const { isSignedIn, setIsSignedIn, currentUser, isGuest } = useContext(AuthContext)
   const router = useRouter()
   const [userState, setUserState] = useState<UserState>({ state: { isLoading: true } })
   const [showModal, setShowModal] = useState<boolean>(false)
@@ -24,29 +24,20 @@ const Account = () => {
   useEffect(() => {
     if (!isSignedIn) {
       redirectToSignIn(router)
-    } else if (!loading && currentUser) {
+    } else if (currentUser) {
       setUserState({ state: { isLoading: false, user: currentUser } })
     }
   }, [])
 
   const handleDelete = async () => {
     setShowModal(false)
-    if (!userState.state.isLoading) {
-      try {
-        const res = await userDelete()
-        if (res.status !== 200 || res.data.status !== 'success') throw Error(res.statusText)
-        toastSuccess('アカウントが削除されました')
-        toastSuccess('ご利用ありがとうございました')
-        destroyCookies()
-        setIsSignedIn(false)
-        router.push('/')
-      } catch (err) {
-        if (err instanceof Error) {
-          toastError('削除できませんでした')
-        }
-      }
-    } else {
-      toastError('削除できませんでした')
+    const data = await authClient({ method: userDelete(), failMessage: '削除できませんでした' })
+    if (data) {
+      toastSuccess('アカウントが削除されました')
+      toastSuccess('ご利用ありがとうございました')
+      destroyCookies()
+      setIsSignedIn(false)
+      router.push('/')
     }
   }
 
