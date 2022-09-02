@@ -10,24 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_14_043256) do
+ActiveRecord::Schema.define(version: 2022_09_02_022147) do
 
   create_table "lists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "comment"
-    t.integer "theme_id"
-    t.integer "user_id"
+    t.bigint "theme_id"
+    t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["theme_id"], name: "fk_rails_cb138dee8d"
+    t.index ["user_id"], name: "fk_rails_d6cf4279f7"
   end
 
   create_table "movies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title"
     t.integer "position"
-    t.integer "list_id"
+    t.bigint "list_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "tmdb_id"
     t.string "tmdb_image"
+    t.index ["list_id"], name: "fk_rails_eab7b7a78d"
   end
 
   create_table "themes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -60,4 +63,7 @@ ActiveRecord::Schema.define(version: 2022_08_14_043256) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "lists", "themes"
+  add_foreign_key "lists", "users", on_delete: :cascade
+  add_foreign_key "movies", "lists", on_delete: :cascade
 end
