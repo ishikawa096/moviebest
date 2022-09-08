@@ -1,4 +1,4 @@
-import type { CreateListParams, List, MovieSelectOption, Theme, User } from 'interfaces/interface'
+import type { CreateListParams, CreateMovieParams, List, MovieSelectOption, Theme, User } from 'interfaces/interface'
 import { useState, useCallback } from 'react'
 import { isEmptyObject } from 'lib/helpers'
 import { validateList } from 'lib/validations'
@@ -16,17 +16,17 @@ interface Props {
   onSave: (formData: { list: CreateListParams }) => void
   theme: Theme
   listProp?: List & { user: User; theme: Theme }
+  isSending: boolean
 }
 
-const ListForm = ({ onSave, theme, listProp }: Props) => {
+const ListForm = ({ onSave, theme, listProp, isSending }: Props) => {
   const title = theme.title
   const cap = theme.capacity
   const themeId = theme.id
-  const [isSending, setIsSending] = useState(false)
 
   const [formErrors, setFormErrors] = useState<{ [K in keyof CreateListParams]?: string }>({})
 
-  const defaultMovieParams = (i: number) => ({
+  const defaultMovieParams = (i: number): CreateMovieParams => ({
     title: '',
     position: i,
     tmdbId: 0,
@@ -34,12 +34,10 @@ const ListForm = ({ onSave, theme, listProp }: Props) => {
   })
   const EmptyMovies = [...Array(MAX_CAP)].fill(null).map((_, i) => defaultMovieParams(i))
   const defaultsMovies = listProp ? EmptyMovies.map((m, i) => (listProp.movies[i] ? listProp.movies[i] : m)) : EmptyMovies
-  const initialMovies = [...defaultsMovies]
 
-  const defaultsList = listProp ? { ...listProp, movies: initialMovies } : { movies: initialMovies }
-  const initialListState = { ...defaultsList }
-  const [list, setList] = useState(initialListState)
-  const [comment, setComment] = useState(listProp ? listProp.comment : '')
+  const defaultsList = listProp ? { ...listProp, movies: defaultsMovies } : { movies: defaultsMovies }
+  const [list, setList] = useState<List | { movies: Array<CreateMovieParams> }>(defaultsList)
+  const [comment, setComment] = useState<string>(listProp ? listProp.comment : '')
 
   const handleClear = useCallback(
     (i: number) => {
@@ -69,9 +67,8 @@ const ListForm = ({ onSave, theme, listProp }: Props) => {
     setComment(value)
   }, [])
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    setIsSending(true)
     const submitList = { ...list, comment: comment, themeId: themeId }
     const movies = submitList.movies.slice(0, cap)
     submitList.movies = movies
@@ -81,9 +78,6 @@ const ListForm = ({ onSave, theme, listProp }: Props) => {
     if (isEmptyObject(errors)) {
       const formData = { list: submitList }
       onSave(formData)
-    } else {
-      toastWarn('項目にエラーがあります')
-      setIsSending(false)
     }
   }
 

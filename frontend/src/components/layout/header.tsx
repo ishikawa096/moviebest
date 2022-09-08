@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { AuthContext } from 'pages/_app'
-import { signOut } from 'lib/api/auth'
-import { toastSuccess, toastError } from 'lib/toast'
+import { signOutClient } from 'lib/api/auth'
+import { toastSuccess } from 'lib/toast'
 import HeaderButton from 'components/commons/headerButton'
 import Hamburger from 'components/commons/hamburger'
 import { useWindowWidth } from 'lib/helpers'
@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen, faFilePen } from '@fortawesome/free-solid-svg-icons'
 
 const BREAKPOINT_WIDTH = 768
-const LOGO_IMAGE = '/assets/images/logo.png'
+const LOGO_IMAGE = '/assets/images/logo.webp'
 
 const Header = () => {
   const { loading, isSignedIn, setIsSignedIn, currentUser, setIsGuest } = useContext(AuthContext)
@@ -33,18 +33,12 @@ const Header = () => {
   const handleSignOut = async (e: React.MouseEvent<HTMLButtonElement>) => {
     setMenuOpen(false)
     setSettingOpen(false)
-    try {
-      const res = await signOut()
-      if (res.data.success === true) {
-        setIsSignedIn(false)
-        setIsGuest(false)
-        toastSuccess('ログアウトしました')
-        router.push('/')
-      } else {
-        toastError('ログアウトできませんでした')
-      }
-    } catch (err) {
-      toastError('ログアウトできませんでした')
+    const data = await signOutClient()
+    if (data) {
+      setIsSignedIn(false)
+      setIsGuest(false)
+      toastSuccess('ログアウトしました')
+      router.push('/')
     }
   }
 

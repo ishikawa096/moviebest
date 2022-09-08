@@ -1,5 +1,5 @@
 class Api::V1::Auth::RegistrationsController < DeviseTokenAuth::RegistrationsController
-  before_action :check_guest_user, only: %i[update destroy]
+  before_action :ensure_not_guest_user, only: %i[update destroy]
 
   private
 
@@ -9,11 +9,5 @@ class Api::V1::Auth::RegistrationsController < DeviseTokenAuth::RegistrationsCon
 
   def account_update_params
     params.permit(:name, :email, :current_password, :password, :password_confirmation)
-  end
-
-  def check_guest_user
-    if current_api_v1_user && current_api_v1_user.email == 'guest@example.com'
-      render status: :unauthorized
-    end
   end
 end

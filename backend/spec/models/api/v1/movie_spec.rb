@@ -62,7 +62,7 @@ RSpec.describe Movie, type: :model do
   end
 
   it '削除できること' do
-    movie = create(:movie, params)
+    movie = create(:list, :with_movies, :with_theme).movies[0]
     expect { movie.destroy }.to change(described_class, :count).by(-1)
   end
 end

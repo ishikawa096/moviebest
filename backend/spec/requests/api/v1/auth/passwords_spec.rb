@@ -51,9 +51,9 @@ RSpec.describe 'Api::V1::Auth::Passwords', type: :request do
       expect(response).to have_http_status(:unauthorized)
     end
 
-    it 'ゲストユーザーは:unauthorizedを返すこと' do
+    it 'ゲストユーザーは:forbiddenを返すこと' do
       put path, headers: api_and_guest_auth, params: guest_update_params
-      expect(response).to have_http_status(:unauthorized)
+      expect(response).to have_http_status(:forbidden)
     end
   end
 end

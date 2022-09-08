@@ -1,6 +1,6 @@
 import { List, Movie, PasswordParams, SignUpParams, Theme, User, UserEditParams } from 'interfaces/interface'
 
-export const movieMock: Movie = { id: 1, listId: 1, title: 'MOVIE', position: 0, tmdbId: 1, tmdbImage: '', createdAt: new Date(), updatedAt: new Date() }
+export const movieMock: Movie = { id: 1, listId: 1, title: 'MOVIE', position: 0, tmdbId: 1, tmdbImage: '/', createdAt: new Date(), updatedAt: new Date() }
 
 export const moviesMock: Array<Movie> = [
   movieMock,

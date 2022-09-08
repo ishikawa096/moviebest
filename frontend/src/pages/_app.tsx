@@ -60,7 +60,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setIsSignedIn, currentUser, setCurrentUser, isGuest, setIsGuest }}>
         <Layout>
           {pageProps.error
-            ? <PageError code={pageProps.error.statusCode} text={pageProps.error.message} />
+            ? <PageError error={pageProps.error.statusCode} />
             : <Component {...pageProps} />}
         </Layout>
         <ToastContainer />

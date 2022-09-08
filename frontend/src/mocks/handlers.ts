@@ -10,14 +10,17 @@ import signOut from './api/v1/auth/signOut'
 import signInGuest from './api/v1/auth/signInGuest'
 import mockList from './api/v1/lists/list'
 import mockTheme from './api/v1/themes/theme'
+import mockUser from './api/v1/users/user'
 
 export const handlers = [
   rest.get('/api/v1/tmdb/search', mockTmdbSearch),
   rest.get('/api/v1/lists', mockLists),
   rest.post('/api/v1/lists', mockList),
   rest.patch('/api/v1/lists', mockList),
+  rest.delete('/api/v1/lists', mockList),
   rest.get('/api/v1/themes', mockThemes),
   rest.post('/api/v1/themes', mockTheme),
+  rest.get('/api/v1/users', mockUser),
   rest.post('/api/v1/auth/signup', signUp),
   rest.post('/api/v1/auth/signin', signIn),
   rest.post('/api/v1/auth/signinAsGuest', signInGuest),

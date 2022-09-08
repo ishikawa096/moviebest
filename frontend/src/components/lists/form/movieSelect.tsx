@@ -1,11 +1,11 @@
 import AsyncCreatableSelect from 'react-select/async-creatable'
-import type { CreateMovieParams, MovieSelectOption } from 'interfaces/interface'
-import axios from 'axios'
+import type { CreateMovieParams, MovieSelectOption, TmdbMovieData } from 'interfaces/interface'
 import { toastWarn } from 'lib/toast'
 import { useState } from 'react'
 import { formatCreateLabel, FormatOptionLabel, placeholder, Input, Control, ValueContainer, movieFormStyles, formTheme } from './movieSelectStyles'
-import CloseButton from '../../commons/closeButton'
+import CloseButton from 'components/commons/closeButton'
 import React from 'react'
+import { getTmdbSearch } from 'lib/fetcher'
 
 export interface Props {
   movie: CreateMovieParams
@@ -15,17 +15,11 @@ export interface Props {
   clear: (i: number) => void
 }
 
-interface TmdbMovieData {
-  title: string
-  posterPath: string
-  id: number
-}
-
 const MovieSelect = React.memo(({ movie, onChange, index, cap, clear }: Props) => {
   const [update, setUpdate] = useState(false)
 
-  const searchMovie = async (inputValue: string) => {
-    const res = await axios.get('/api/v1/tmdb/search', { params: { keyword: inputValue } })
+  const searchMovie = async (inputValue: string): Promise<Array<MovieSelectOption | null>> => {
+    const res = await getTmdbSearch(inputValue)
     if (res.status === 200) {
       const results = res.data.results
       const movies = results.map((m: TmdbMovieData) => ({
@@ -41,25 +35,19 @@ const MovieSelect = React.memo(({ movie, onChange, index, cap, clear }: Props) =
     }
   }
 
-  const defaultValue = () => {
-    const value = movie.title
-      ? {
-          label: movie.title,
-          value: movie.title,
-          posterPath: movie.tmdbImage,
-          tmdbId: movie.tmdbId,
-          position: movie.position,
-        }
-      : null
-    return value
-  }
-
   const onError = (option: MovieSelectOption) => {
     option.posterPath = ''
     setUpdate(!update)
   }
 
-  const value = movie.title.trim() ? { label: movie.title, value: movie.title, posterPath: movie.tmdbImage, tmdbId: movie.tmdbId, position: movie.position } : null
+  const value: MovieSelectOption | null = movie.title.trim()
+    ? {
+        label: movie.title,
+        value: movie.title,
+        posterPath: movie.tmdbImage,
+        tmdbId: movie.tmdbId,
+      }
+    : null
 
   const formatOptionLabel = (option: MovieSelectOption | any) => <FormatOptionLabel option={option} onError={() => onError(option)} />
 
@@ -77,9 +65,8 @@ const MovieSelect = React.memo(({ movie, onChange, index, cap, clear }: Props) =
           inputId={`movie-${index}`}
           value={value}
           loadOptions={searchMovie}
-          onChange={(newValue: any) => onChange(newValue, index)}
+          onChange={(newValue: MovieSelectOption | any) => onChange(newValue, index)}
           placeholder={placeholder}
-          defaultValue={defaultValue}
           formatOptionLabel={formatOptionLabel}
           formatCreateLabel={formatCreateLabel}
           noOptionsMessage={() => null}

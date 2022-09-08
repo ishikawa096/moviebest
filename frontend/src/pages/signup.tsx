@@ -1,15 +1,15 @@
 import { useState, useContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { AuthContext } from './_app'
-import { signUp } from 'lib/api/auth'
+import { authClient, signUp } from 'lib/api/auth'
 import type { SignUpParams } from 'interfaces/interface'
-import { toastSuccess, toastError } from 'lib/toast'
+import { toastSuccess } from 'lib/toast'
 import SignInLayout from 'components/layout/signInLayout'
 import SignInButton from 'components/commons/signInButton'
 import SignInInput from 'components/signInInput'
 import PageHead from 'components/layout/pageHead'
 import { validateSignUp } from 'lib/validations'
-import { alreadySignIn, errorMessage, isEmptyObject } from 'lib/helpers'
+import { alreadySignIn, isEmptyObject } from 'lib/helpers'
 
 const SignUp: React.FC = () => {
   const router = useRouter()
@@ -25,11 +25,10 @@ const SignUp: React.FC = () => {
     if (isSignedIn) {
       alreadySignIn(router)
     }
-  }, [])
+  }, [router])
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    setIsSending(true)
     const params: SignUpParams = {
       name: name,
       email: email,
@@ -38,24 +37,16 @@ const SignUp: React.FC = () => {
     }
     const errors = validateSignUp(params)
     setFormErrors(errors)
-    if (!isEmptyObject(errors)) {
-      setIsSending(false)
-      return
-    }
-    try {
-      const res = await signUp(params)
-      if (res.status === 200 && res.data.status === 'success') {
+    if (isEmptyObject(errors)) {
+      setIsSending(true)
+
+      const data = await authClient({ method: signUp(params), setIsSending: setIsSending, failMessage: 'すでに登録済みか無効な内容です'})
+      if (data) {
         setIsSignedIn(true)
-        setCurrentUser(res.data.data)
+        setCurrentUser(data.data)
         toastSuccess('登録完了！ログインしました')
         router.push('/')
-      } else {
-        setIsSending(false)
-        toastError('すでに登録済みか無効な内容です')
       }
-    } catch (err) {
-      setIsSending(false)
-      errorMessage()
     }
   }
 
