@@ -17,6 +17,7 @@ export const handlers = [
   rest.get('/api/v1/lists', mockLists),
   rest.post('/api/v1/lists', mockList),
   rest.patch('/api/v1/lists', mockList),
+  rest.delete('/api/v1/lists', mockList),
   rest.get('/api/v1/themes', mockThemes),
   rest.post('/api/v1/themes', mockTheme),
   rest.get('/api/v1/users', mockUser),

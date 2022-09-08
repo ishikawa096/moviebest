@@ -97,9 +97,9 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       expect(response).to have_http_status(:unauthorized)
     end
 
-    it 'ゲストユーザーは:unauthorizedを返すこと' do
+    it 'ゲストユーザーは:forbiddenを返すこと' do
       put path, headers: api_and_guest_auth, params: guest_update_params
-      expect(response).to have_http_status(:unauthorized)
+      expect(response).to have_http_status(:forbidden)
     end
   end
 
@@ -124,9 +124,9 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       expect(response).to have_http_status(:unauthorized)
     end
 
-    it 'ゲストユーザーは削除できず:unauthorizedを返すこと' do
+    it 'ゲストユーザーは削除できず:forbiddenを返すこと' do
       delete path, headers: api_and_guest_auth
-      expect(response).to have_http_status(:unauthorized)
+      expect(response).to have_http_status(:forbidden)
       expect(User.find(guest_user.id)).to be_present
     end
   end

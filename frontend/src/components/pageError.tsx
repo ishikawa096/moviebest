@@ -2,8 +2,24 @@ import Headline from 'components/layout/headline'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPersonPraying, faCat } from '@fortawesome/free-solid-svg-icons'
 
-const PageError = ({ code, text }: { code?: number; text?: string }) => {
-  if (!text) { text = 'エラーが発生しました' }
+const PageError = ({ error }: { error?: number | string }) => {
+  let code
+  let text = 'エラーが発生しました'
+
+  if (typeof error === 'number') {
+    code = error
+    switch (error) {
+      case 404:
+        text = 'ページが見つかりませんでした'
+        break
+
+      case 500:
+        text = 'サーバーエラーが発生しました'
+        break
+    }
+  } else if (typeof error === 'string') {
+    text = error
+  }
 
   return (
     <>

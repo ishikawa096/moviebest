@@ -1,5 +1,6 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { CreateListParams, CreateThemeParams, UpdateMovieParams } from 'interfaces/interface'
+import { errorMessage } from './helpers'
 
 export const getTheme = (id: number) => {
   return axios.get('/api/v1/themes', { params: { id: id } })
@@ -34,5 +35,22 @@ export const getUser = (id: number) => {
 }
 
 export const getTmdbSearch = (keyword: string) => {
-    return axios.get('/api/v1/tmdb/search', { params: { keyword: keyword } })
+  return axios.get('/api/v1/tmdb/search', { params: { keyword: keyword } })
+}
+
+export const fetchData = async (method: Promise<AxiosResponse<any, any>>, setError?: React.Dispatch<React.SetStateAction<string | number | undefined>>) => {
+  try {
+    const res = await method
+    if (res.status !== 200 || res.data.status) {
+      setError?.(res.data.status)
+      errorMessage()
+    } else {
+      return res.data
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      setError?.(err.message)
+      errorMessage()
+    }
+  }
 }

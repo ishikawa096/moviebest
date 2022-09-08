@@ -1,6 +1,7 @@
-import { ButtonColor } from 'interfaces/interface'
+const colorList = ['white', 'color']
+export type ButtonColor = typeof colorList[number]
 
-export const buttonColor = ({ color }: ButtonColor) => {
+export const buttonColor = (color: ButtonColor) => {
   switch (color) {
     case 'white':
       return ' bg-white hover:bg-sky-400 disabled:bg-gray-100 focus:ring-sky-200 text-sky-400 hover:text-white disabled:text-sky-200 border-2 border-sky-400 disabled:border-sky-200 duration-150'

@@ -57,7 +57,7 @@ const PopularThemes = ({ themes }: Props) => {
       return arrayRandom(backGroundColors) as string
     })
     setColors(colorArray)
-  }, [])
+  }, [themes.length])
 
   const handleMouseEnter = (themeId: number) => {
     selected === themeId ? setSelected(undefined) : setSelected(themeId)
