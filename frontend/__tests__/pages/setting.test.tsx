@@ -137,8 +137,7 @@ describe('Setting', () => {
       expect(inputEmail.value).toBe('update@example.com')
       expect(inputPassword.value).toBe('password')
       await waitFor(() => user.click(button))
-      expect(mockedSetCurrentUser).toBeCalledTimes(1)
-      expect(mockedRouterPush).toHaveBeenCalledWith('/account')
+      await waitFor(() => expect(screen.getByText(/認証メールを送信しました/)).toBeInTheDocument)
     })
 
     test('空欄があると送信できないこと', async () => {

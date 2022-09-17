@@ -1,0 +1,12 @@
+<p>ご登録のEメール: <%= @email %></p>
+
+<p>下のリンクをクリックして認証を完了してください</p>
+
+<p><%= link_to 'アカウントを認証する', "#{ENV['APP_URL']}/confirmation?config=default&confirmation_token=#{@token}&redirect_url=/" %></p>
+
+<p>--------------------------</p>
+
+<p>映画なんでもベスト</p>
+<p><%= link_to ENV['APP_URL'], ENV['APP_URL'] %></p>
+
+<p>--------------------------</p>
