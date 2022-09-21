@@ -78,7 +78,7 @@ const Setting: React.FC = () => {
                   ご入力いただいたメールアドレス
                   <br /> <span className='text-xl font-bold'>{email}</span>
                 </p>
-                <p>メールに記載のURLからアカウントを有効化してください</p>
+                <p>メールに記載のURLをクリックして変更を確定してください</p>
               </div>
             ) : (
               <>

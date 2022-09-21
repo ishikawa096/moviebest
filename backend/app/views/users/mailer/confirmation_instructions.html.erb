@@ -1,8 +1,18 @@
+<% if @resource.unconfirmed_email %>
+
+<h2>メールアドレス変更の確認</h2>
+<p>変更後のEメール: <%= @email %></p>
+<p>変更してよろしければ、下のリンクをクリックして変更を確定してください</p>
+
+<% else %>
+
+<h2>ユーザー登録ありがとうございます。</h2>
 <p>ご登録のEメール: <%= @email %></p>
+<p>下のリンクをクリックしてアカウントを有効化してください</p>
 
-<p>下のリンクをクリックして認証を完了してください</p>
+<% end %>
 
-<p><%= link_to 'アカウントを認証する', "#{ENV['APP_URL']}/confirmation?config=default&confirmation_token=#{@token}&redirect_url=/" %></p>
+<p><%= link_to @resource.unconfirmed_email ? '変更を確定する' : 'アカウントを有効化する', "#{ENV['APP_URL']}/confirmation?config=default&confirmation_token=#{@token}&redirect_url=/" %></p>
 
 <p>--------------------------</p>
 
