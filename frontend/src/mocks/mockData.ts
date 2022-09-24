@@ -16,7 +16,7 @@ export const userMock: User = { id: 1, name: 'USER', email: 'user@example.com', 
 
 export const listMock: List = { id: 1, comment: 'COMMENT TEXT', themeId: 1, userId: 1, createdAt: new Date(), updatedAt: new Date(), movies: moviesMock }
 
-export const signUpMock: SignUpParams = { name: 'NAME', email: 'test@example.com', password: 'password', passwordConfirmation: 'password' }
+export const signUpMock: SignUpParams = { name: 'NAME', email: 'test@example.com', password: 'password', passwordConfirmation: 'password', confirmSuccessUrl: '/' }
 
 export const passwordMock: PasswordParams = { currentPassword: 'currPass', password: 'password', passwordConfirmation: 'password' }
 
