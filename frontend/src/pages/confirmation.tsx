@@ -1,5 +1,5 @@
 import { ConfirmationParams, User } from 'interfaces/interface'
-import { useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { AuthContext } from 'pages/_app'
 import { useRouter } from 'next/router'
 import { toastSuccess } from 'lib/toast'
@@ -21,7 +21,7 @@ const Confirmation = () => {
   const [error, setError] = useState<string>('')
   const [type, setType] = useState<'signup' | 'change' | ''>('')
 
-  const confirm = async () => {
+  const confirm = useCallback(async () => {
     const params: ConfirmationParams = router.query
     const data = await authClient({ method: confirmation(params) })
     if (data) {
@@ -32,13 +32,13 @@ const Confirmation = () => {
     } else {
       setError('無効なURLか、既に完了した認証URLです')
     }
-  }
+  },[type, router.query, setCurrentUser])
 
   useEffect(() => {
+    isSignedIn ? setType('change') : setType('signup')
     if (router.isReady) {
       confirm()
     }
-    isSignedIn ? setType('change') : setType('signup')
   }, [])
 
   return (
@@ -62,7 +62,7 @@ const Confirmation = () => {
                 <>
                   <p className='text-lg'>アカウント情報の変更が完了しました！</p>
                   <Link href='/account'>
-                    <a>ユーザー情報画面へ戻る</a>
+                    <a className='hover:underline text-md'>ユーザー情報画面へ戻る</a>
                   </Link>
                 </>
               )}
