@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import { parseCookies } from 'nookies'
-import { SignUpParams, SignInParams, PasswordParams, UserEditParams } from 'interfaces/interface'
+import { SignUpParams, SignInParams, PasswordParams, UserEditParams, ConfirmationParams } from 'interfaces/interface'
 import { errorMessage } from 'lib/helpers'
 import { toastError } from 'lib/toast'
 
@@ -14,6 +14,10 @@ export const signIn = (params: SignInParams) => {
 
 export const guestSignIn = () => {
   return axios.post('/api/v1/auth/signinAsGuest')
+}
+
+export const confirmation = (params: ConfirmationParams) => {
+  return axios.get('/api/v1/auth/confirmation', { params: params })
 }
 
 export const signOut = () => {

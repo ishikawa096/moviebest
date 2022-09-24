@@ -1,52 +1,54 @@
 class Api::V1::ListsController < ApplicationController
   before_action :authenticate_api_v1_user!, only: %i[create update destroy]
+  before_action :set_list, only: %i[show update destroy]
 
   def index
     lists = List.includes(:user, :theme, :movies)
-    json = lists.as_json(include: [:theme, :movies, { user: { only: %i[name id] } }])
-    render json:, status: :ok
+    @json = lists.as_json(include: [:theme, :movies, { user: { only: %i[name id] } }])
+    render_json
   end
 
   def show
-    list = List.includes(:user, :theme, :movies).find(params[:id])
-    json = list.as_json(include: [:theme, :movies, { user: { only: %i[name id] } }])
-    render json:, status: :ok
+    @json = @list.as_json(include: [:theme, :movies, { user: { only: %i[name id] } }])
+    render_json
   end
 
   def create
-    list = current_api_v1_user.lists.create_with_movies!(create_params)
-    render json: list, status: :ok
+    @list = current_api_v1_user.lists.create_with_movies!(create_params)
+    render_list
   rescue ActiveRecord::RecordInvalid => e
-    render json: e.record.errors, status: :unprocessable_entity
+    render422(e)
   end
 
   def update
-    list = List.find(params[:id])
-    if list.user != current_api_v1_user
+    if @list.user != current_api_v1_user
       render401
       return
     end
     ActiveRecord::Base.transaction do
-      list.update_with_movies!(update_params)
+      @list.update_with_movies!(update_params)
     end
-    render json: list, status: :ok
+    render_list
   rescue ActiveRecord::RecordInvalid => e
-    render json: e.record.errors, status: :unprocessable_entity
+    render422(e)
   end
 
   def destroy
-    list = List.find(params[:id])
-    if list.user != current_api_v1_user
+    if @list.user != current_api_v1_user
       render401
       return
     end
-    list.destroy!
+    @list.destroy!
     render json: { message: 'List was successfully destroyed.' }, status: :ok
   rescue ActiveRecord::RecordInvalid => e
-    render json: e.record.errors, status: :unprocessable_entity
+    render422(e)
   end
 
   private
+
+  def set_list
+    @list = List.find(params[:id])
+  end
 
   def create_params
     params
@@ -60,7 +62,19 @@ class Api::V1::ListsController < ApplicationController
       .permit(:comment, movies: %i[id title position tmdb_id tmdb_image])
   end
 
+  def render_json
+    render json: @json, status: :ok
+  end
+
+  def render_list
+    render json: @list, status: :ok
+  end
+
   def render401
     render status: :unauthorized, json: { message: 'Failed to authenticate' }
+  end
+
+  def render422(error)
+    render json: error.record.errors, status: :unprocessable_entity
   end
 end

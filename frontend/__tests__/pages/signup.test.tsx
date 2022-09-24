@@ -74,9 +74,7 @@ describe('SignUp', () => {
       expect(inputConfirm.value).toBe('password')
       expect(button).toBeEnabled()
       await waitFor(() => user.click(button))
-      expect(mockedSetIsSignedIn).toBeCalledWith(true)
-      expect(mockedSetCurrentUser).toBeCalledTimes(1)
-      expect(mockedRouterPush).toBeCalledWith('/')
+      await waitFor(() => expect(screen.getByText(/認証メールを送信しました/)).toBeInTheDocument)
     })
 
     test('入力エラーがあると表示される', async () => {

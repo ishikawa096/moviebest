@@ -1,19 +1,17 @@
 class Api::V1::ThemesController < ApplicationController
-  POPULAR_THEMES_MAX_COUNT = 15
-
   before_action :authenticate_api_v1_user!, only: %i[create]
 
   def index
     themes = Theme.includes(:lists)
-    json = themes.as_json(include: :lists)
-    render json:, status: :ok
+    @json = themes.as_json(include: :lists)
+    render_json
   end
 
   def show
     theme = Theme.includes(lists: %i[user movies]).find(params[:id])
-    json = theme.as_json(include: { lists: { include: [:movies,
-                                                       { user: { only: %i[name id] } }] } })
-    render json:, status: :ok
+    @json = theme.as_json(include: { lists: { include: [:movies,
+                                                        { user: { only: %i[name id] } }] } })
+    render_json
   end
 
   def create
@@ -26,6 +24,10 @@ class Api::V1::ThemesController < ApplicationController
   end
 
   private
+
+  def render_json
+    render json: @json, status: :ok
+  end
 
   def theme_params
     params.require(:theme).permit(:title, :capacity)
