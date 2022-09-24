@@ -18,12 +18,12 @@ jest.mock('lib/helpers', () => ({
   alreadySignIn: () => mockedAlreadySignIn(),
 }))
 
-const mockedRouterBack = jest.fn()
+const mockedRouterPush = jest.fn()
 jest.mock('next/router', () => ({
   useRouter() {
     return {
-      back: mockedRouterBack,
-      asPath: '/'
+      push: mockedRouterPush,
+      asPath: '/',
     }
   },
 }))
@@ -70,7 +70,7 @@ describe('SignIn', () => {
       await waitFor(() => user.click(button))
       expect(mockedSetIsSignedIn).toBeCalledWith(true)
       expect(mockedSetCurrentUser).toBeCalledTimes(1)
-      expect(mockedRouterBack).toBeCalledTimes(1)
+      expect(mockedRouterPush).toBeCalledTimes(1)
     })
 
     test('パスワードが間違っているとログインできないこと', async () => {
@@ -90,7 +90,7 @@ describe('SignIn', () => {
       await waitFor(() => user.click(button))
       expect(mockedSetIsSignedIn).toBeCalledWith(true)
       expect(mockedSetCurrentUser).toBeCalledTimes(1)
-      expect(mockedRouterBack).toBeCalledTimes(1)
+      expect(mockedRouterPush).toBeCalledTimes(1)
       expect(mockedSetIsGuest).toBeCalledWith(true)
     })
   })

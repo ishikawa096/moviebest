@@ -5,6 +5,7 @@ FactoryBot.define do
     password { '12345678' }
     uid { email }
     password_confirmation { password }
+    confirmed_at { Date.current }
 
     factory :guest_user do
       email { 'guest@example.com' }

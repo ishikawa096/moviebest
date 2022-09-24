@@ -29,5 +29,7 @@
 /vendor/*
 !/vendor/assets
 
+/.letter_openner
+
 .DS_Store
 .env

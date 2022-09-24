@@ -11,6 +11,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
   let(:user) { create(:user, sign_up_params) }
   let(:guest_user) { create(:guest_user) }
   let(:path) { api_v1_user_registration_path }
+  let(:confirm_success_url) { { confirm_success_url: '/success' } }
 
   let(:sign_up_params) do
     {
@@ -39,19 +40,16 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
 
   describe '#create' do
     it 'レスポンスに成功すること' do
-      post path, headers: api_auth, params: sign_up_params
+      post path, headers: api_auth, params: sign_up_params.merge(confirm_success_url)
       expect(response).to have_http_status(:ok)
     end
 
     it '新規user登録できること' do
-      expect { post path, headers: api_auth, params: sign_up_params }.to change(User, :count).by(1)
-    end
-
-    it '作成後ログインされること' do
-      post path, headers: api_auth, params: sign_up_params
-      expect(response.headers['access-token']).to be_present
-      expect(response.headers['client']).to be_present
-      expect(response.headers['uid']).to eq sign_up_params[:email]
+      expect do
+        post path,
+        headers: api_auth,
+        params: sign_up_params.merge(confirm_success_url)
+      end.to change(User, :count).by(1)
     end
 
     it 'バリデーションエラーのとき:unprocessable_entityを返すこと' do

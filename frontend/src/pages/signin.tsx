@@ -49,7 +49,7 @@ const SignIn: React.FC = () => {
       setIsSignedIn(true)
       setCurrentUser(data.data)
       toastSuccess('ログインしました')
-      router.back()
+      router.push('/')
     } else {
       setFormError('Emailかパスワードが違います')
     }
@@ -63,7 +63,7 @@ const SignIn: React.FC = () => {
       setCurrentUser(data.data)
       setIsGuest(true)
       toastSuccess('ゲストログインしました')
-      router.back()
+      router.push('/')
     }
   }
 
